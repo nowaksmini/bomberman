@@ -73,6 +73,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -86,6 +87,7 @@
     <Compile Include="Common\Components\MovingComponents\Star.cs" />
     <Compile Include="Common\Components\MovingComponents\Rocket.cs" />
     <Compile Include="Common\Components\StateComponents\Block.cs" />
+    <Compile Include="Common\Components\StateComponents\TextInput.cs" />
     <Compile Include="Common\Engine.cs" />
     <Compile Include="Common\Engines\RocketEngine.cs" />
     <Compile Include="Common\Engines\StarsEngine.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Screens\HighScores.cs" />
     <Compile Include="Screens\Login.cs" />
     <Compile Include="Screens\MainMenu.cs" />
+    <Compile Include="Screens\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -1,5 +1,4 @@
-﻿using BomberMan.Common.Components;
-using BomberMan.Common.Components.StateComponents;
+﻿using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,7 +9,7 @@ using System.Text;
 
 namespace BomberMan.Screens
 {
-    public class MainMenu : Screen
+    public class Settings : Screen
     {
         public const int NUMBER_OF_BUTTONS = 5;
 
@@ -18,7 +17,7 @@ namespace BomberMan.Screens
         bool mpressed, prevMpressed = false;
         KeyboardState KeyboardState, LastKeyboardState;
 
-        public MainMenu(int windowWidth, int windowHeight)
+        public Settings(int windowWidth, int windowHeight)
         {
             int x = windowWidth / 2 - windowWidth / (2 * NUMBER_OF_BUTTONS);
             int y = windowHeight / 2 -
@@ -93,14 +92,5 @@ namespace BomberMan.Screens
 
             }
         }
-    }
-
-    public enum MainMenuOptions
-    {
-        NewGame,
-        LoadGame,
-        HighScores,
-        Settings,
-        LogOut
     }
 }

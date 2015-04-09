@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using BomberMan.Screens;
 using BomberMan.Common.Engines;
 using Microsoft.Xna.Framework.Media;
+using BomberMan.Common.Components.StateComponents;
 
   
 namespace BomberMan
@@ -21,6 +22,9 @@ namespace BomberMan
         ScreenType screen = ScreenType.MainMenu;
         MainMenu mainMenu;
         Song song;
+        SpriteFont font;
+        TextInput textInput = new TextInput();
+        bool showCursorForInput;
 
         public GameManager()
         {
@@ -32,6 +36,7 @@ namespace BomberMan
  
         protected override void Initialize()
         {
+            showCursorForInput = true;
             base.Initialize();
         }
  
@@ -49,6 +54,7 @@ namespace BomberMan
             rocketeEngine = new RocketEngine(rocket);
             song =(Content.Load<Song>(@"Music/OneRepublic"));
             MediaPlayer.Play(song);
+            font = Content.Load<SpriteFont>(@"Fonts/Input");
             LoadMainMenu();
         }
  
@@ -59,7 +65,6 @@ namespace BomberMan
  
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             rocketeEngine.MaxWidth = Window.ClientBounds.Width;
@@ -71,6 +76,7 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     mainMenu.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
+                    textInput.ProcessKeyboard(System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock));
                     break;
                 case ScreenType.Help:
                     break;
@@ -88,7 +94,7 @@ namespace BomberMan
  
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
             spriteBatch.End();
@@ -97,7 +103,9 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     IsMouseVisible = true;
+                    showCursorForInput = ((gameTime.TotalGameTime.TotalSeconds * 2) % 2 < 1);
                     mainMenu.Draw(spriteBatch);
+                    textInput.Draw(spriteBatch, font, showCursorForInput);
                     break;
                 case ScreenType.Help:
                     break;
@@ -117,11 +125,15 @@ namespace BomberMan
         private void LoadMainMenu()
         {
             mainMenu.buttons[0].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/settings");
+                Content.Load<Texture2D>(@"Images/MainMenu/NewGame");
             mainMenu.buttons[1].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/settings");
+                Content.Load<Texture2D>(@"Images/MainMenu/LoadGame");
             mainMenu.buttons[2].Texture =
+                Content.Load<Texture2D>(@"Images/MainMenu/HighScores");
+            mainMenu.buttons[3].Texture =
                 Content.Load<Texture2D>(@"Images/MainMenu/settings");
+            mainMenu.buttons[4].Texture =
+                Content.Load<Texture2D>(@"Images/MainMenu/LogOut");
         }
     }
 

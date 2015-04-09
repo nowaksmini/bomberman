@@ -13,9 +13,12 @@ namespace BomberMan.Common.Components.StateComponents
         public BState State { get; set; }
         public double Timer { get; set; }
 
-        bool mpressed, prevMpressed = false;
-        int mx, my;
-        double frameTime;
+        private Color pressedColor = Color.DarkBlue;
+        private Color hoverColor = Color.LightBlue;
+        private Color normalColor = Color.White;
+        private bool mpressed, prevMpressed = false;
+        private int mx, my;
+        private double frameTime;
 
         public Button(int height, int width, Color color, BState _state, Texture2D texture,
             Rectangle rectangle, double _timer) : base (texture, color, height, width, rectangle)
@@ -42,7 +45,7 @@ namespace BomberMan.Common.Components.StateComponents
                 if (mpressed)
                 {
                     State = BState.DOWN;
-                    Color = Color.Blue;
+                    Color = pressedColor;
                 }
                 else if (!mpressed && prevMpressed)
                 {
@@ -54,7 +57,7 @@ namespace BomberMan.Common.Components.StateComponents
                 else
                 {
                     State = BState.HOVER;
-                    Color = Color.LightBlue;
+                    Color = hoverColor;
                 }
             }
             else
@@ -66,7 +69,7 @@ namespace BomberMan.Common.Components.StateComponents
                 }
                 else
                 {
-                    Color = Color.White;
+                    Color = normalColor;
                 }
             }
             if (State == BState.JUST_RELEASED)
@@ -82,13 +85,13 @@ namespace BomberMan.Common.Components.StateComponents
         }
 
 
-        bool CheckIfButtonContainsPoint(int x, int y)
+        private bool CheckIfButtonContainsPoint(int x, int y)
         {
             return CheckIfRectangleContainsPoint(0, 0, Texture.Width * (x - Rectangle.X) /
                 Rectangle.Width, Texture.Height * (y - Rectangle.Y) / Rectangle.Height);
         }
 
-        bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
+        private bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
         {
             return (x >= tx &&
                 x <= tx + Texture.Width &&
@@ -96,7 +99,7 @@ namespace BomberMan.Common.Components.StateComponents
                 y <= ty + Texture.Height);
         }
 
-        bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
+        private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
         {
             if (CheckIfTextureContainsPoint(tx, ty, x, y))
             {
