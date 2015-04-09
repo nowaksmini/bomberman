@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="BomberManViewModel.DataBaseServices.BoardService">
+    <Position X="0.75" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAQAAAAAAQAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>DataBaseServices\BoardService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.DataBaseServices.GameService">
+    <Position X="6.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AEgIAAAAAAAQAAIAAACAAACAAAAABAAAAAAAAAAAAAE=</HashCode>
+      <FileName>DataBaseServices\GameService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.DataBaseServices.OponentService">
+    <Position X="0.75" Y="2.5" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAECAAAAEAAAAAgAAAAACAYAAAAIAAAAAACAAAAAA=</HashCode>
+      <FileName>DataBaseServices\OponentService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.DataBaseServices.UserService">
+    <Position X="6.25" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACEAQAAAAIAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>DataBaseServices\UserService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

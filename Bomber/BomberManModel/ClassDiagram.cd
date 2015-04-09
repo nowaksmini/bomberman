@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="BomberManDataBase.BomberManContext">
+    <Position X="0.5" Y="0.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>QAAAACAAAAAAAAAAAAIAQAAAAAAIAACAAAAAAAAAAAA=</HashCode>
+      <FileName>BomberManContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.Game">
+    <Position X="8.75" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAABABAAAAAAiAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Entities\Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.Location">
+    <Position X="0.5" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAQAAAAAAAAACAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Entities\Location.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.Oponent">
+    <Position X="4.5" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Entities\Oponent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.OponentLocation">
+    <Position X="0.5" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAgAAAAAIAAAAAAAgAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Entities\OponentLocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.ParticipantState">
+    <Position X="3.75" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Entities\ParticipantState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManDataBase.Entities.User">
+    <Position X="7.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAQAAAgAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
