@@ -1,7 +1,4 @@
-﻿using BomberMan.Common.Components;
-using BomberMan.Common.Components.MovingComponents;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,42 +6,22 @@ using System.Text;
 
 namespace BomberMan.Common.Engines
 {
-    public class RocketEngine : Engine
+    class PlanetEngine: Engine
     {
         private const int SHIFT = 50;
         public float MaxHeight { get; set; }
         public float MaxWidth { get; set; }
 
-        public RocketEngine(List<Texture2D> textures, int objectsCount) : base(textures, objectsCount)
+        public PlanetEngine(List<Texture2D> textures, int objectsCount)
+            : base(textures, objectsCount)
         {
             for (int i = 0; i < objectsAmount; i++)
             {
-                components.Add(GenerateNewRocket());
+                components.Add(GenerateNewPlanet());
             }
         }
 
-        public void Update()
-        {
-            for (int i = 0; i < components.Count; i++)
-            {
-                components[i].Update();
-                if (
-                    components[i].Position.X> MaxWidth + SHIFT||
-                    components[i].Position.X  < 0 - SHIFT||
-                    components[i].Position.Y  < 0 - SHIFT ||
-                    components[i].Position.Y > MaxHeight + SHIFT)
-                {
-                    components.RemoveAt(i);
-                    i--;
-                }
-            }
-            for(int i = objectsAmount - components.Count; i > 0; i--)
-            {
-                components.Add(GenerateNewRocket());
-            }
-        }
-
-        private Rocket GenerateNewRocket()
+        private Component GenerateNewPlanet()
         {
             Texture2D texture = textures[random.Next(textures.Count)];
             float positionY, positionX;

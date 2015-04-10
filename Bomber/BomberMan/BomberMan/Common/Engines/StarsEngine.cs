@@ -14,10 +14,9 @@ namespace BomberMan.Common.Engines
     {
         public Vector2 EmitterLocation { get; set; }
 
-        public StarsEngine(List<Texture2D> textures, Vector2 location) : base(textures)
+        public StarsEngine(List<Texture2D> textures, Vector2 location, int objectsCount) : base(textures, objectsCount)
         {
             EmitterLocation = location;
-            objectsAmount = 7;
         }
 
         public void Update()
@@ -50,9 +49,9 @@ namespace BomberMan.Common.Engines
                         (float)random.NextDouble(),
                         (float)random.NextDouble(),
                         (float)random.NextDouble());
-            float size = (float)random.NextDouble() / (float)(3.0);
+            float scale = (float)random.NextDouble() / (float)(3.0);
             int ttl = 20 + random.Next(40);
-            return new Star(texture, position, velocity, angle, angularVelocity, color, size, ttl);
+            return new Star(texture, position, velocity, angle, angularVelocity, color, scale, ttl);
         }
 
     }

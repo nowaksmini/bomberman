@@ -9,17 +9,13 @@ namespace BomberMan.Common.Components
 {
     public class StateComponent : Component
     {
-        public int Height { get; set; }
-        public int Width { get; set; }
         public Rectangle Rectangle { get; set; }
 
         public StateComponent() : base() { }
 
-        public StateComponent(Texture2D texture, Color color, int height, int width, Rectangle rectangle)
+        public StateComponent(Texture2D texture, Color color, Rectangle rectangle)
             : base (texture, color)
         {
-            Height = height;
-            Width = width;
             Rectangle = rectangle;
         }
 

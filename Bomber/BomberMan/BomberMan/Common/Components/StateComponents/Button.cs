@@ -20,8 +20,8 @@ namespace BomberMan.Common.Components.StateComponents
         private int mx, my;
         private double frameTime;
 
-        public Button(int height, int width, Color color, BState _state, Texture2D texture,
-            Rectangle rectangle, double _timer) : base (texture, color, height, width, rectangle)
+        public Button (Color color, BState _state, Texture2D texture,
+            Rectangle rectangle, double _timer) : base (texture, color, rectangle)
         {
             State = _state;
             Timer = _timer;
@@ -29,7 +29,9 @@ namespace BomberMan.Common.Components.StateComponents
 
         public Button()
         {
-            // TODO: Complete member initialization
+            Color = normalColor;
+            State = BState.UP;
+            Timer = 0.0;
         }
 
         public void Update(int _mx, int _my, double _frameTime, bool _mPressed, bool _prevMPressed)
