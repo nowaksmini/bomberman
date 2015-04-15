@@ -9,6 +9,7 @@ namespace BomberManViewModel.DataAccessObjects
     public class OponentDAO
     {
         public int ID { get; set; }
+        public BomberManModel.OpponentType OpponentType { get; set; }
         public String Description { get; set; }
     }
 }

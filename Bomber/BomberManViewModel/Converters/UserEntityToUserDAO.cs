@@ -15,6 +15,9 @@ namespace BomberManViewModel.Converters
         public UserDAO Convert(User Source)
         {
             UserDAO Target = new UserDAO();
+            Target.ID = Source.ID;
+            Target.Name = Source.Name;
+            Target.Password = Source.Password;
             return Target;
         }
 

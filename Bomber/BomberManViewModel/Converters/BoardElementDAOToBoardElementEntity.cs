@@ -14,6 +14,9 @@ namespace BomberManViewModel.Converters
         public BoardElement Convert(BoardElementDAO Source)
         {
             BoardElement Target = new BoardElement();
+            Target.Description = Source.Description;
+            Target.ElementType = Source.ElementType;
+            Target.ID = Source.ID;
             return Target;
         }
 

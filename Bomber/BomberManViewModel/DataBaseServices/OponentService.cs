@@ -41,7 +41,7 @@ namespace BomberManViewModel.DataBaseServices
             return null;
         }
 
-        static public List<OponentDAO> GetAllOponentsByGameAndLocation(GameDAO gameDAO, LocationDAO oponentLocation, out String message)
+        static public List<OponentDAO> GetAllOponentsByGameAndLocation(GameDAO gameDAO, uint x, uint y, out String message)
         {
             message = null;
             return null;
@@ -53,13 +53,13 @@ namespace BomberManViewModel.DataBaseServices
             return null;
         }
 
-        static public List<OponentLocationDAO> GetAllOponentsWithLocationsByGameAndLocation(GameDAO gameDAO, LocationDAO oponentLocation, out String message)
+        static public List<OponentLocationDAO> GetAllOponentsWithLocationsByGameAndLocation(GameDAO gameDAO,  uint x, uint y, out String message)
         {
             message = null;
             return null;
         }
 
-        static public bool UpdateOponentLocation(OponentLocationDAO gameDAO, LocationDAO oponentLocation, out String message)
+        static public bool UpdateOponentLocation(OponentLocationDAO gameDAO,  uint x, uint y, out String message)
         {
             message = null;
             return false;

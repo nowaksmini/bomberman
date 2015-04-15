@@ -57,29 +57,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccessObjects\BoardElementLocationDAO.cs" />
     <Compile Include="DataBaseServices\BoardService.cs" />
     <Compile Include="DataBaseServices\OponentService.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Converters\BoardElementDAOToBoardElementEntity.cs" />
     <Compile Include="Converters\BoardElementEntityToBoardElementDAO.cs" />
-    <Compile Include="Converters\LocationDAOToLocationEntity.cs" />
-    <Compile Include="Converters\LocationEntityToLocationDAO.cs" />
+    <Compile Include="Converters\BoardElementLocationDAOToBoardElementLocationEntity.cs" />
+    <Compile Include="Converters\BoardElementLocationEntityToBoardElementLocationDAO.cs" />
     <Compile Include="Converters\OponentDAOToOponentEntity.cs" />
     <Compile Include="Converters\OponentEntityToOponentDAO.cs" />
     <Compile Include="Converters\OponentLocationDAOToOponentLocationEntity.cs" />
     <Compile Include="Converters\OponentLocationEntityToOponentLocationDAO.cs" />
-    <Compile Include="Converters\ParticipantStateDAOToParticipantEntity.cs" />
-    <Compile Include="Converters\ParticipantStateEntityToParticipateStateDAO.cs" />
     <Compile Include="Converters\UserEntityToUserDAO.cs" />
     <Compile Include="Converters\GameDAOToGameEntity.cs" />
     <Compile Include="Converters\UserDAOToUserEntity.cs" />
     <Compile Include="Converters\GameEntityToGameDAO.cs" />
     <Compile Include="DataAccessObjects\BoardElementDAO.cs" />
     <Compile Include="DataAccessObjects\GameDAO.cs" />
-    <Compile Include="DataAccessObjects\LocationDAO.cs" />
     <Compile Include="DataAccessObjects\OponentDAO.cs" />
     <Compile Include="DataAccessObjects\OponentLocationDAO.cs" />
-    <Compile Include="DataAccessObjects\ParticipantStateDAO.cs" />
     <Compile Include="DataAccessObjects\UserDAO.cs" />
     <Compile Include="DataBaseServices\GameService.cs" />
     <Compile Include="DataBaseServices\UserService.cs" />
@@ -93,8 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Converters\ClassDiagram1.cd" />
-    <None Include="DataAccessObjects\ClassDiagram1.cd" />
     <None Include="DataBaseServices\ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>

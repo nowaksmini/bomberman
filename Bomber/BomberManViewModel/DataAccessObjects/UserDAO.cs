@@ -11,6 +11,5 @@ namespace BomberManViewModel.DataAccessObjects
         public int ID { get; set; }
         public String Name { get; set; }
         public String Password { get; set; }
-
     }
 }

@@ -16,6 +16,5 @@ namespace BomberManModel.Entities
         public String Password { get; set; }
 
         public virtual ICollection<Game> Game { get; set; }
-
     }
 }

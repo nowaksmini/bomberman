@@ -13,18 +13,20 @@ namespace BomberManModel
         public BomberManContext() : base("BomberMan") {}
 
         public DbSet<Game> Games { get; set; }
-        public DbSet<Location> Locations { get; set; }
+        public DbSet<BoardElementLocation> BoardElementLocations { get; set; }
         public DbSet<Oponent> Oponents { get; set; }
         public DbSet<OponentLocation> OponentLocations { get; set; }
-        public DbSet<ParticipantState> ParticipantStates { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<BoardElement> BoardElements { get; set; }
 
     }
 
-    public enum ElementType
+    public enum BoardElementType
     {
-        SimpleBlock,
-        ComplexBlock,
+        WhiteBlock,
+        GrayBlock,
+        BlackBlock,
+        RedBlock,
         Bomb,
         LifeBonus,
         FastBonus,
@@ -32,5 +34,11 @@ namespace BomberManModel
         InmortalBonus,
         StrenghtBonus,
         BombAmountBonus
+    }
+
+    public enum OpponentType
+    {
+        Octopus,
+        Ghost
     }
 }

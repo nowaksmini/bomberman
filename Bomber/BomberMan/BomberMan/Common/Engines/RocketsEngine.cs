@@ -9,13 +9,13 @@ using System.Text;
 
 namespace BomberMan.Common.Engines
 {
-    public class RocketEngine : Engine
+    public class RocketsEngine : Engine
     {
         private const int SHIFT = 50;
         public float MaxHeight { get; set; }
         public float MaxWidth { get; set; }
 
-        public RocketEngine(List<Texture2D> textures, int objectsCount) : base(textures, objectsCount)
+        public RocketsEngine(List<Texture2D> textures, int objectsCount) : base(textures, objectsCount)
         {
             for (int i = 0; i < objectsAmount; i++)
             {
@@ -27,12 +27,12 @@ namespace BomberMan.Common.Engines
         {
             for (int i = 0; i < components.Count; i++)
             {
-                components[i].Update();
+                ((MovingComponent)components[i]).Update();
                 if (
-                    components[i].Position.X> MaxWidth + SHIFT||
-                    components[i].Position.X  < 0 - SHIFT||
-                    components[i].Position.Y  < 0 - SHIFT ||
-                    components[i].Position.Y > MaxHeight + SHIFT)
+                    ((MovingComponent)components[i]).Position.X> MaxWidth + SHIFT||
+                    ((MovingComponent)components[i]).Position.X < 0 - SHIFT ||
+                    ((MovingComponent)components[i]).Position.Y < 0 - SHIFT ||
+                    ((MovingComponent)components[i]).Position.Y > MaxHeight + SHIFT)
                 {
                     components.RemoveAt(i);
                     i--;

@@ -8,6 +8,7 @@ using BomberMan.Common.Engines;
 using Microsoft.Xna.Framework.Media;
 using BomberMan.Common.Components.StateComponents;
 using System;
+using BomberMan.Common.Engines.StateEngines;
 
   
 namespace BomberMan
@@ -18,7 +19,8 @@ namespace BomberMan
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         StarsEngine starsEngine;
-        RocketEngine rocketeEngine;
+        RocketsEngine rocketeEngine;
+        PlanetEngine planetEngine;
         Texture2D background;
         ScreenType screen = ScreenType.MainMenu;
         MainMenu mainMenu;
@@ -58,7 +60,7 @@ namespace BomberMan
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            UpdateBackground();
+            UpdateBackground(Window.ClientBounds.Width, Window.ClientBounds.Height);
             switch (screen)
             {
                 case ScreenType.MainMenu:
@@ -85,6 +87,7 @@ namespace BomberMan
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
             spriteBatch.End();
+            planetEngine.Draw(spriteBatch);
             rocketeEngine.Draw(spriteBatch);
             switch (screen)
             {
@@ -135,14 +138,21 @@ namespace BomberMan
             starsEngine = new StarsEngine(textures, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), random.Next(5) + 5);
             List<Texture2D> rocket = new List<Texture2D>();
             rocket.Add(Content.Load<Texture2D>(@"Images/AllMenus/Shuttle"));
-            rocketeEngine = new RocketEngine(rocket, random.Next(5) + 3);
+            rocketeEngine = new RocketsEngine(rocket, random.Next(5) + 3);
+            List<Texture2D> planets = new List<Texture2D>();
+            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/earth"));
+            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/saturn"));
+            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/dyingstar"));
+            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/redstar"));
+            planetEngine = new PlanetEngine(planets, random.Next(4) + 4);
             song = (Content.Load<Song>(@"Music/OneRepublic"));
             MediaPlayer.Play(song);
             font = Content.Load<SpriteFont>(@"Fonts/Input");
         }
 
-        private void UpdateBackground()
+        private void UpdateBackground(int windowWidth, int windowHeight)
         {
+            planetEngine.Update(windowWidth, windowHeight);
             rocketeEngine.MaxWidth = Window.ClientBounds.Width;
             rocketeEngine.MaxHeight = Window.ClientBounds.Height;
             rocketeEngine.Update();

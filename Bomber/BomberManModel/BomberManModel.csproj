@@ -53,18 +53,15 @@
   <ItemGroup>
     <Compile Include="BomberManContext.cs" />
     <Compile Include="Entities\BoardElement.cs" />
+    <Compile Include="Entities\BoardElementLocation.cs" />
     <Compile Include="Entities\Game.cs" />
-    <Compile Include="Entities\Location.cs" />
     <Compile Include="Entities\Oponent.cs" />
     <Compile Include="Entities\OponentLocation.cs" />
-    <Compile Include="Entities\ParticipantState.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

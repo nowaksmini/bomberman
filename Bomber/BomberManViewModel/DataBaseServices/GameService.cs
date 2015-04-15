@@ -42,7 +42,7 @@ namespace BomberManViewModel.DataBaseServices
             return false;
         }
 
-        static public bool UpdatePlayerLocationByGame(GameDAO gameDAO, LocationDAO location, out String message)
+        static public bool UpdatePlayerLocationByGame(GameDAO gameDAO,  uint x, uint y, out String message)
         {
             message = null;
             return false;
@@ -60,7 +60,7 @@ namespace BomberManViewModel.DataBaseServices
             return null;
         }
 
-        static public List<GameDAO> GetLastGamesForUser(UserDAO userDAO,int n, out String message)
+        static public List<GameDAO> GetLastGamesForUser(UserDAO userDAO, int n, out String message)
         {
             message = null;
             return null;

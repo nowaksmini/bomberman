@@ -10,7 +10,7 @@ namespace BomberManModel.Entities
     {
         public int ID { get; set; }
         public String Description { get; set; }
-
+        public OpponentType OpponentType { get; set; }
         public virtual ICollection<OponentLocation> OponentLocation { get; set; }
     }
 }

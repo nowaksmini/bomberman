@@ -9,9 +9,10 @@ namespace BomberManViewModel.DataAccessObjects
     public class OponentLocationDAO
     {
         public int ID { get; set; }
+        public bool IsAlive { get; set; }
         public OponentDAO Oponent { get; set; }
-        public LocationDAO Location { get; set; }
-        public ParticipantStateDAO State { get; set; }
+        public uint XLocation { get; set; }
+        public uint YLocation { get; set; }
         public GameDAO Game { get; set; }
     }
 }

@@ -9,8 +9,6 @@ namespace BomberManModel.Entities
     {
         public int ID { get; set; }
         public String Description { get; set; }
-        public virtual Location Location { get; set; }
-        public virtual Game Game { get; set; }
-        public ElementType ElementType { get; set; }
+        public BoardElementType ElementType { get; set; }
     }
 }

@@ -10,8 +10,6 @@ namespace BomberManViewModel.DataAccessObjects
     {
         public int ID { get; set; }
         public String Description { get; set; }
-        public LocationDAO Location { get; set; }
-        public GameDAO Game { get; set; }
-        public BomberManModel.ElementType ElementType { get; set; }
+        public BomberManModel.BoardElementType ElementType { get; set; }
     }
 }

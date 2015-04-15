@@ -14,6 +14,9 @@ namespace BomberManViewModel.Converters
         public Oponent Convert(OponentDAO Source)
         {
             Oponent Target = new Oponent();
+            Target.ID = Source.ID;
+            Target.Description = Source.Description;
+            Target.OpponentType = Source.OpponentType;
             return Target;
         }
 

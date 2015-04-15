@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BomberMan.Common
 {
-    public class Component
+    public abstract class Component
     {
         public Texture2D Texture { get; set; }
         public Color Color { get; set; }
@@ -19,5 +19,7 @@ namespace BomberMan.Common
             Texture = texture;
             Color = color;
         }
+
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

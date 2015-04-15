@@ -83,25 +83,27 @@
     <Compile Include="Common\Component.cs" />
     <Compile Include="Common\Components\MovingComponent.cs" />
     <Compile Include="Common\Components\StateComponent.cs" />
+    <Compile Include="Common\Components\StateComponents\Block.cs" />
     <Compile Include="Common\Components\StateComponents\Button.cs" />
     <Compile Include="Common\Components\MovingComponents\Star.cs" />
     <Compile Include="Common\Components\MovingComponents\Rocket.cs" />
     <Compile Include="Common\Components\StateComponents\TextInput.cs" />
     <Compile Include="Common\Configuration.cs" />
     <Compile Include="Common\Engine.cs" />
+    <Compile Include="Common\Engines\BoardEngine.cs" />
     <Compile Include="Common\Engines\PlanetEngine.cs" />
-    <Compile Include="Common\Engines\RocketEngine.cs" />
+    <Compile Include="Common\Engines\RocketsEngine.cs" />
     <Compile Include="Common\Engines\StarsEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Common\Screen.cs" />
-    <Compile Include="Menus\Game.cs" />
-    <Compile Include="Menus\HelpMenu.cs" />
-    <Compile Include="Menus\HighScores.cs" />
-    <Compile Include="Menus\LoginMenu.cs" />
-    <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Screens\Game.cs" />
+    <Compile Include="Screens\HelpMenu.cs" />
+    <Compile Include="Screens\HighScores.cs" />
+    <Compile Include="Screens\LoginMenu.cs" />
+    <Compile Include="Screens\MainMenu.cs" />
+    <Compile Include="Screens\SettingsMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

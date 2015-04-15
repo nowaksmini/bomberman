@@ -14,6 +14,15 @@ namespace BomberManViewModel.Converters
         public Game Convert(GameDAO Source)
         {
             Game Target = new Game();
+            Target.Finished = Source.Finished;
+            Target.ID = Source.ID;
+            Target.Level = Source.Level;
+            Target.Life = Source.Life;
+            Target.PlayerXLocation = Source.PlayerXLocation;
+            Target.PlayerYLocation = Source.PlayerYLocation;
+            Target.Points = Source.Points;
+            Target.SaveTime = Source.SaveTime;
+            Target.User = Mapper.Map<User>(Source.User);
             return Target;
         }
 
