@@ -98,7 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Common\Screen.cs" />
-    <Compile Include="Screens\Game.cs" />
+    <Compile Include="Screens\GameScreen.cs" />
     <Compile Include="Screens\HelpMenu.cs" />
     <Compile Include="Screens\HighScores.cs" />
     <Compile Include="Screens\LoginMenu.cs" />

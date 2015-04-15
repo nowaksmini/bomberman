@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Media;
 using BomberMan.Common.Components.StateComponents;
 using System;
 using BomberMan.Common.Engines.StateEngines;
+using BomberManViewModel.DataAccessObjects;
+using BomberMan.Common.Engines.DynamicEngines;
 
   
 namespace BomberMan
@@ -22,8 +24,9 @@ namespace BomberMan
         RocketsEngine rocketeEngine;
         PlanetEngine planetEngine;
         Texture2D background;
-        ScreenType screen = ScreenType.MainMenu;
+        ScreenType screen = ScreenType.Game;
         MainMenu mainMenu;
+        GameScreen game;
         Song song;
         SpriteFont font;
         TextInput textInput = new TextInput();
@@ -35,7 +38,9 @@ namespace BomberMan
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
+            DataManager.InitContext();
             mainMenu = new MainMenu();
+            game = new GameScreen(new GameDAO() { ID = 1 });
         }
  
         protected override void Initialize()
@@ -49,6 +54,7 @@ namespace BomberMan
             spriteBatch = new SpriteBatch(GraphicsDevice);
             LoadBackGround();
             LoadMainMenu();
+            LoadGame();
         }
  
         protected override void UnloadContent()
@@ -72,6 +78,7 @@ namespace BomberMan
                 case ScreenType.HighScores:
                     break;
                 case ScreenType.Game:
+                    game.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.LoadGame:
                     break;
@@ -102,6 +109,7 @@ namespace BomberMan
                 case ScreenType.HighScores:
                     break;
                 case ScreenType.Game:
+                    game.Draw(spriteBatch);
                     break;
                 case ScreenType.LoadGame:
                     break;
@@ -125,6 +133,23 @@ namespace BomberMan
                 Content.Load<Texture2D>(@"Images/MainMenu/settings");
             mainMenu.optionButtons[4].Texture =
                 Content.Load<Texture2D>(@"Images/MainMenu/LogOut");
+        }
+
+        private void LoadGame()
+        {
+            game.BlockTextures = new List<Texture2D>();
+            Texture2D[] blocks = new Texture2D[4];
+            blocks[(int)BlockKind.Black] =  Content.Load<Texture2D>(@"Images/Game/SolidBlock");
+            blocks[(int)BlockKind.White] = Content.Load<Texture2D>(@"Images/Game/Block");
+            blocks[(int)BlockKind.Grey] = Content.Load<Texture2D>(@"Images/Game/DeletableBlock");
+            blocks[(int)BlockKind.Red] =  Content.Load<Texture2D>(@"Images/Game/BombBlock");
+            for (int i = 0; i < blocks.Length; i++ )
+            {
+                game.BlockTextures.Add(blocks[i]);
+            }
+            game.BombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
+            game.boardEngine = new BoardEngine(game.BlockTextures, 16, 8);
+
         }
 
         private void LoadBackGround()

@@ -17,11 +17,14 @@ namespace BomberMan.Common.Components.StateComponents
             BlockType = blockType;
         }
 
-        public enum BlockKind
-        {
-            Black,
-            Grey,
-            Red,
-        }
     }
+
+    public enum BlockKind
+    {
+        Black,
+        Grey,
+        Red,
+        White
+    }
+
 }

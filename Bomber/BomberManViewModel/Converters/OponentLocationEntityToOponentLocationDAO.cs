@@ -17,8 +17,8 @@ namespace BomberManViewModel.Converters
             Target.Game = Mapper.Map<GameDAO>(Source.Game);
             Target.ID = Source.ID;
             Target.IsAlive = Source.IsAlive;
-            Target.XLocation = Source.XLocation;
-            Target.YLocation = Source.YLocation;
+            Target.XLocation = (uint)Source.XLocation;
+            Target.YLocation = (uint)Source.YLocation;
             Target.Oponent = Mapper.Map<OponentDAO>(Source.Oponent);
             return Target;
         }

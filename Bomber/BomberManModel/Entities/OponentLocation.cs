@@ -10,8 +10,8 @@ namespace BomberManModel.Entities
     {
         public int ID { get; set; }
         public bool IsAlive { get; set; }
-        public uint XLocation { get; set; }
-        public uint YLocation { get; set; }
+        public int XLocation { get; set; }
+        public int YLocation { get; set; }
         public virtual Oponent Oponent { get; set; }
         public virtual Game Game { get; set; }
     }

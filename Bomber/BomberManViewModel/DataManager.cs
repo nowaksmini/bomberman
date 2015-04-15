@@ -13,12 +13,13 @@ namespace BomberManViewModel
 {
     public class DataManager
     {
-        static bool init = false;
+        static bool init = true;
         
         static public BomberManContext DataBaseContext;
 
         static public void InitContext(BomberManContext Context = null)
         {
+            CreateMappers();
             if (Context == null) 
                 DataBaseContext = new BomberManContext();
             else 
@@ -27,7 +28,6 @@ namespace BomberManViewModel
                 return; 
             init = true;
             CreateGame();
-            CreateMappers();
         }
 
         private static void CreateMappers() 
@@ -88,8 +88,8 @@ namespace BomberManViewModel
                     ID = 1,
                     IsAlive = true,
                     Game = game.First<Game>(),
-                    XLocation = (uint)i+1,
-                    YLocation = (uint)i+1,
+                    XLocation = i+1,
+                    YLocation = i+1,
                     Oponent = oponents.ElementAt<Oponent>(i)
                 });
 
@@ -103,8 +103,8 @@ namespace BomberManViewModel
                 {
                     ID = 1,
                     Game = game.First<Game>(),
-                    XLocation = (uint)i + 1,
-                    YLocation = (uint)i + 1,
+                    XLocation = i + 1,
+                    YLocation = i + 1,
                     BoardElement = elements.ElementAt<BoardElement>(i),
                     Timeout = 10000
                 });

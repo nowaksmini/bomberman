@@ -37,20 +37,22 @@ namespace BomberManViewModel.DataBaseServices
             return false;
         }
 
-        static public List<BoardElementDAO> GetAllBlocksForGame(GameDAO gameDAO)
+        static public List<BoardElementLocationDAO> GetAllBlocksForGame(GameDAO gameDAO)
         {
-            List<BoardElementDAO> blocks = new List<BoardElementDAO>();
-            var query = from element in DataManager.DataBaseContext.BoardElements
-                        where element.ElementType == BomberManModel.BoardElementType.BlackBlock || 
-                        element.ElementType == BomberManModel.BoardElementType.GrayBlock ||
-                        element.ElementType == BomberManModel.BoardElementType.WhiteBlock ||
-                        element.ElementType == BomberManModel.BoardElementType.RedBlock
+            List<BoardElementLocationDAO> blocks = new List<BoardElementLocationDAO>();
+            var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                        where element.Game.ID == gameDAO.ID &&
+                        element.BoardElement.ElementType == BomberManModel.BoardElementType.BlackBlock || 
+                        element.BoardElement.ElementType == BomberManModel.BoardElementType.GrayBlock ||
+                        element.BoardElement.ElementType == BomberManModel.BoardElementType.WhiteBlock ||
+                        element.BoardElement.ElementType == BomberManModel.BoardElementType.RedBlock
+                        orderby element.XLocation, element.YLocation
                         select element;
             if (query == null) return blocks;
-            BoardElement[] bElements = query.ToArray<BoardElement>();
+            BoardElementLocation[] bElements = query.ToArray<BoardElementLocation>();
             for(int i = 0; i < bElements.Length; i++)
             {
-                BoardElementDAO block = Mapper.Map<BoardElement, BoardElementDAO>(bElements[i]);
+                BoardElementLocationDAO block = Mapper.Map<BoardElementLocation, BoardElementLocationDAO>(bElements[i]);
                 blocks.Add(block);
             }
             return blocks;
