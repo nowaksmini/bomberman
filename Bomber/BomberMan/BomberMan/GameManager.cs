@@ -24,7 +24,7 @@ namespace BomberMan
         RocketsEngine rocketeEngine;
         PlanetEngine planetEngine;
         Texture2D background;
-        ScreenType screen = ScreenType.Game;
+        ScreenType screen = ScreenType.MainMenu;
         MainMenu mainMenu;
         GameScreen game;
         Song song;
@@ -122,7 +122,7 @@ namespace BomberMan
 
         private void LoadMainMenu()
         {
-            mainMenu.Title.Texture = Content.Load<Texture2D>(@"Images/AllMenus/BomberMan");
+            //mainMenu.Title.Texture = Content.Load<Texture2D>(@"Images/AllMenus/BomberMan");
             mainMenu.optionButtons[0].Texture =
                 Content.Load<Texture2D>(@"Images/MainMenu/NewGame");
             mainMenu.optionButtons[1].Texture =

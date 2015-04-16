@@ -77,7 +77,7 @@ namespace BomberMan.Common.Engines
                         (float)random.NextDouble(),
                         (float)random.NextDouble());
             float scale = (float)random.NextDouble() + (float)0.05;
-            return new Rocket(texture, position, velocity, angle, color, scale);
+            return new Rocket(texture, position, velocity, angle, color, new Vector2(scale, scale));
         }
     }
 }

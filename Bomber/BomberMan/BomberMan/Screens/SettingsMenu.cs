@@ -29,7 +29,7 @@ namespace BomberMan.Screens
                 buttons[i].State = BState.UP;
                 buttons[i].Color = Color.White;
                 buttons[i].Timer = 0.0;
-                buttons[i].Rectangle = new Rectangle(x, y, windowWidth / NUMBER_OF_BUTTONS, windowHeight / NUMBER_OF_BUTTONS);
+                //buttons[i].Rectangle = new Rectangle(x, y, windowWidth / NUMBER_OF_BUTTONS, windowHeight / NUMBER_OF_BUTTONS);
                 y += windowHeight / 4;
             }
         }
@@ -48,7 +48,7 @@ namespace BomberMan.Screens
                 (NUMBER_OF_BUTTONS % 2) * windowHeight / (2 * NUMBER_OF_BUTTONS);
             for (int i = 0; i < NUMBER_OF_BUTTONS; i++ )
             {
-                buttons[i].Rectangle = new Rectangle(x, y, windowWidth / NUMBER_OF_BUTTONS, windowHeight / NUMBER_OF_BUTTONS);
+                //buttons[i].Rectangle = new Rectangle(x, y, windowWidth / NUMBER_OF_BUTTONS, windowHeight / NUMBER_OF_BUTTONS);
                 y += windowHeight / NUMBER_OF_BUTTONS;
                 buttons[i].Update(mouse_state.X, mouse_state.Y, frame_time, mpressed, prevMpressed);
             }

@@ -51,7 +51,7 @@ namespace BomberMan.Common.Engines
                         (float)random.NextDouble());
             float scale = (float)random.NextDouble() / (float)(3.0);
             int ttl = 20 + random.Next(40);
-            return new Star(texture, position, velocity, angle, angularVelocity, color, scale, ttl);
+            return new Star(texture, position, velocity, angle, angularVelocity, color, new Vector2(scale), ttl);
         }
 
     }

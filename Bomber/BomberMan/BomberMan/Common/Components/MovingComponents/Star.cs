@@ -14,7 +14,7 @@ namespace BomberMan.Common.Components.MovingComponents
         public float AngularVelocity { get; set; }
 
         public Star(Texture2D texture, Vector2 position, Vector2 velocity,
-            float angle, float angularVelocity, Color color, float scale, int ttl)
+            float angle, float angularVelocity, Color color, Vector2 scale, int ttl)
             : base (texture, position, velocity, angle, scale, color) 
         {
             TTL = ttl;

@@ -10,7 +10,7 @@ namespace BomberMan.Common.Components.MovingComponents
     public class Rocket : MovingComponent
     {
         public Rocket(Texture2D texture, Vector2 position, Vector2 velocity,
-                float angle, Color color, float scale)
+                float angle, Color color, Vector2 scale)
             : base(texture, position, velocity, angle, scale, color) { }
 
         public override void Update()

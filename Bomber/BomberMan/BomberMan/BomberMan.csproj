@@ -82,7 +82,6 @@
   <ItemGroup>
     <Compile Include="Common\Component.cs" />
     <Compile Include="Common\Components\MovingComponent.cs" />
-    <Compile Include="Common\Components\StateComponent.cs" />
     <Compile Include="Common\Components\StateComponents\Block.cs" />
     <Compile Include="Common\Components\StateComponents\Button.cs" />
     <Compile Include="Common\Components\MovingComponents\Star.cs" />

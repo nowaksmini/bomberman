@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BomberMan.Common.Components.StateComponents
 {
-    public class Button : StateComponent
+    public class Button : Component
     {
         public BState State { get; set; }
         public double Timer { get; set; }
@@ -20,8 +20,8 @@ namespace BomberMan.Common.Components.StateComponents
         private int mx, my;
         private double frameTime;
 
-        public Button (Color color, BState _state, Texture2D texture,
-            Rectangle rectangle, double _timer) : base (texture, color, rectangle)
+        public Button(BState _state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, double _timer)
+            : base(texture, color, position, scale, angle)
         {
             State = _state;
             Timer = _timer;
@@ -89,20 +89,21 @@ namespace BomberMan.Common.Components.StateComponents
 
         private bool CheckIfButtonContainsPoint(int x, int y)
         {
-            return CheckIfRectangleContainsPoint(0, 0, Texture.Width * (x - Rectangle.X) /
-                Rectangle.Width, Texture.Height * (y - Rectangle.Y) / Rectangle.Height);
+            return CheckIfRectangleContainsPoint(0, 0, (int) (((float)x - (Position.X - (float)Texture.Width * Scale.X/(float)2 )) / Scale.X),
+                (int)(((float)y - (Position.Y - (float)Texture.Height * Scale.Y / (float)2)) / Scale.Y));
         }
 
         private bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
         {
             return (x >= tx &&
-                x <= tx + Texture.Width &&
+                x <= tx + (float)Texture.Width &&
                 y >= ty &&
-                y <= ty + Texture.Height);
+                y <= ty + (float)Texture.Height);
         }
 
         private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
         {
+           // if (CheckIfTextureContainsPoint(tx, ty, x, y)) return true;
             if (CheckIfTextureContainsPoint(tx, ty, x, y))
             {
                 uint[] data = new uint[Texture.Width * Texture.Height];
@@ -110,8 +111,7 @@ namespace BomberMan.Common.Components.StateComponents
                 if ((x - (int)tx) + (y - (int)ty) *
                     Texture.Width < Texture.Width * Texture.Height)
                 {
-                    return ((data[
-                        (x - (int)tx) + (y - (int)ty) * Texture.Width] & 0xFF000000) >> 24) > 20;
+                    return ((data[(x - (int)tx) + (y - (int)ty) * Texture.Width] & 0xFF000000) >> 24) > 20;
                 }
             }
             return false;

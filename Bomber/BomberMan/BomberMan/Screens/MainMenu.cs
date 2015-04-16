@@ -1,4 +1,5 @@
-﻿using BomberMan.Common.Components;
+﻿using BomberMan.Common;
+using BomberMan.Common.Components;
 using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,15 +18,18 @@ namespace BomberMan.Screens
         private bool mousePressed, prevMousePressed = false;
         private KeyboardState KeyboardState, LastKeyboardState;
         private const int GAP = 10;
-        public StateComponent Title { get; set; }
+        private const int SHIFT = 100;
+        //public Component Title { get; set; }
 
         public MainMenu()
         {
-            Title = new StateComponent();
-            Title.Color = Color.White;
+            //Title = new Component();
+            //Title.Color = Color.White;
             for (int i = 0; i < OPTIONS; i++)
             {
                 optionButtons[i] = new Button();
+                optionButtons[i].Angle = 0;
+                optionButtons[i].Color = Color.Transparent;
             }
         }
 
@@ -38,17 +42,20 @@ namespace BomberMan.Screens
             int my = mouse_state.Y;
             prevMousePressed = mousePressed;
             mousePressed = mouse_state.LeftButton == ButtonState.Pressed;
-            int width = windowWidth / (OPTIONS - 1);
-            int height = windowHeight / (OPTIONS + (OPTIONS - 3)/2);
-            int x = (windowWidth - width)/2;
-            int y = height /2;
-            Title.Rectangle = new Rectangle (windowWidth / (3), y, windowWidth / (3), (int)(2 * height));
-            y += height;
+            int width = windowWidth/ 4;
+            int height = (windowHeight - 2 * SHIFT - (OPTIONS)*GAP )/ OPTIONS;
+            int x = (windowWidth)/2;
+            int y = SHIFT + height/2;
+            //Vector2 scale = new Vector2((float)width / (float)texture.Width, (float)height / (float)texture.Height);
+           // Block block = new Block(texture, Color.Transparent, new Vector2(x, y), scale, 0, blockType);
+            //Title.Rectangle = new Rectangle (windowWidth / (3), y, windowWidth / (3), (int)(2 * height));
             for (int i = 0; i < OPTIONS; i++ )
             {
-                y += height / 2 + GAP;
-                optionButtons[i].Rectangle = new Rectangle(x, y, width, height);
+                optionButtons[i].Position = new Vector2(x,y);
+                optionButtons[i].Scale = new Vector2((float)width / (float)optionButtons[i].Texture.Width,
+                    (float)height / (float)optionButtons[i].Texture.Height);
                 optionButtons[i].Update(mouse_state.X, mouse_state.Y, frame_time, mousePressed, prevMousePressed);
+                y += height + GAP;
             }
             HandleKeyboard();
         }
@@ -56,7 +63,7 @@ namespace BomberMan.Screens
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            Title.Draw(spriteBatch);
+            //Title.Draw(spriteBatch);
             for (int i = 0; i < OPTIONS; i++)
                 optionButtons[i].Draw(spriteBatch);
             spriteBatch.End();
