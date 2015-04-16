@@ -103,7 +103,6 @@ namespace BomberMan.Common.Components.StateComponents
 
         private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
         {
-           // if (CheckIfTextureContainsPoint(tx, ty, x, y)) return true;
             if (CheckIfTextureContainsPoint(tx, ty, x, y))
             {
                 uint[] data = new uint[Texture.Width * Texture.Height];

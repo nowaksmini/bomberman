@@ -24,7 +24,7 @@ namespace BomberMan
         RocketsEngine rocketeEngine;
         PlanetEngine planetEngine;
         Texture2D background;
-        ScreenType screen = ScreenType.MainMenu;
+        ScreenType screen = ScreenType.Game;
         MainMenu mainMenu;
         GameScreen game;
         Song song;
@@ -148,7 +148,7 @@ namespace BomberMan
                 game.BlockTextures.Add(blocks[i]);
             }
             game.BombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
-            game.boardEngine = new BoardEngine(game.BlockTextures, 16, 8);
+            game.boardEngine = new BoardEngine(game.BlockTextures, 12, 16);
 
         }
 

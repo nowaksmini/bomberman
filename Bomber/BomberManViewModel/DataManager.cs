@@ -13,7 +13,7 @@ namespace BomberManViewModel
 {
     public class DataManager
     {
-        static bool init = true;
+        static bool init = false;
         
         static public BomberManContext DataBaseContext;
 
@@ -97,19 +97,22 @@ namespace BomberManViewModel
             oponentsLocations.ForEach(s => DataBaseContext.OponentLocations.Add(s));
             DataBaseContext.SaveChanges();
             var elementsLocations = new List<BoardElementLocation>();
-            for (int i = 0; i < elements.Count; i++)
-            {
-                elementsLocations.Add(new BoardElementLocation
+            int w = 0;
+            for (int j = 0; j < 12; j++ )
+                for (int i = 0; i < 16; i++)
                 {
-                    ID = 1,
-                    Game = game.First<Game>(),
-                    XLocation = i + 1,
-                    YLocation = i + 1,
-                    BoardElement = elements.ElementAt<BoardElement>(i),
-                    Timeout = 10000
-                });
+                    elementsLocations.Add(new BoardElementLocation
+                    {
+                        ID = w+1,
+                        Game = game.First<Game>(),
+                        XLocation = i,
+                        YLocation = j,
+                        BoardElement = elements.ElementAt<BoardElement>(w%4 == 0? 1 : 10),
+                        Timeout = 10000
+                    });
+                    w++;
 
-            }
+                }
             elementsLocations.ForEach(s => DataBaseContext.BoardElementLocations.Add(s));
             DataBaseContext.SaveChanges();
         }
