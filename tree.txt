@@ -1,0 +1,272 @@
+ 
+\---BomberManGame
+    |   BomberManDataBase.sln
+    |   UpgradeLog.htm
+    |   
+    +---BomberMan
+    |   +---BomberMan
+    |   |   |   App.config
+    |   |   |   Game.ico
+    |   |   |   GameManager.cs
+    |   |   |   GameThumbnail.png
+    |   |   |   packages.config
+    |   |   |   Program.cs
+    |   |   |   Utils.cs
+    |   |   |   
+    |   |   +---Common
+    |   |   |   |   Component.cs
+    |   |   |   |   Engine.cs
+    |   |   |   |   Screen.cs
+    |   |   |   |   
+    |   |   |   +---Components
+    |   |   |   |   |   MovingComponent.cs
+    |   |   |   |   |   
+    |   |   |   |   +---MovingComponents
+    |   |   |   |   |       Rocket.cs
+    |   |   |   |   |       Star.cs
+    |   |   |   |   |       
+    |   |   |   |   \---StateComponents
+    |   |   |   |           Block.cs
+    |   |   |   |           Button.cs
+    |   |   |   |           CheckBox.cs
+    |   |   |   |           Label.cs
+    |   |   |   |           ProgressBar.cs
+    |   |   |   |           TextInput.cs
+    |   |   |   |           
+    |   |   |   \---Engines
+    |   |   |           BoardEngine.cs
+    |   |   |           PlanetEngine.cs
+    |   |   |           RocketsEngine.cs
+    |   |   |           SpecialElementsEngine.cs
+    |   |   |           StarsEngine.cs
+    |   |   |           
+    |   |   +---Properties
+    |   |   |       AssemblyInfo.cs
+    |   |   |       
+    |   |   \---Screens
+    |   |       |   GameScreen.cs
+    |   |       |   HelpMenuScreen.cs
+    |   |       |   HighScoresScreen.cs
+    |   |       |   LoginScreen.cs
+    |   |       |   Menu.cs
+    |   |       |   
+    |   |       \---Menus
+    |   |               LoadGameScreen.cs
+    |   |               MainMenuScreen.cs
+    |   |               SettingsScreen.cs
+    |   |               
+    |   \---BomberManContent
+    |       |   BomberManContent.contentproj
+    |       |   high_scores.png
+    |       |   
+    |       +---Fonts
+    |       |       Input.spritefont
+    |       |       
+    |       +---Images
+    |       |   +---Common
+    |       |   +---Game
+    |       |   +---Help
+    |       |   +---HighScores
+    |       |   +---LoadGame
+    |       |   +---Login
+    |       |   +---MainMenu
+    |       |   \---Settings
+    |       +---Music
+    +---BomberManModel
+    |   |   App.config
+    |   |   BomberManContext.cs
+    |   |   packages.config
+    |   +---Entities
+    |   |       BoardElement.cs
+    |   |       BoardElementLocation.cs
+    |   |       entities.cd
+    |   |       Game.cs
+    |   |       Oponent.cs
+    |   |       OponentLocation.cs
+    |   |       User.cs
+    |   \---Properties
+    |           AssemblyInfo.cs
+    |           
+    +---BomberManViewModel
+    |   |   App.config
+    |   |   DataManager.cs
+    |   |   packages.config
+    |   +---Converters
+    |   |       BoardElementDAOToBoardElementEntity.cs
+    |   |       BoardElementEntityToBoardElementDAO.cs
+    |   |       BoardElementLocationDAOToBoardElementLocationEntity.cs
+    |   |       BoardElementLocationEntityToBoardElementLocationDAO.cs
+    |   |       GameDAOToGameEntity.cs
+    |   |       GameEntityToGameDAO.cs
+    |   |       OponentDAOToOponentEntity.cs
+    |   |       OponentEntityToOponentDAO.cs
+    |   |       OponentLocationDAOToOponentLocationEntity.cs
+    |   |       OponentLocationEntityToOponentLocationDAO.cs
+    |   |       UserDAOToUserEntity.cs
+    |   |       UserEntityToUserDAO.cs
+    |   |       
+    |   +---DataAccessObjects
+    |   |       BoardElementDAO.cs
+    |   |       BoardElementLocationDAO.cs
+    |   |       ClassDiagram1.cd
+    |   |       GameDAO.cs
+    |   |       OponentDAO.cs
+    |   |       OponentLocationDAO.cs
+    |   |       UserDAO.cs
+    |   |       
+    |   +---DataBaseServices
+    |   |       BoardService.cs
+    |   |       ClassDiagram1.cd
+    |   |       GameService.cs
+    |   |       OponentService.cs
+    |   |       UserService.cs
+    |   |       
+    |   \---Properties
+    |           AssemblyInfo.cs
+    |           
+    +---GifAnimation
+    |   |   GifAnimation.cs
+    |   |   GifAnimation.csproj
+    |   |   GifAnimationContentTypeReader.cs
+    |   \---Properties
+    |           AssemblyInfo.cs
+    |           
+    +---GifAnimation.Pipeline
+    |   |   GifAminationImporter.cs
+    |   |   GifAnimation.Pipeline.csproj
+    |   |   GifAnimationContent.cs
+    |   |   GifAnimationContentTypeWriter.cs
+    |   |   GifAnimationProcessor.cs
+    |   |   Quantizer.cs
+    |   \---Properties
+    |           AssemblyInfo.cs
+    |           
+    \---packages
+        |   repositories.config
+        |   
+        +---AutoMapper.3.3.1
+        |   |   AutoMapper.3.3.1.nupkg
+        |   |   AutoMapper.3.3.1.nuspec
+        |   |   
+        |   +---lib
+        |   |   +---MonoAndroid
+        |   |   |       AutoMapper.Android.dll
+        |   |   |       AutoMapper.Android.pdb
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---MonoTouch
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.iOS.dll
+        |   |   |       AutoMapper.iOS.pdb
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---net40
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.Net4.dll
+        |   |   |       AutoMapper.Net4.pdb
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---portable-windows8+net40+wp8+sl5+MonoAndroid+MonoTouch
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---portable-windows8+net40+wp8+wpa81+sl5+MonoAndroid+MonoTouch
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---sl5
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.SL5.dll
+        |   |   |       AutoMapper.SL5.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---windows8
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.WinRT.dll
+        |   |   |       AutoMapper.WinRT.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   +---wp8
+        |   |   |       AutoMapper.dll
+        |   |   |       AutoMapper.pdb
+        |   |   |       AutoMapper.WP8.dll
+        |   |   |       AutoMapper.WP8.pdb
+        |   |   |       AutoMapper.xml
+        |   |   |       
+        |   |   \---wpa81
+        |   |           AutoMapper.dll
+        |   |           AutoMapper.pdb
+        |   |           AutoMapper.WPA81.dll
+        |   |           AutoMapper.WPA81.pdb
+        |   |           AutoMapper.xml
+        |   |           
+        |   \---tools
+        |       |   AutoMapper.targets
+        |       |   
+        |       +---MonoAndroid
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       +---MonoTouch
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       +---net40
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       +---sl5
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       +---windows8
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       +---wp8
+        |       |       Install.ps1
+        |       |       uninstall.ps1
+        |       |       
+        |       \---wpa81
+        |               Install.ps1
+        |               uninstall.ps1
+        |               
+        \---EntityFramework.6.1.3
+            |   EntityFramework.6.1.3.nupkg
+            |   EntityFramework.6.1.3.nuspec
+            |   
+            +---content
+            |       App.config.transform
+            |       Web.config.transform
+            |       
+            +---lib
+            |   +---net40
+            |   |       EntityFramework.dll
+            |   |       EntityFramework.SqlServer.dll
+            |   |       EntityFramework.SqlServer.xml
+            |   |       EntityFramework.xml
+            |   |       
+            |   \---net45
+            |           EntityFramework.dll
+            |           EntityFramework.SqlServer.dll
+            |           EntityFramework.SqlServer.xml
+            |           EntityFramework.xml
+            |           
+            \---tools
+                    about_EntityFramework.help.txt
+                    EntityFramework.PowerShell.dll
+                    EntityFramework.PowerShell.Utility.dll
+                    EntityFramework.psd1
+                    EntityFramework.psm1
+                    init.ps1
+                    install.ps1
+                    migrate.exe
+                    

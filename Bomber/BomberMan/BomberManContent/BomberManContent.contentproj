@@ -30,35 +30,35 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\shuttle.png">
+    <Compile Include="Images\Common\shuttle.png">
       <Name>shuttle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\stars.jpg">
+    <Compile Include="Images\Common\stars.jpg">
       <Name>stars</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\heart.png">
+    <Compile Include="Images\Common\heart.png">
       <Name>heart</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\star.png">
+    <Compile Include="Images\Common\star.png">
       <Name>star</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\circle.png">
+    <Compile Include="Images\Common\circle.png">
       <Name>circle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -106,7 +106,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\Back.png">
+    <Compile Include="Images\Common\Back.png">
       <Name>Back</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -131,42 +131,42 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\earth.png">
+    <Compile Include="Images\Common\earth.png">
       <Name>earth</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\Frame - Copy %282%29.png">
+    <Compile Include="Images\Common\Frame - Copy %282%29.png">
       <Name>Frame - Copy %282%29</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\LoginMenu\LogIn.png">
+    <Compile Include="Images\Login\LogIn.png">
       <Name>LogIn</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\NoSound.png">
+    <Compile Include="Images\Common\NoSound.png">
       <Name>NoSound</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\Question.png">
+    <Compile Include="Images\Common\Question.png">
       <Name>Question</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\LoginMenu\Register.png">
+    <Compile Include="Images\Login\Register.png">
       <Name>Register</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\Save.png">
+    <Compile Include="Images\Common\Save.png">
       <Name>Save</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\Setting.png">
+    <Compile Include="Images\Common\Setting.png">
       <Name>Setting</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -176,7 +176,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\AllMenus\Sound.png">
+    <Compile Include="Images\Common\Sound.png">
       <Name>Sound</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -189,32 +189,38 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\BomberMan.png">
+    <Compile Include="Images\Common\BomberMan.png">
       <Name>BomberMan</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\saturn.png">
+    <Compile Include="Images\Common\saturn.png">
       <Name>saturn</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\dyingstar.png">
+    <Compile Include="Images\Common\dyingstar.png">
       <Name>dyingstar</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\AllMenus\redstar.png">
+    <Compile Include="Images\Common\redstar.png">
       <Name>redstar</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\Help\" />
+    <Folder Include="Images\HighScores\" />
+    <Folder Include="Images\LoadGame\" />
+    <Folder Include="Images\Settings\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

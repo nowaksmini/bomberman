@@ -12,7 +12,7 @@ namespace BomberMan.Common.Engines.DynamicEngines
 {
     public class BoardEngine : Engine
     {
-        private int rows, columns;
+        public int rows, columns;
         private const int SHIFT = 100;
         private const float GAP = 0.57f;
 

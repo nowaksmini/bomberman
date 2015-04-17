@@ -24,9 +24,12 @@ namespace BomberMan
         RocketsEngine rocketeEngine;
         PlanetEngine planetEngine;
         Texture2D background;
-        ScreenType screen = ScreenType.Game;
-        MainMenu mainMenu;
+        public static ScreenType ScreenType = ScreenType.MainMenu;
+        MainMenuScreen mainMenu;
         GameScreen game;
+        HelpMenuScreen help;
+        HighScoresScreen highScores;
+        LoginScreen login;
         Song song;
         SpriteFont font;
         TextInput textInput = new TextInput();
@@ -39,7 +42,6 @@ namespace BomberMan
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             DataManager.InitContext();
-            mainMenu = new MainMenu();
             game = new GameScreen(new GameDAO() { ID = 1 });
         }
  
@@ -67,7 +69,7 @@ namespace BomberMan
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             UpdateBackground(Window.ClientBounds.Width, Window.ClientBounds.Height);
-            switch (screen)
+            switch (ScreenType)
             {
                 case ScreenType.MainMenu:
                     mainMenu.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
@@ -96,7 +98,7 @@ namespace BomberMan
             spriteBatch.End();
             planetEngine.Draw(spriteBatch);
             rocketeEngine.Draw(spriteBatch);
-            switch (screen)
+            switch (ScreenType)
             {
                 case ScreenType.MainMenu:
                     IsMouseVisible = true;
@@ -122,18 +124,23 @@ namespace BomberMan
 
         private void LoadMainMenu()
         {
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/NewGame"));
+            textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/LoadGame"));
+            textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/HighScores"));
+            textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/settings"));
+            textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/LogOut"));
+            mainMenu = new MainMenuScreen(5, textures);
             //mainMenu.Title.Texture = Content.Load<Texture2D>(@"Images/AllMenus/BomberMan");
-            mainMenu.optionButtons[0].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/NewGame");
-            mainMenu.optionButtons[1].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/LoadGame");
-            mainMenu.optionButtons[2].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/HighScores");
-            mainMenu.optionButtons[3].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/settings");
-            mainMenu.optionButtons[4].Texture =
-                Content.Load<Texture2D>(@"Images/MainMenu/LogOut");
         }
+
+        private void LoadHighScores() { }
+
+        private void LoadSettings() { }
+
+        private void LoadHelp() { }
+
+        private void LoadLogin() { }
 
         private void LoadGame()
         {
@@ -148,7 +155,7 @@ namespace BomberMan
                 game.BlockTextures.Add(blocks[i]);
             }
             game.BombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
-            game.boardEngine = new BoardEngine(game.BlockTextures, 12, 16);
+            game.CreateBoardEngine();
 
         }
 
@@ -156,19 +163,19 @@ namespace BomberMan
         {
             random = new Random();
             List<Texture2D> textures = new List<Texture2D>();
-            background = Content.Load<Texture2D>(@"Images/AllMenus/stars");
-            textures.Add(Content.Load<Texture2D>(@"Images/AllMenus/heart"));
-            textures.Add(Content.Load<Texture2D>(@"Images/AllMenus/star"));
-            textures.Add(Content.Load<Texture2D>(@"Images/AllMenus/circle"));
+            background = Content.Load<Texture2D>(@"Images/Common/stars");
+            textures.Add(Content.Load<Texture2D>(@"Images/Common/heart"));
+            textures.Add(Content.Load<Texture2D>(@"Images/Common/star"));
+            textures.Add(Content.Load<Texture2D>(@"Images/Common/circle"));
             starsEngine = new StarsEngine(textures, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), random.Next(5) + 5);
             List<Texture2D> rocket = new List<Texture2D>();
-            rocket.Add(Content.Load<Texture2D>(@"Images/AllMenus/Shuttle"));
+            rocket.Add(Content.Load<Texture2D>(@"Images/Common/Shuttle"));
             rocketeEngine = new RocketsEngine(rocket, random.Next(5) + 3);
             List<Texture2D> planets = new List<Texture2D>();
-            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/earth"));
-            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/saturn"));
-            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/dyingstar"));
-            planets.Add(Content.Load<Texture2D>(@"Images/AllMenus/redstar"));
+            planets.Add(Content.Load<Texture2D>(@"Images/Common/earth"));
+            planets.Add(Content.Load<Texture2D>(@"Images/Common/saturn"));
+            planets.Add(Content.Load<Texture2D>(@"Images/Common/dyingstar"));
+            planets.Add(Content.Load<Texture2D>(@"Images/Common/redstar"));
             planetEngine = new PlanetEngine(planets, random.Next(4) + 4);
             song = (Content.Load<Song>(@"Music/OneRepublic"));
             MediaPlayer.Play(song);

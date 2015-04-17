@@ -86,10 +86,14 @@
     <Compile Include="Common\Components\StateComponents\Button.cs" />
     <Compile Include="Common\Components\MovingComponents\Star.cs" />
     <Compile Include="Common\Components\MovingComponents\Rocket.cs" />
+    <Compile Include="Common\Components\StateComponents\CheckBox.cs" />
+    <Compile Include="Common\Components\StateComponents\Label.cs" />
+    <Compile Include="Common\Components\StateComponents\ProgressBar.cs" />
     <Compile Include="Common\Components\StateComponents\TextInput.cs" />
     <Compile Include="Common\Configuration.cs" />
     <Compile Include="Common\Engine.cs" />
     <Compile Include="Common\Engines\BoardEngine.cs" />
+    <Compile Include="Common\Engines\SpecialElementsEngine.cs" />
     <Compile Include="Common\Engines\PlanetEngine.cs" />
     <Compile Include="Common\Engines\RocketsEngine.cs" />
     <Compile Include="Common\Engines\StarsEngine.cs" />
@@ -98,11 +102,14 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="Common\Screen.cs" />
     <Compile Include="Screens\GameScreen.cs" />
-    <Compile Include="Screens\HelpMenu.cs" />
-    <Compile Include="Screens\HighScores.cs" />
-    <Compile Include="Screens\LoginMenu.cs" />
-    <Compile Include="Screens\MainMenu.cs" />
-    <Compile Include="Screens\SettingsMenu.cs" />
+    <Compile Include="Screens\HelpMenuScreen.cs" />
+    <Compile Include="Screens\HighScoresScreen.cs" />
+    <Compile Include="Screens\LoginScreen.cs" />
+    <Compile Include="Screens\Menu.cs" />
+    <Compile Include="Screens\Menus\LoadGameScreen.cs" />
+    <Compile Include="Screens\Menus\MainMenuScreen.cs" />
+    <Compile Include="Screens\Menus\SettingsScreen.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -151,7 +158,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Common\common.cd" />
+    <None Include="Common\Components\components.cd" />
+    <None Include="Common\Engines\engines.cd" />
     <None Include="packages.config" />
+    <None Include="Screens\screens.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

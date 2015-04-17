@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="BomberMan.Screen">
+    <Position X="6.25" Y="0.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAEEAAASAgAAAAAgAAABAAAAAAAAAAAEAiAAAQQ=</HashCode>
+      <FileName>Common\Screen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.Menus.LoadGameScreen">
+    <Position X="6.5" Y="14.25" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAABAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Screens\Menus\LoadGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.MainMenuScreen">
+    <Position X="8.5" Y="7.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAkAAAAAAAAAgAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Screens\Menus\MainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.Settings">
+    <Position X="8.5" Y="11" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAQAAgAAAAAAAAAAAAAAAAAAAEAAAAAAAQA=</HashCode>
+      <FileName>Screens\Menus\SettingsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.GameScreen">
+    <Position X="0.5" Y="5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>BEQAAAAAAEAQAkAEAAEAAACAgAAAQAAIAAAiAAAIQSA=</HashCode>
+      <FileName>Screens\GameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.HelpMenuScreen">
+    <Position X="0.5" Y="14.25" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAgAgAAAAAAAAQAAAAAABAAAAAAAAAAAQA=</HashCode>
+      <FileName>Screens\HelpMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.HighScoresScreen">
+    <Position X="0.5" Y="1.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAoAAAAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Screens\HighScoresScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.LoginScreen">
+    <Position X="0.5" Y="10.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAAgAAAAAAACAAAAAAAAAAAAAAAAAAgQE=</HashCode>
+      <FileName>Screens\LoginScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberMan.Screens.Menu">
+    <Position X="7.5" Y="5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAABAAAA=</HashCode>
+      <FileName>Screens\Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BomberMan.Screens.MainMenuOptions">
+    <Position X="11.25" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAABAAAAAAAgAAAAAAAAAU=</HashCode>
+      <FileName>Screens\Menus\MainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

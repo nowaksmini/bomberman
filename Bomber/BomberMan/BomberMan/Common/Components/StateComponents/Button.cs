@@ -20,6 +20,7 @@ namespace BomberMan.Common.Components.StateComponents
         private int mx, my;
         private double frameTime;
 
+        public Func<string, int> Click;
         public Button(BState _state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, double _timer)
             : base(texture, color, position, scale, angle)
         {
@@ -82,8 +83,8 @@ namespace BomberMan.Common.Components.StateComponents
 
         public void OnClick(double _timer)
         {
-            Color = Color.Green;
             Timer = _timer;
+            Color = Color.Green;
         }
 
 

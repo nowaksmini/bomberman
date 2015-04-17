@@ -24,6 +24,9 @@ namespace BomberMan.Common.Components.StateComponents
             theValue = String.Empty;
         }
 
+        public void Update(int windowWidth, int windowHeight)
+        { }
+
         public void ProcessKeyboard(bool capsLock)
         {
             keyboardState = Keyboard.GetState();
@@ -170,6 +173,12 @@ namespace BomberMan.Common.Components.StateComponents
                 }
             }
             return keyPressed;
+        }
+
+        public enum TextInputType
+        {
+            Name,
+            Password
         }
     }
 }

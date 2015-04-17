@@ -18,4 +18,3 @@ namespace BomberMan
     }
 #endif
 }
-

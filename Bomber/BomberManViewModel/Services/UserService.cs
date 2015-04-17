@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BomberManViewModel.DataBaseServices
+namespace BomberManViewModel.Services
 {
     public class UserService
     {

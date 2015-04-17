@@ -11,6 +11,7 @@ namespace BomberManViewModel.DataAccessObjects
         public int ID { get; set; }
         public int Level { get; set; }
         public int Points { get; set; }
+        public int Time { get; set; }
         public bool Finished { get; set; }  // czy jest sens ładować
         public double Life { get; set; } // procentowo npp 10,23
         public DateTime SaveTime { get; set; }

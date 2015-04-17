@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BomberManViewModel.DataBaseServices
+namespace BomberManViewModel.Services
 {
     public class BoardService
     {
@@ -37,8 +37,9 @@ namespace BomberManViewModel.DataBaseServices
             return false;
         }
 
-        static public List<BoardElementLocationDAO> GetAllBlocksForGame(GameDAO gameDAO)
+        static public List<BoardElementLocationDAO> GetAllBlocksForGame(GameDAO gameDAO, out String message)
         {
+            message = null;
             List<BoardElementLocationDAO> blocks = new List<BoardElementLocationDAO>();
             var query = from element in DataManager.DataBaseContext.BoardElementLocations
                         where element.Game.ID == gameDAO.ID &&
@@ -58,8 +59,9 @@ namespace BomberManViewModel.DataBaseServices
             return blocks;
         }
 
-        static public List<BoardElementDAO> GetAllBombsForGame(GameDAO gameDAO)
+        static public List<BoardElementDAO> GetAllBombsForGame(GameDAO gameDAO, out String message)
         {
+            message = null;
             List<BoardElementDAO> bombs = new List<BoardElementDAO>();
             var query = from element in DataManager.DataBaseContext.BoardElements
                         where element.ElementType == BomberManModel.BoardElementType.Bomb
@@ -74,8 +76,9 @@ namespace BomberManViewModel.DataBaseServices
             return bombs;
         }
 
-        static public List<BoardElementDAO> GetAllBonusesForGame(GameDAO gameDAO)
+        static public List<BoardElementDAO> GetAllBonusesForGame(GameDAO gameDAO, out String message)
         {
+            message = null;
             List<BoardElementDAO> bonuses = new List<BoardElementDAO>();
             var query = from element in DataManager.DataBaseContext.BoardElements
                         where element.ElementType == BomberManModel.BoardElementType.BombAmountBonus ||

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="BomberManViewModel.Services.BoardService">
+    <Position X="0.5" Y="3.75" Width="7.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAQAAAAAAAAAQEAAAgAQAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Services\BoardService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.Services.GameService">
+    <Position X="0.5" Y="0.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AEgIAAAEAAAAAAIAAACAAACAAAAABAAAIAAAAAAAAAE=</HashCode>
+      <FileName>Services\GameService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.Services.OponentService">
+    <Position X="0.5" Y="6.25" Width="8.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAECAAAAEAAAAAgAAAAACAYAAAAIAAAAAACAAAAAA=</HashCode>
+      <FileName>Services\OponentService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.Services.UserService">
+    <Position X="0.5" Y="9.25" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACEAQAAAAIAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Services\UserService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BomberManViewModel.Logger">
+    <Position X="0.5" Y="12.75" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Logger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
