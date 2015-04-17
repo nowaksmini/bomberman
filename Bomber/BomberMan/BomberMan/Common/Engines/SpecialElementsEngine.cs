@@ -18,7 +18,7 @@ namespace BomberMan.Common.Engines
             ;
         }
 
-        public void Update(List<List<int>> fieldValues, int windowWidth, int windowHeight, int max)
+        public void Update(List<List<Tuple<int,int>>> paths, int windowWidth, int windowHeight, int max)
         {
 
         }

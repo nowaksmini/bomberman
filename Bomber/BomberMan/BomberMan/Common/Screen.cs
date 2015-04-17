@@ -23,5 +23,6 @@ namespace BomberMan
         public abstract void Draw(SpriteBatch spriteBatch);
         public abstract void Update(GameTime gameTime, int windowWidth, int windowHeight);
         public abstract void HandleKeyboard();
+
     }
 }

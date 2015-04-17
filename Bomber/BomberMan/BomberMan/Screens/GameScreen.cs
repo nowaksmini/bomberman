@@ -86,7 +86,7 @@ namespace BomberMan.Screens
 
         private GameDAO CreateNewGame() { return null; }
 
-        private List<List<int>> GenereteFieldValues()
+        private List<List<Tuple<int,int>>> GenereteFieldValues()
         {
            /* for (int i = 0; i < boardEngine.rows; i++)
                 for (int j = 0; j < boardEngine.columns; j++ )
