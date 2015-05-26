@@ -1,13 +1,8 @@
-﻿using BomberMan.Common.Components;
-using BomberMan.Common.Components.MovingComponents;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace BomberMan.Common.Engines.StateEngines
+namespace BomberMan.Common.Engines
 {
     class PlanetEngine: Engine
     {

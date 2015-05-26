@@ -1,14 +1,10 @@
-﻿using BomberMan.Common.Components;
-using BomberMan.Common.Components.MovingComponents;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace BomberMan.Common.Engines.DynamicEngines
+namespace BomberMan.Common.Engines
 {
     public class BoardEngine : Engine
     {

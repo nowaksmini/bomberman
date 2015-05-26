@@ -8,11 +8,9 @@ using BomberMan.Common.Engines;
 using Microsoft.Xna.Framework.Media;
 using BomberMan.Common.Components.StateComponents;
 using System;
-using BomberMan.Common.Engines.StateEngines;
 using BomberManViewModel.DataAccessObjects;
-using BomberMan.Common.Engines.DynamicEngines;
 
-  
+
 namespace BomberMan
 {
 
@@ -24,7 +22,7 @@ namespace BomberMan
         RocketsEngine rocketeEngine;
         PlanetEngine planetEngine;
         Texture2D background;
-        public static ScreenType ScreenType = ScreenType.MainMenu;
+        public static ScreenType ScreenType = ScreenType.Game;
         MainMenuScreen mainMenu;
         GameScreen game;
         HelpMenuScreen help;
@@ -42,7 +40,6 @@ namespace BomberMan
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             DataManager.InitContext();
-            game = new GameScreen(new GameDAO() { ID = 1 });
         }
  
         protected override void Initialize()
@@ -144,7 +141,7 @@ namespace BomberMan
 
         private void LoadGame()
         {
-            game.BlockTextures = new List<Texture2D>();
+            List<Texture2D> blockTextures = new List<Texture2D>();
             Texture2D[] blocks = new Texture2D[4];
             blocks[(int)BlockKind.Black] =  Content.Load<Texture2D>(@"Images/Game/SolidBlock");
             blocks[(int)BlockKind.White] = Content.Load<Texture2D>(@"Images/Game/Block");
@@ -152,11 +149,9 @@ namespace BomberMan
             blocks[(int)BlockKind.Red] =  Content.Load<Texture2D>(@"Images/Game/BombBlock");
             for (int i = 0; i < blocks.Length; i++ )
             {
-                game.BlockTextures.Add(blocks[i]);
+                blockTextures.Add(blocks[i]);
             }
-            game.BombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
-            game.CreateBoardEngine();
-
+            game = new GameScreen(blockTextures, Content.Load<Texture2D>(@"Images/Game/Bomb"));
         }
 
         private void LoadBackGround()
