@@ -10,25 +10,25 @@ namespace BomberMan.Common
 {
     public class Engine
     {
-        protected Random random;
-        protected List<Texture2D> textures;
-        protected int objectsAmount;
-        protected List<Component> components;
+        protected Random Random;
+        protected List<Texture2D> Textures;
+        protected int ObjectsAmount;
+        protected List<Component> Components;
 
         public Engine(List<Texture2D> textures, int objectsCount)
         {
-            this.textures = textures;
-            objectsAmount = objectsCount;
-            random = new Random();
-            components = new List<Component>();
+            this.Textures = textures;
+            ObjectsAmount = objectsCount;
+            Random = new Random();
+            Components = new List<Component>();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            for (int index = 0; index < components.Count; index++)
+            for (int index = 0; index < Components.Count; index++)
             {
-                components[index].Draw(spriteBatch);
+                Components[index].Draw(spriteBatch);
             }
             spriteBatch.End();
         }

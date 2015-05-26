@@ -17,42 +17,42 @@ namespace BomberMan.Common.Engines
 
         public RocketsEngine(List<Texture2D> textures, int objectsCount) : base(textures, objectsCount)
         {
-            for (int i = 0; i < objectsAmount; i++)
+            for (int i = 0; i < ObjectsAmount; i++)
             {
-                components.Add(GenerateNewRocket());
+                Components.Add(GenerateNewRocket());
             }
         }
 
         public void Update()
         {
-            for (int i = 0; i < components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
             {
-                ((MovingComponent)components[i]).Update();
+                ((MovingComponent)Components[i]).Update();
                 if (
-                    ((MovingComponent)components[i]).Position.X> MaxWidth + SHIFT||
-                    ((MovingComponent)components[i]).Position.X < 0 - SHIFT ||
-                    ((MovingComponent)components[i]).Position.Y < 0 - SHIFT ||
-                    ((MovingComponent)components[i]).Position.Y > MaxHeight + SHIFT)
+                    ((MovingComponent)Components[i]).Position.X> MaxWidth + SHIFT||
+                    ((MovingComponent)Components[i]).Position.X < 0 - SHIFT ||
+                    ((MovingComponent)Components[i]).Position.Y < 0 - SHIFT ||
+                    ((MovingComponent)Components[i]).Position.Y > MaxHeight + SHIFT)
                 {
-                    components.RemoveAt(i);
+                    Components.RemoveAt(i);
                     i--;
                 }
             }
-            for(int i = objectsAmount - components.Count; i > 0; i--)
+            for(int i = ObjectsAmount - Components.Count; i > 0; i--)
             {
-                components.Add(GenerateNewRocket());
+                Components.Add(GenerateNewRocket());
             }
         }
 
         private Rocket GenerateNewRocket()
         {
-            Texture2D texture = textures[random.Next(textures.Count)];
+            Texture2D texture = Textures[Random.Next(Textures.Count)];
             float positionY, positionX;
-            bool vertical = random.Next(1) > 0;
+            bool vertical = Random.Next(1) > 0;
             if(vertical)
             {
-                positionY = random.Next((int)MaxHeight);
-                bool left = random.Next(1) > 0;
+                positionY = Random.Next((int)MaxHeight);
+                bool left = Random.Next(1) > 0;
                 if (left)
                     positionX = (float)0;
                 else
@@ -60,23 +60,23 @@ namespace BomberMan.Common.Engines
             }
             else
             {
-                positionX = random.Next((int)MaxWidth);
-                bool up = random.Next(1) > 0;
+                positionX = Random.Next((int)MaxWidth);
+                bool up = Random.Next(1) > 0;
                 if (up)
                     positionY = (float)0;
                 else
                     positionY = MaxHeight;
             }
             Vector2 position = new Vector2(positionX, positionY);
-            float a = 1f * (float)(random.NextDouble() * 2 - 1);
-            float b = 1f * (float)(random.NextDouble() * 2 - 1);
+            float a = 1f * (float)(Random.NextDouble() * 2 - 1);
+            float b = 1f * (float)(Random.NextDouble() * 2 - 1);
             Vector2 velocity = new Vector2(a,b);
             float angle = MathHelper.Pi - (float)Math.Atan2(a, b);  
             Color color = new Color(
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble());
-            float scale = (float)random.NextDouble() + (float)0.05;
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble());
+            float scale = (float)Random.NextDouble() + (float)0.05;
             return new Rocket(texture, position, velocity, angle, color, new Vector2(scale, scale));
         }
     }

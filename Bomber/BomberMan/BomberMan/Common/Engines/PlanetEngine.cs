@@ -19,19 +19,19 @@ namespace BomberMan.Common.Engines
 
         public void Update(int windowWidth, int windowHeight)
         {
-            if(components.Count == 0)
+            if(Components.Count == 0)
             {
-                for (int i = 0; i < objectsAmount; i++)
+                for (int i = 0; i < ObjectsAmount; i++)
                 {
-                    components.Add(GenerateNewPlanet(windowWidth, windowHeight));
+                    Components.Add(GenerateNewPlanet(windowWidth, windowHeight));
                 }
             }
             else
             {
-                for(int i = 0; i< objectsAmount; i++)
+                for(int i = 0; i< ObjectsAmount; i++)
                 {
-                    components[i].Position = new Vector2((float)windowWidth * components[i].Position.X / (float)prevWindowWidth,
-                        (float)windowHeight * components[i].Position.Y / (float)prevWindowHeight);
+                    Components[i].Position = new Vector2((float)windowWidth * Components[i].Position.X / (float)prevWindowWidth,
+                        (float)windowHeight * Components[i].Position.Y / (float)prevWindowHeight);
                 }
             }
             prevWindowWidth = windowWidth;
@@ -42,13 +42,13 @@ namespace BomberMan.Common.Engines
         {
             prevWindowWidth = windowWidth;
             prevWindowHeight = windowHeight;
-            Texture2D texture = textures[random.Next(textures.Count)];
-            float scale = (float)1/ (float) (random.Next(4) + 1);
-            Vector2 position = new Vector2(random.Next(windowWidth), random.Next(windowHeight));
+            Texture2D texture = Textures[Random.Next(Textures.Count)];
+            float scale = (float)1/ (float) (Random.Next(4) + 1);
+            Vector2 position = new Vector2(Random.Next(windowWidth), Random.Next(windowHeight));
             Color color = new Color(
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble());
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble());
             return new Component(texture, color, position, new Vector2(scale,scale), 0);
         }
     }

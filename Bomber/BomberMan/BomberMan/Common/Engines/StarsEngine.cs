@@ -21,16 +21,16 @@ namespace BomberMan.Common.Engines
 
         public void Update()
         {
-            for (int i = 0; i < objectsAmount; i++)
+            for (int i = 0; i < ObjectsAmount; i++)
             {
-                components.Add(GenerateNewParticle());
+                Components.Add(GenerateNewParticle());
             }
-            for (int particle = 0; particle < components.Count; particle++)
+            for (int particle = 0; particle < Components.Count; particle++)
             {
-                ((Star)components[particle]).Update();
-                if (((Star)components[particle]).TTL <= 0)
+                ((Star)Components[particle]).Update();
+                if (((Star)Components[particle]).TTL <= 0)
                 {
-                    components.RemoveAt(particle);
+                    Components.RemoveAt(particle);
                     particle--;
                 }
             }
@@ -38,19 +38,19 @@ namespace BomberMan.Common.Engines
 
         private Star GenerateNewParticle()
         {
-            Texture2D texture = textures[random.Next(textures.Count)];
+            Texture2D texture = Textures[Random.Next(Textures.Count)];
             Vector2 position = EmitterLocation;
             Vector2 velocity = new Vector2(
-                                    1f * (float)(random.NextDouble() * 2 - 1),
-                                    1f * (float)(random.NextDouble() * 2 - 1));
+                                    1f * (float)(Random.NextDouble() * 2 - 1),
+                                    1f * (float)(Random.NextDouble() * 2 - 1));
             float angle = 0;
-            float angularVelocity = 0.1f * (float)(random.NextDouble() * 2 - 1);
+            float angularVelocity = 0.1f * (float)(Random.NextDouble() * 2 - 1);
             Color color = new Color(
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble());
-            float scale = (float)random.NextDouble() / (float)(3.0);
-            int ttl = 20 + random.Next(40);
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble(),
+                        (float)Random.NextDouble());
+            float scale = (float)Random.NextDouble() / (float)(3.0);
+            int ttl = 20 + Random.Next(40);
             return new Star(texture, position, velocity, angle, angularVelocity, color, new Vector2(scale), ttl);
         }
 

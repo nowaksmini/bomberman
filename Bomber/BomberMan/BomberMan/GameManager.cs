@@ -8,6 +8,7 @@ using BomberMan.Common.Engines;
 using Microsoft.Xna.Framework.Media;
 using BomberMan.Common.Components.StateComponents;
 using System;
+using BomberManModel;
 using BomberManViewModel.DataAccessObjects;
 
 
@@ -143,15 +144,25 @@ namespace BomberMan
         {
             List<Texture2D> blockTextures = new List<Texture2D>();
             Texture2D[] blocks = new Texture2D[4];
-            blocks[(int)BlockKind.Black] =  Content.Load<Texture2D>(@"Images/Game/SolidBlock");
-            blocks[(int)BlockKind.White] = Content.Load<Texture2D>(@"Images/Game/Block");
-            blocks[(int)BlockKind.Grey] = Content.Load<Texture2D>(@"Images/Game/DeletableBlock");
-            blocks[(int)BlockKind.Red] =  Content.Load<Texture2D>(@"Images/Game/BombBlock");
-            for (int i = 0; i < blocks.Length; i++ )
-            {
-                blockTextures.Add(blocks[i]);
-            }
-            game = new GameScreen(blockTextures, Content.Load<Texture2D>(@"Images/Game/Bomb"));
+            blocks[(int)BlockType.Black] =  Content.Load<Texture2D>(@"Images/Game/black_block");
+            blocks[(int)BlockType.White] = Content.Load<Texture2D>(@"Images/Game/white_block");
+            blocks[(int)BlockType.Grey] = Content.Load<Texture2D>(@"Images/Game/grey_block");
+            blocks[(int)BlockType.Red] =  Content.Load<Texture2D>(@"Images/Game/bomb_block");
+            blockTextures.AddRange(blocks);
+            List<Texture2D> bonusTextures = new List<Texture2D>();
+            Texture2D[] bonuses = new Texture2D[6];
+            bonuses[(int)BonusType.Life] = Content.Load<Texture2D>(@"Images/Game/life_bonus");
+            bonuses[(int)BonusType.BombAmount] = Content.Load<Texture2D>(@"Images/Game/extra_bomb_bonus");
+            bonuses[(int)BonusType.Fast] = Content.Load<Texture2D>(@"Images/Game/fast_bonus");
+            bonuses[(int)BonusType.Inmortal] = Content.Load<Texture2D>(@"Images/Game/inmortal_bonus");
+            bonuses[(int)BonusType.Slow] = Content.Load<Texture2D>(@"Images/Game/slow_bonus");
+            bonuses[(int)BonusType.Strenght] = Content.Load<Texture2D>(@"Images/Game/strength_bonus");
+            bonusTextures.AddRange(bonuses);
+            List<Texture2D> opponentTextures = new List<Texture2D>();
+            Texture2D[] opponents = new Texture2D[2];
+            opponents[(int)OpponentType.Ghost] = Content.Load<Texture2D>(@"Images/Game/octopus");
+            opponents[(int)OpponentType.Octopus] = Content.Load<Texture2D>(@"Images/Game/ghost");
+            game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/robot"), Content.Load<Texture2D>(@"Images/Game/bomb"), opponentTextures);
         }
 
         private void LoadBackGround()

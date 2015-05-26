@@ -4,14 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BomberManModel;
 
 namespace BomberMan.Common.Components.StateComponents
 {
+    /// <summary>
+    /// Klasa reprezentująca pojedyncze pole planszy o tle wyszczególnionego kwadratu jednostkowego
+    /// </summary>
     public class Block : Component
     {
-        public BlockKind BlockType { get; set; }
+        public BlockType BlockType { get; set; }
 
-        public Block (Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle,  BlockKind blockType) 
+        public Block(Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, BlockType blockType)
             : base(texture, color, position, scale, angle)
         {
             BlockType = blockType;
@@ -19,7 +23,11 @@ namespace BomberMan.Common.Components.StateComponents
 
     }
 
-    public enum BlockKind
+    /// <summary>
+    /// Rodzaje jednostkowych kwadratów
+    /// Niezniszczalny, Zniszczalny, W trakcie niszczenia, Zwykły
+    /// </summary>
+    public enum BlockType
     {
         Black,
         Grey,

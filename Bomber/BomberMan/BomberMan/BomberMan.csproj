@@ -82,7 +82,9 @@
   <ItemGroup>
     <Compile Include="Common\Component.cs" />
     <Compile Include="Common\Components\MovingComponent.cs" />
+    <Compile Include="Common\Components\StateComponents\Character.cs" />
     <Compile Include="Common\Components\StateComponents\Block.cs" />
+    <Compile Include="Common\Components\StateComponents\Bonus.cs" />
     <Compile Include="Common\Components\StateComponents\Button.cs" />
     <Compile Include="Common\Components\MovingComponents\Star.cs" />
     <Compile Include="Common\Components\MovingComponents\Rocket.cs" />
@@ -93,7 +95,6 @@
     <Compile Include="Common\Configuration.cs" />
     <Compile Include="Common\Engine.cs" />
     <Compile Include="Common\Engines\BoardEngine.cs" />
-    <Compile Include="Common\Engines\SpecialElementsEngine.cs" />
     <Compile Include="Common\Engines\PlanetEngine.cs" />
     <Compile Include="Common\Engines\RocketsEngine.cs" />
     <Compile Include="Common\Engines\StarsEngine.cs" />
