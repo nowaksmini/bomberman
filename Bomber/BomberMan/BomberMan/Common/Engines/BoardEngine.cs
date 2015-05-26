@@ -21,7 +21,7 @@ namespace BomberMan.Common.Engines
         private readonly List<Texture2D> _bonusTextures;
         private readonly List<Texture2D> _characterTextures;
         private readonly Texture2D _bombTexture;
-        private const int Shift = 100;
+        private const int Shift = 50;
         private const float GapX = 0.57f;
         private const float GapY = 0.79f;
 
@@ -66,10 +66,9 @@ namespace BomberMan.Common.Engines
             Dictionary<int, List<CharacterType>> characterLocations,
             List<int> bombLocations, int windowWidth, int windowHeight)
         {
-            int width = (windowWidth + 2*Shift)/(_columns);
-            int height = (windowHeight)/(_rows);
-            int x = Shift + width/2;
-            int y = Shift + height/2;
+            int width = (windowWidth - 2 * Shift)/(_columns);
+            int height = (windowHeight - 2 * Shift)/(_rows);
+            int y = height/2 + Shift;
             int counter = 0;
             // zainicjalizuj całą planszę od nowa
             Components.Clear();
@@ -77,7 +76,7 @@ namespace BomberMan.Common.Engines
             {
                 for (int i = 0; i < _rows; i++)
                 {
-                    x = Shift + width/2;
+                    var x = Shift + width/2 ;
                     for (int j = 0; j < _columns; j++)
                     {
                         // należy zadbać aby zawsze bonus znajdujący się pod szarym polem był dodany po szarym polu
@@ -121,10 +120,10 @@ namespace BomberMan.Common.Engines
                                     (int) (height*ComponentPercentage)));
                             }
                         }
-                        x += (int) (GapX*width);
+                        x += width;
                         counter++;
                     }
-                    y += (int) (GapY*height);
+                    y += height;
                 }
             }
         }
