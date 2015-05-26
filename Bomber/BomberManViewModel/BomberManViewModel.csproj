@@ -92,7 +92,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Converters\cnverters.cd" />
-    <None Include="DataAccessObjects\ClassDiagram1.cd" />
     <None Include="Services\ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>

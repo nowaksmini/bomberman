@@ -1,13 +1,12 @@
-﻿using BomberMan.Common.Components;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BomberMan.Common
 {
+    /// <summary>
+    /// Bazowa klasa reprezentująca silniki generujące zbiory komponentów w aplikacji.
+    /// </summary>
     public class Engine
     {
         protected Random Random;
@@ -15,14 +14,23 @@ namespace BomberMan.Common
         protected int ObjectsAmount;
         protected List<Component> Components;
 
+        /// <summary>
+        /// Utwórz silnik do generowania zbiorów komponentów.
+        /// </summary>
+        /// <param name="textures">dostępne tła dla komponentów</param>
+        /// <param name="objectsCount">ilość komponentów</param>
         public Engine(List<Texture2D> textures, int objectsCount)
         {
-            this.Textures = textures;
+            Textures = textures;
             ObjectsAmount = objectsCount;
             Random = new Random();
             Components = new List<Component>();
         }
 
+        /// <summary>
+        /// Narysuj wszystkie komponenty przechowywane w liście komponentów w obiekcie.
+        /// </summary>
+        /// <param name="spriteBatch">Obiekt, w którym rysujemy komponenty</param>
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();

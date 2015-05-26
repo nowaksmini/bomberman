@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BomberMan.Common
 {
@@ -16,8 +13,8 @@ namespace BomberMan.Common
     }
 
     public enum KeybordOption
-        {
-            Arrows,
-            Wsad
-        }
+    {
+        Arrows,
+        Wsad
+    }
 }

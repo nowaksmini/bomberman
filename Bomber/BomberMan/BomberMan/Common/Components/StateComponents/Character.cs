@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BomberMan.Common.Components.StateComponents
 {
-    class Character
+    public class Character
     {
     }
 }

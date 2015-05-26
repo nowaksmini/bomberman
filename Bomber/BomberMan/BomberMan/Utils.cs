@@ -1,14 +1,19 @@
 ﻿using BomberManViewModel.DataAccessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BomberMan
 {
+    /// <summary>
+    /// Klasa przechowująca informacje na temat zalogowanego uczestnika i aktualnie toczącej się gry.
+    /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// Aktualnie trwająca gra
+        /// </summary>
         public static GameDAO Game;
+        /// <summary>
+        /// Zalogowany użytkownik
+        /// </summary>
         public static UserDAO User;
     }
 }
