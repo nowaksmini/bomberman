@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
+using BomberMan.Common;
+using Microsoft.Xna.Framework.Input;
 
 namespace BomberMan.Screens
 {
@@ -56,6 +58,8 @@ namespace BomberMan.Screens
         private readonly List<Texture2D> _characterTextures;
         private readonly List<Texture2D> _bonusesTextures;
 
+        float countDuration = 0.1f; //every  0.5s.
+        float currentTime;
 
         /// <summary>
         /// Utwórz widok gry ze wszystkimi polami jednostkowymi
@@ -119,10 +123,7 @@ namespace BomberMan.Screens
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (_boardEngine != null)
-            {
-                _boardEngine.Draw(spriteBatch);
-            }
+            _boardEngine.Draw(spriteBatch);
         }
 
         /// <summary>
@@ -137,16 +138,157 @@ namespace BomberMan.Screens
             // "usuwamy obiekt" z listy do rysowania
 
             //gameTime.ElapsedGameTime.Milliseconds;
-            if (_boardEngine != null)
+            _boardEngine.Update(_boradBlocksTypes, _bonusLocations,
+                _characterLocations, _bombLocations, windowWidth, windowHeight);
+            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (currentTime >= countDuration)
             {
-                _boardEngine.Update(_boradBlocksTypes, _bonusLocations,
-                    _characterLocations, _bombLocations, windowWidth, windowHeight);
+                currentTime -= countDuration;
+                HandleKeyboard();
             }
         }
 
+        /// <summary>
+        /// Obsłuż wciskane klawisze na klawiaturze w zależności od wybranej opcji.
+        /// </summary>
         public override void HandleKeyboard()
         {
-            //throw new NotImplementedException();
+            LastKeyboardState = KeyboardState;
+            KeyboardState = Keyboard.GetState();
+            Keys[] keymap = KeyboardState.GetPressedKeys();
+            int gamer = _boardEngine.PlayerLocation;
+            int columns = _boardEngine.Columns;
+            int rows = _boardEngine.Rows;
+            int x = gamer/columns;
+            int y = gamer - x*columns;
+            foreach (Keys k in keymap)
+            {
+                if (Configuration.KeyboardOption.Equals(KeyboardOption.Arrows))
+                {
+                    switch (k)
+                    {
+                        case Keys.Down:
+                            if (x < rows - 1)
+                            {
+                                int tmp = (x + 1)*columns + y;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    x++;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case Keys.Up:
+                            if (x > 0)
+                            {
+                                int tmp = (x - 1)*columns + y;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    x--;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case Keys.Left:
+                            if (y > 0)
+                            {
+                                int tmp = x*columns + y - 1;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    y--;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case Keys.Right:
+                            if (y < columns - 1)
+                            {
+                                int tmp = x*columns + y + 1;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    y++;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (k)
+                    {
+                        case Keys.W:
+                            break;
+                        case Keys.S:
+                            break;
+                        case Keys.A:
+                            break;
+                        case Keys.D:
+                            break;
+                    }
+                }
+
+                // sprawdź czy nie trzeba postawić nowej bomby
+                switch (k)
+                {
+                    case Keys.Space:
+                        if (Configuration.BombKeyboardOption.Equals(BombKeyboardOption.Spcace))
+                        {
+                            _bombLocations.Add(gamer);
+                        }
+                        break;
+                    case Keys.P:
+                        if (Configuration.BombKeyboardOption.Equals(BombKeyboardOption.P))
+                        {
+                            _bombLocations.Add(gamer);
+                        }
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -239,6 +381,8 @@ namespace BomberMan.Screens
             RandomBonuses();
         }
 
+        #region RandomBoardValues
+
         /// <summary>
         /// Wylosuj pola, które powinny być niezniszczalne lub zniszczalne, pozostałe ustaw na białe, zwykłe
         /// Pola ustawiane jedynie na wartości <value>GREY</value>, <value>BLACK</value>, <value>WHITE</value>
@@ -301,7 +445,7 @@ namespace BomberMan.Screens
                 int index = _random.Next(_boradBlocksTypes.Count);
                 if (_boradBlocksTypes[index].Equals(BlockType.Grey) && !_bonusLocations.ContainsKey(index))
                 {
-                    int number = _random.Next() % 10;
+                    int number = _random.Next()%10;
                     BonusType bonusType;
                     if (number == 0)
                     {
@@ -349,16 +493,8 @@ namespace BomberMan.Screens
                 int index = _random.Next(_boradBlocksTypes.Count);
                 if (_boradBlocksTypes[index].Equals(BlockType.White) && !_characterLocations.ContainsKey(index))
                 {
-                    int number = _random.Next() % 100;
-                    CharacterType characterType;
-                    if (number < 65)
-                    {
-                        characterType = CharacterType.Octopus;
-                    }
-                    else
-                    {
-                        characterType = CharacterType.Ghost;
-                    }
+                    int number = _random.Next()%100;
+                    var characterType = number < 65 ? CharacterType.Octopus : CharacterType.Ghost;
                     _characterLocations.Add(index, new List<CharacterType>()
                     {
                         characterType
@@ -374,8 +510,9 @@ namespace BomberMan.Screens
                     && !_characterLocations.ContainsKey(index - 1)
                     && !_characterLocations.ContainsKey(index + 1)
                     && !_characterLocations.ContainsKey(index + columns)
-                    && ( (index >= columns && !_characterLocations.ContainsKey(index - columns)) || index < columns)
-                    && _boradBlocksTypes[index].Equals(BlockType.White)){
+                    && ((index >= columns && !_characterLocations.ContainsKey(index - columns)) || index < columns)
+                    && _boradBlocksTypes[index].Equals(BlockType.White))
+                {
                     _characterLocations.Add(index, new List<CharacterType>()
                     {
                         CharacterType.Player
@@ -384,5 +521,7 @@ namespace BomberMan.Screens
                 }
             }
         }
+
+        #endregion
     }
 }

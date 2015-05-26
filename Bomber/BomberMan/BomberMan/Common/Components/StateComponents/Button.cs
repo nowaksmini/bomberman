@@ -1,105 +1,103 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BomberMan.Common.Components.StateComponents
 {
+    /// <summary>
+    /// Reprezentacja przyciska, możliwośc najechania na przycisk, wciśnięcia, wykonania akcji
+    /// </summary>
     public class Button : Component
     {
-        public BState State { get; set; }
-        public double Timer { get; set; }
-
-        private Color pressedColor = Color.DarkBlue;
-        private Color hoverColor = Color.LightBlue;
-        private Color normalColor = Color.White;
-        private bool mpressed, prevMpressed = false;
-        private int mx, my;
-        private double frameTime;
-
+        private BState _state;
+        private double _timer;
+        private readonly Color _pressedColor = Color.DarkBlue;
+        private readonly Color _hoverColor = Color.LightBlue;
+        private readonly Color _normalColor = Color.White;
+        private bool _mpressed, _prevMpressed;
+        private int _mx, _my;
+        private double _frameTime;
         public Func<string, int> Click;
-        public Button(BState _state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, double _timer)
+
+        public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, double timer)
             : base(texture, color, position, scale, angle)
         {
-            State = _state;
-            Timer = _timer;
+            _state = state;
+            _timer = timer;
         }
 
         public Button()
         {
-            Color = normalColor;
-            State = BState.UP;
-            Timer = 0.0;
+            Color = _normalColor;
+            _state = BState.Up;
+            _timer = 0.0;
         }
 
-        public void Update(int _mx, int _my, double _frameTime, bool _mPressed, bool _prevMPressed)
+        public void Update(int mx, int my, double frameTime, bool mPressed, bool prevMPressed)
         {
-            mx = _mx;
-            my = _my;
-            frameTime = _frameTime;
-            mpressed = _mPressed;
-            prevMpressed = _prevMPressed;
-            if (CheckIfButtonContainsPoint(mx, my))
+            _mx = mx;
+            _my = my;
+            _frameTime = frameTime;
+            _mpressed = mPressed;
+            _prevMpressed = prevMPressed;
+            if (CheckIfButtonContainsPoint(_mx, _my))
             {
-                Timer = 0.0;
-                if (mpressed)
+                _timer = 0.0;
+                if (_mpressed)
                 {
-                    State = BState.DOWN;
-                    Color = pressedColor;
+                    _state = BState.Down;
+                    Color = _pressedColor;
                 }
-                else if (!mpressed && prevMpressed)
+                else if (!_mpressed && _prevMpressed)
                 {
-                    if (State == BState.DOWN)
+                    if (_state == BState.Down)
                     {
-                        State = BState.JUST_RELEASED;
+                        _state = BState.JustReleased;
                     }
                 }
                 else
                 {
-                    State = BState.HOVER;
-                    Color = hoverColor;
+                    _state = BState.Hover;
+                    Color = _hoverColor;
                 }
             }
             else
             {
-                State = BState.UP;
-                if (Timer > 0)
+                _state = BState.Up;
+                if (_timer > 0)
                 {
-                    Timer = Timer - frameTime;
+                    _timer = _timer - _frameTime;
                 }
                 else
                 {
-                    Color = normalColor;
+                    Color = _normalColor;
                 }
             }
-            if (State == BState.JUST_RELEASED)
+            if (_state == BState.JustReleased)
             {
-                OnClick(Timer);
+                OnClick(_timer);
             }
         }
 
-        public void OnClick(double _timer)
+        public void OnClick(double timer)
         {
-            Timer = _timer;
+            _timer = timer;
             Color = Color.Green;
         }
 
 
         private bool CheckIfButtonContainsPoint(int x, int y)
         {
-            return CheckIfRectangleContainsPoint(0, 0, (int) (((float)x - (Position.X - (float)Texture.Width * Scale.X/(float)2 )) / Scale.X),
-                (int)(((float)y - (Position.Y - (float)Texture.Height * Scale.Y / (float)2)) / Scale.Y));
+            return CheckIfRectangleContainsPoint(0, 0, (int) ((x - (Position.X - Texture.Width * Scale.X/(float)2 )) / Scale.X),
+                (int)((y - (Position.Y - Texture.Height * Scale.Y / 2)) / Scale.Y));
         }
 
         private bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
         {
             return (x >= tx &&
-                x <= tx + (float)Texture.Width &&
+                x <= tx + Texture.Width &&
                 y >= ty &&
-                y <= ty + (float)Texture.Height);
+                y <= ty + Texture.Height);
         }
 
         private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
@@ -107,7 +105,7 @@ namespace BomberMan.Common.Components.StateComponents
             if (CheckIfTextureContainsPoint(tx, ty, x, y))
             {
                 uint[] data = new uint[Texture.Width * Texture.Height];
-                Texture.GetData<uint>(data);
+                Texture.GetData(data);
                 if ((x - (int)tx) + (y - (int)ty) *
                     Texture.Width < Texture.Width * Texture.Height)
                 {
@@ -120,9 +118,9 @@ namespace BomberMan.Common.Components.StateComponents
 
     public enum BState
     {
-        HOVER,
-        UP,
-        JUST_RELEASED,
-        DOWN
+        Hover,
+        Up,
+        JustReleased,
+        Down
     }
 }

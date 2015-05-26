@@ -14,8 +14,7 @@ namespace BomberMan.Screens
         public Button[] OptionButtons { get; set; }
         public int Options { get; set; }
 
-
-        public Menu(int options, List<Texture2D> textures)
+        protected Menu(int options, List<Texture2D> textures)
         {
             prevSelectedOption = -1;
             Options = options;

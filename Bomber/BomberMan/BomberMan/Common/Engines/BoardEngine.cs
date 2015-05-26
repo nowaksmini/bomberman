@@ -22,24 +22,17 @@ namespace BomberMan.Common.Engines
         private readonly List<Texture2D> _characterTextures;
         private readonly Texture2D _bombTexture;
         private const int Shift = 50;
-        private const float GapX = 0.57f;
-        private const float GapY = 0.79f;
+        public int PlayerLocation { get; set; }
 
-        /// <summary>
-        /// Współczynnik opisujący jak powinien być pomniejszony bonus aby zmieścić się w polu planszy
-        /// </summary>
-        private const float ComponentPercentage = 0.55f;
+        public int Rows
+        {
+            get { return _rows; }
+        }
 
-        /// <summary>
-        /// Współczynnik opisujący jak powinien być w skali szerokości przesunięty bonus aby zmieścić się w polu planszy
-        /// </summary>
-        private const float GapBonusX = 0.2f;
-
-        /// <summary>
-        /// Współczynnik opisujący jak powinien być w skali wysokości przesunięty bonus aby zmieścić się w polu planszy
-        /// </summary>
-        private const float GapBonusY = 0.18f;
-
+        public int Columns
+        {
+            get { return _columns;  }
+        }
 
         public BoardEngine(List<Texture2D> textures, List<Texture2D> bonusTextures, List<Texture2D> characterTextures,
             Texture2D bombTexture, int rows, int columns)
@@ -66,8 +59,8 @@ namespace BomberMan.Common.Engines
             Dictionary<int, List<CharacterType>> characterLocations,
             List<int> bombLocations, int windowWidth, int windowHeight)
         {
-            int width = (windowWidth - 2 * Shift)/(_columns);
-            int height = (windowHeight - 2 * Shift)/(_rows);
+            int width = (windowWidth - 2*Shift)/(_columns);
+            int height = (windowHeight - 2*Shift)/(_rows);
             int y = height/2 + Shift;
             int counter = 0;
             // zainicjalizuj całą planszę od nowa
@@ -76,7 +69,7 @@ namespace BomberMan.Common.Engines
             {
                 for (int i = 0; i < _rows; i++)
                 {
-                    var x = Shift + width/2 ;
+                    var x = Shift + width/2;
                     for (int j = 0; j < _columns; j++)
                     {
                         // należy zadbać aby zawsze bonus znajdujący się pod szarym polem był dodany po szarym polu
@@ -85,17 +78,13 @@ namespace BomberMan.Common.Engines
                         {
                             if (blocksTypes[counter].Equals(BlockType.Grey))
                             {
-                                Components.Add(GenerateNewBonus(bonusLocations[counter], (int) (x - GapBonusX*width),
-                                    (int) (y - GapBonusY*height), (int) (width*ComponentPercentage),
-                                    (int) (height*ComponentPercentage)));
+                                Components.Add(GenerateNewBonus(bonusLocations[counter], x, y, width, height));
                                 Components.Add(GenerateNewBlock(blocksTypes[counter], x, y, width, height));
                             }
                             else
                             {
                                 Components.Add(GenerateNewBlock(blocksTypes[counter], x, y, width, height));
-                                Components.Add(GenerateNewBonus(bonusLocations[counter], (int) (x - GapBonusX*width),
-                                    (int) (y - GapBonusY*height), (int) (width*ComponentPercentage),
-                                    (int) (height*ComponentPercentage)));
+                                Components.Add(GenerateNewBonus(bonusLocations[counter], x, y, width, height));
                             }
                         }
                         else
@@ -107,17 +96,18 @@ namespace BomberMan.Common.Engines
                         {
                             Vector2 scale = new Vector2(width/(float) _bombTexture.Width,
                                 height/(float) _bombTexture.Height);
-                            Components.Add(new Component(_bombTexture, Color.White,
-                                new Vector2((x - GapBonusX*width), (y - GapBonusY*height)), scale, 0));
+                            Components.Add(new Component(_bombTexture, Color.White, new Vector2(x, y), scale, 0));
                         }
                         //na samej górze narysowane będą postacie - przeciwnicy oraz gracz
                         if (characterLocations.ContainsKey(counter))
                         {
                             foreach (var character in characterLocations[counter])
                             {
-                                Components.Add(GenerateNewCharacter(character, (int) (x - GapBonusX*width),
-                                    (int) (y - GapBonusY*height), (int) (width*ComponentPercentage),
-                                    (int) (height*ComponentPercentage)));
+                                Components.Add(GenerateNewCharacter(character, x, y, width, height));
+                                if (character == CharacterType.Player)
+                                {
+                                    PlayerLocation = counter;
+                                }
                             }
                         }
                         x += width;

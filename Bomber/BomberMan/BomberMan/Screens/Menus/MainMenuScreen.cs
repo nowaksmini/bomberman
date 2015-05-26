@@ -1,20 +1,15 @@
-﻿using BomberMan.Common;
-using BomberMan.Common.Components;
-using BomberMan.Common.Components.StateComponents;
+﻿using System.Collections.Generic;
+using BomberMan.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace BomberMan.Screens
+namespace BomberMan.Screens.Menus
 {
     public class MainMenuScreen : Menu
     {
 
-        private const int SHIFT = 100;
+        private const int Shift = 100;
         public Component Title { get; set; }
 
         public MainMenuScreen(int options, List<Texture2D> buttonsTextures) : base(options, buttonsTextures)
@@ -25,17 +20,14 @@ namespace BomberMan.Screens
 
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
-            double frame_time = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
-            MouseState mouse_state = Mouse.GetState();
-            
-            int mx = mouse_state.X;
-            int my = mouse_state.Y;
+            double frameTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
+            MouseState mouseState = Mouse.GetState();
             prevMousePressed = mousePressed;
-            mousePressed = mouse_state.LeftButton == ButtonState.Pressed;
+            mousePressed = mouseState.LeftButton == ButtonState.Pressed;
             int width = windowWidth/ 4;
-            int height = (windowHeight - 2 * SHIFT - (Options)*GAP )/ Options;
+            int height = (windowHeight - 2 * Shift - (Options)*GAP )/ Options;
             int x = (windowWidth)/2;
-            int y = SHIFT + height/2;
+            int y = Shift + height/2;
             //Vector2 scale = new Vector2((float)width / (float)texture.Width, (float)height / (float)texture.Height);
            // Block block = new Block(texture, Color.Transparent, new Vector2(x, y), scale, 0, blockType);
             //Title.Rectangle = new Rectangle (windowWidth / (3), y, windowWidth / (3), (int)(2 * height));
@@ -44,7 +36,7 @@ namespace BomberMan.Screens
                 OptionButtons[i].Position = new Vector2(x,y);
                 OptionButtons[i].Scale = new Vector2((float)width / (float)OptionButtons[i].Texture.Width,
                     (float)height / (float)OptionButtons[i].Texture.Height);
-                OptionButtons[i].Update(mouse_state.X, mouse_state.Y, frame_time, mousePressed, prevMousePressed);
+                OptionButtons[i].Update(mouseState.X, mouseState.Y, frameTime, mousePressed, prevMousePressed);
                 y += height + GAP;
             }
             HandleKeyboard();
@@ -63,10 +55,9 @@ namespace BomberMan.Screens
         {
             LastKeyboardState = KeyboardState;
             KeyboardState = Keyboard.GetState();
-            Keys[] keymap = (Keys[])KeyboardState.GetPressedKeys();
+            Keys[] keymap = KeyboardState.GetPressedKeys();
             foreach (Keys k in keymap)
             {
-
                 char key = k.ToString()[0];
                 switch (key)
                 {
@@ -82,10 +73,7 @@ namespace BomberMan.Screens
                     case 'H':
                         OptionButtons[2].OnClick(0.25);
                         break;
-                    default:
-                        break;
                 }
-
             }
         }
     }
