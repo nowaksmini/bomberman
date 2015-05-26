@@ -2,14 +2,17 @@
 
 namespace BomberMan.Common
 {
+    /// <summary>
+    /// Reprezentuje ustawienia aplikacji związane z Setting'sami
+    /// </summary>
     public static class Configuration
     {
-        public static bool isMusic;
-        public static KeybordOption keybordOption;
-        public static String name;
-        public static String password;
-        public static bool isAnimation;
-        public static bool isMouse;
+        public static bool IsMusic;
+        public static KeybordOption KeybordOption;
+        public static String Name;
+        public static String Password;
+        public static bool IsAnimation;
+        public static bool IsMouse;
     }
 
     public enum KeybordOption

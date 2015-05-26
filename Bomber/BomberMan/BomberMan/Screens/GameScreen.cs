@@ -27,17 +27,22 @@ namespace BomberMan.Screens
         private const int PercentageOfSolidBlocks = 10;
         private const int PercentageOfGreyBlocks = 40;
         private const int PercentageOfBonuses = 5;
+        private const int PercentageOfOpponents = 5;
 
         private readonly Random _random;
         private List<OponentLocationDAO> _opponents;
         private List<BoardElementDAO> _boardElements;
         private BoardEngine _boardEngine;
+
         /// <summary>
         /// Lista zawierająca wszystkie jednostkowe pola planszy ze wzgędu na typ pola
         /// Przekazywana do BoardEngine w celu narysowania jednostkowych pól
         /// </summary>
         private List<BlockType> _boradBlocksTypes;
+
         private readonly Dictionary<int, BonusType> _bonusLocations;
+        private readonly Dictionary<int, List<CharacterType>> _characterLocations;
+        private readonly List<int> _bombLocations;
         private List<ProgressBar> _bonuses;
         private List<ProgressBar> _hearts;
 
@@ -46,9 +51,9 @@ namespace BomberMan.Screens
         /// Jedna textura na jeden obrazek
         /// </summary>
         private readonly List<Texture2D> _blockTextures;
-        private readonly Texture2D _playerTexture;
+
         private readonly Texture2D _bombTexture;
-        private readonly List<Texture2D> _opponentsTxtures;
+        private readonly List<Texture2D> _characterTextures;
         private readonly List<Texture2D> _bonusesTextures;
 
 
@@ -58,16 +63,17 @@ namespace BomberMan.Screens
         /// W przeciwnym przypadku załąduj grę z Utils i utwórz widok całej planszy
         /// </summary>
         public GameScreen(List<Texture2D> blockTextures, List<Texture2D> bonusesTextures,
-            Texture2D bombTexture, Texture2D playerTexture, List<Texture2D> opponentsTxtures)
+            Texture2D bombTexture, List<Texture2D> characterTextures)
         {
             _bonusesTextures = bonusesTextures;
             _blockTextures = blockTextures;
             _bombTexture = bombTexture;
-            _playerTexture = playerTexture;
-            _opponentsTxtures = opponentsTxtures;
+            _characterTextures = characterTextures;
             _random = new Random();
             _boradBlocksTypes = new List<BlockType>();
             _bonusLocations = new Dictionary<int, BonusType>();
+            _bombLocations = new List<int>();
+            _characterLocations = new Dictionary<int, List<CharacterType>>();
             if (Utils.Game == null)
             {
                 Utils.User = new UserDAO()
@@ -84,20 +90,20 @@ namespace BomberMan.Screens
                 //List<BoardElementLocationDAO> blocks = BoardService.GetAllBlocksForGame(Utils.Game, out message);
                 //for(int i = 0; i< blocks.Count; i++)
                 //{
-                //    BlockType blockKind = BlockType.White;
+                //    characterType blockKind = characterType.White;
                 //    switch (blocks[i].BoardElement.ElementType)
                 //    {
                 //        case BoardElementType.WhiteBlock:
-                //            blockKind = BlockType.White;
+                //            blockKind = characterType.White;
                 //            break;
                 //        case BoardElementType.RedBlock:
-                //            blockKind = BlockType.Red;
+                //            blockKind = characterType.Red;
                 //            break;
                 //        case BoardElementType.GrayBlock:
-                //            blockKind = BlockType.Grey;
+                //            blockKind = characterType.Grey;
                 //            break;
                 //        case BoardElementType.BlackBlock:
-                //            blockKind = BlockType.Black;
+                //            blockKind = characterType.Black;
                 //            break;
                 //    }
                 //    _boradBlocksTypes.Add(blockKind);
@@ -133,10 +139,8 @@ namespace BomberMan.Screens
             //gameTime.ElapsedGameTime.Milliseconds;
             if (_boardEngine != null)
             {
-                int player = 1;
-                List<int> bomList = new List<int>();
                 _boardEngine.Update(_boradBlocksTypes, _bonusLocations,
-                    new Dictionary<int, OpponentType>(), bomList, player, windowWidth, windowHeight);
+                    _characterLocations, _bombLocations, windowWidth, windowHeight);
             }
         }
 
@@ -157,8 +161,8 @@ namespace BomberMan.Screens
                 Level = 0,
                 Life = 100,
                 Finished = false,
-                PlayerXLocation = (uint)1,
-                PlayerYLocation = (uint)1,
+                PlayerXLocation = (uint) 1,
+                PlayerYLocation = (uint) 1,
                 Points = 0,
                 SaveTime = DateTime.Now,
                 Time = 100,
@@ -189,8 +193,8 @@ namespace BomberMan.Screens
         /// <param name="columns">ilość jednostkowych pól w jednym wierszu</param>
         private void CreateBoardEngine(int rows, int columns)
         {
-            _boardEngine = new BoardEngine(_blockTextures, _bonusesTextures, _opponentsTxtures,
-                _bombTexture, _playerTexture, rows, columns);
+            _boardEngine = new BoardEngine(_blockTextures, _bonusesTextures, _characterTextures,
+                _bombTexture, rows, columns);
         }
 
         /// <summary>
@@ -198,7 +202,6 @@ namespace BomberMan.Screens
         /// </summary>
         private void SaveGame()
         {
-
         }
 
         /// <summary>
@@ -216,32 +219,37 @@ namespace BomberMan.Screens
             if (level < 5)
             {
                 RandomBlocks(SimpleLevelRows, SimpleLevelColumns);
-                RandomBonuses(SimpleLevelRows, SimpleLevelColumns, level);
+                RandomCharacters(SimpleLevelColumns);
             }
             else if (level < 10)
             {
                 RandomBlocks(MediumLevelRows, MediumLevelComulns);
+                RandomCharacters(MediumLevelComulns);
             }
             else if (level < 15)
             {
                 RandomBlocks(HighLevelRows, HighLevelColumns);
+                RandomCharacters(HighLevelColumns);
             }
             else
             {
                 RandomBlocks(SuperLevelRows, SuperLevelColumns);
+                RandomCharacters(SuperLevelColumns);
             }
+            RandomBonuses();
         }
 
         /// <summary>
         /// Wylosuj pola, które powinny być niezniszczalne lub zniszczalne, pozostałe ustaw na białe, zwykłe
         /// Pola ustawiane jedynie na wartości <value>GREY</value>, <value>BLACK</value>, <value>WHITE</value>
+        /// Do wszystkich pól white/grey da się dojść
         /// </summary>
         /// <param name="rows">ilość wierszy pól jednostkowch na planszy</param>
         /// <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
         private void RandomBlocks(int rows, int columns)
         {
             CreateBoardEngine(rows, columns);
-            int randomBlocks = PercentageOfSolidBlocks * rows * columns / 100;
+            int randomBlocks = PercentageOfSolidBlocks*rows*columns/100;
             _boradBlocksTypes = new List<BlockType>();
             // zapełnij całą listę szarymi zniszczalnymi blokami
             for (int i = 0; i < rows; i++)
@@ -259,10 +267,10 @@ namespace BomberMan.Screens
                 {
                     x = _random.Next(rows);
                     y = _random.Next(columns);
-                } while (_boradBlocksTypes[x * columns + y].Equals(BlockType.Black));
-                _boradBlocksTypes[x * columns + y] = BlockType.Black;
+                } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
+                _boradBlocksTypes[x*columns + y] = BlockType.Black;
             }
-            randomBlocks = PercentageOfGreyBlocks * rows * columns / 100;
+            randomBlocks = PercentageOfGreyBlocks*rows*columns/100;
             // wylosuj pozycje na których ma znajdować się szary block
             for (int i = 0; i < randomBlocks; i++)
             {
@@ -271,9 +279,9 @@ namespace BomberMan.Screens
                 {
                     x = _random.Next(rows);
                     y = _random.Next(columns);
-                } while (_boradBlocksTypes[x * columns + y].Equals(BlockType.Grey) ||
-                    _boradBlocksTypes[x * columns + y].Equals(BlockType.Black));
-                _boradBlocksTypes[x * columns + y] = BlockType.Grey;
+                } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Grey) ||
+                         _boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
+                _boradBlocksTypes[x*columns + y] = BlockType.Grey;
             }
         }
 
@@ -284,17 +292,14 @@ namespace BomberMan.Screens
         /// Ilość wszystkich bonusów na planszy po rozpoczęsciu poziomu to <value>PercentageOfBonuses</value> * ilość pól
         /// Wylosuj z prawdopodobieństwem 1/10 Bonus Inmortal, 3/10 Life, 2/10 Fast, 1/10 Slow, 2/10 Strength, 1/10 Extra Bomb
         /// </summary>
-        /// <param name="rows">ilość wierszy pól jednostkowch na planszy</param>
-        /// <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
-        /// <param name="level">poziom, dla którego generowana jest plansza</param>
-        private void RandomBonuses(int rows, int columns, int level)
+        private void RandomBonuses()
         {
-            int maxBonusesAmount = PercentageOfBonuses * _boradBlocksTypes.Count - 1;
+            int maxBonusesAmount = PercentageOfBonuses*_boradBlocksTypes.Count/100 - 1;
             int counter = 0;
-            for (int i = 0; i < _boradBlocksTypes.Count; i++)
+            while (counter < maxBonusesAmount)
             {
-                if (counter == maxBonusesAmount) break;
-                if (_boradBlocksTypes[i].Equals(BlockType.Grey) && !_bonusLocations.ContainsKey(i))
+                int index = _random.Next(_boradBlocksTypes.Count);
+                if (_boradBlocksTypes[index].Equals(BlockType.Grey) && !_bonusLocations.ContainsKey(index))
                 {
                     int number = _random.Next() % 10;
                     BonusType bonusType;
@@ -322,9 +327,60 @@ namespace BomberMan.Screens
                     {
                         bonusType = BonusType.BombAmount;
                     }
-                    _bonusLocations.Add(i, bonusType);
+                    _bonusLocations.Add(index, bonusType);
                     counter++;
+                }
+            }
+        }
 
+        /// <summary>
+        /// Wylosuj pola, na których powinny znaleźć się postacie przeciwników i gracz.
+        /// Ilość przeciwników zależy od poziomu i jest równa <value>PercentageOfOpponents</value>
+        /// Prawdopodobieństwo wylosowania ośmiornicy wynosi 65% a ducha 35%
+        /// </summary>
+        /// <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
+        private void RandomCharacters(int columns)
+        {
+            // wylosuj przeciwników
+            int maxOpponentAmount = PercentageOfOpponents*_boradBlocksTypes.Count/100 - 1;
+            int counter = 0;
+            while (counter < maxOpponentAmount)
+            {
+                int index = _random.Next(_boradBlocksTypes.Count);
+                if (_boradBlocksTypes[index].Equals(BlockType.White) && !_characterLocations.ContainsKey(index))
+                {
+                    int number = _random.Next() % 100;
+                    CharacterType characterType;
+                    if (number < 65)
+                    {
+                        characterType = CharacterType.Octopus;
+                    }
+                    else
+                    {
+                        characterType = CharacterType.Ghost;
+                    }
+                    _characterLocations.Add(index, new List<CharacterType>()
+                    {
+                        characterType
+                    });
+                    counter++;
+                }
+            }
+            while (true)
+            {
+                int index = _random.Next(_boradBlocksTypes.Count);
+                if (_boradBlocksTypes[index].Equals(BlockType.White)
+                    && !_characterLocations.ContainsKey(index)
+                    && !_characterLocations.ContainsKey(index - 1)
+                    && !_characterLocations.ContainsKey(index + 1)
+                    && !_characterLocations.ContainsKey(index + columns)
+                    && ( (index >= columns && !_characterLocations.ContainsKey(index - columns)) || index < columns)
+                    && _boradBlocksTypes[index].Equals(BlockType.White)){
+                    _characterLocations.Add(index, new List<CharacterType>()
+                    {
+                        CharacterType.Player
+                    });
+                    break;
                 }
             }
         }

@@ -14,26 +14,25 @@ using BomberManViewModel.DataAccessObjects;
 
 namespace BomberMan
 {
-
     public class GameManager : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        StarsEngine starsEngine;
-        RocketsEngine rocketeEngine;
-        PlanetEngine planetEngine;
-        Texture2D background;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private StarsEngine starsEngine;
+        private RocketsEngine rocketeEngine;
+        private PlanetEngine planetEngine;
+        private Texture2D background;
         public static ScreenType ScreenType = ScreenType.Game;
-        MainMenuScreen mainMenu;
-        GameScreen game;
-        HelpMenuScreen help;
-        HighScoresScreen highScores;
-        LoginScreen login;
-        Song song;
-        SpriteFont font;
-        TextInput textInput = new TextInput();
-        Random random;
-        bool showCursorForInput;
+        private MainMenuScreen mainMenu;
+        private GameScreen game;
+        private HelpMenuScreen help;
+        private HighScoresScreen highScores;
+        private LoginScreen login;
+        private Song song;
+        private SpriteFont font;
+        private TextInput textInput = new TextInput();
+        private Random random;
+        private bool showCursorForInput;
 
         public GameManager()
         {
@@ -42,13 +41,13 @@ namespace BomberMan
             Window.AllowUserResizing = true;
             DataManager.InitContext();
         }
- 
+
         protected override void Initialize()
         {
             showCursorForInput = true;
             base.Initialize();
         }
- 
+
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -56,12 +55,12 @@ namespace BomberMan
             LoadMainMenu();
             LoadGame();
         }
- 
+
         protected override void UnloadContent()
         {
             Content.Unload();
         }
- 
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -71,7 +70,8 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     mainMenu.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
-                    textInput.ProcessKeyboard(System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock));
+                    textInput.ProcessKeyboard(
+                        System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock));
                     break;
                 case ScreenType.Help:
                     break;
@@ -87,12 +87,13 @@ namespace BomberMan
             }
             base.Update(gameTime);
         }
- 
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
-            spriteBatch.Draw(background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height), Color.White);
+            spriteBatch.Draw(background, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height),
+                Color.White);
             spriteBatch.End();
             planetEngine.Draw(spriteBatch);
             rocketeEngine.Draw(spriteBatch);
@@ -100,7 +101,7 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     IsMouseVisible = true;
-                    showCursorForInput = ((gameTime.TotalGameTime.TotalSeconds * 2) % 2 < 1);
+                    showCursorForInput = ((gameTime.TotalGameTime.TotalSeconds*2)%2 < 1);
                     mainMenu.Draw(spriteBatch);
                     textInput.Draw(spriteBatch, font, showCursorForInput);
                     break;
@@ -132,37 +133,48 @@ namespace BomberMan
             //mainMenu.Title.Texture = Content.Load<Texture2D>(@"Images/AllMenus/BomberMan");
         }
 
-        private void LoadHighScores() { }
+        private void LoadHighScores()
+        {
+        }
 
-        private void LoadSettings() { }
+        private void LoadSettings()
+        {
+        }
 
-        private void LoadHelp() { }
+        private void LoadHelp()
+        {
+        }
 
-        private void LoadLogin() { }
+        private void LoadLogin()
+        {
+        }
 
         private void LoadGame()
         {
             List<Texture2D> blockTextures = new List<Texture2D>();
             Texture2D[] blocks = new Texture2D[4];
-            blocks[(int)BlockType.Black] =  Content.Load<Texture2D>(@"Images/Game/black_block");
-            blocks[(int)BlockType.White] = Content.Load<Texture2D>(@"Images/Game/white_block");
-            blocks[(int)BlockType.Grey] = Content.Load<Texture2D>(@"Images/Game/grey_block");
-            blocks[(int)BlockType.Red] =  Content.Load<Texture2D>(@"Images/Game/bomb_block");
+            blocks[(int) BlockType.Black] = Content.Load<Texture2D>(@"Images/Game/black_block");
+            blocks[(int) BlockType.White] = Content.Load<Texture2D>(@"Images/Game/white_block");
+            blocks[(int) BlockType.Grey] = Content.Load<Texture2D>(@"Images/Game/grey_block");
+            blocks[(int) BlockType.Red] = Content.Load<Texture2D>(@"Images/Game/bomb_block");
             blockTextures.AddRange(blocks);
             List<Texture2D> bonusTextures = new List<Texture2D>();
             Texture2D[] bonuses = new Texture2D[6];
-            bonuses[(int)BonusType.Life] = Content.Load<Texture2D>(@"Images/Game/life_bonus");
-            bonuses[(int)BonusType.BombAmount] = Content.Load<Texture2D>(@"Images/Game/extra_bomb_bonus");
-            bonuses[(int)BonusType.Fast] = Content.Load<Texture2D>(@"Images/Game/fast_bonus");
-            bonuses[(int)BonusType.Inmortal] = Content.Load<Texture2D>(@"Images/Game/inmortal_bonus");
-            bonuses[(int)BonusType.Slow] = Content.Load<Texture2D>(@"Images/Game/slow_bonus");
-            bonuses[(int)BonusType.Strenght] = Content.Load<Texture2D>(@"Images/Game/strength_bonus");
+            bonuses[(int) BonusType.Life] = Content.Load<Texture2D>(@"Images/Game/life_bonus");
+            bonuses[(int) BonusType.BombAmount] = Content.Load<Texture2D>(@"Images/Game/extra_bomb_bonus");
+            bonuses[(int) BonusType.Fast] = Content.Load<Texture2D>(@"Images/Game/fast_bonus");
+            bonuses[(int) BonusType.Inmortal] = Content.Load<Texture2D>(@"Images/Game/inmortal_bonus");
+            bonuses[(int) BonusType.Slow] = Content.Load<Texture2D>(@"Images/Game/slow_bonus");
+            bonuses[(int) BonusType.Strenght] = Content.Load<Texture2D>(@"Images/Game/strength_bonus");
             bonusTextures.AddRange(bonuses);
-            List<Texture2D> opponentTextures = new List<Texture2D>();
-            Texture2D[] opponents = new Texture2D[2];
-            opponents[(int)OpponentType.Ghost] = Content.Load<Texture2D>(@"Images/Game/octopus");
-            opponents[(int)OpponentType.Octopus] = Content.Load<Texture2D>(@"Images/Game/ghost");
-            game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/robot"), Content.Load<Texture2D>(@"Images/Game/bomb"), opponentTextures);
+            List<Texture2D> characterTextures = new List<Texture2D>();
+            Texture2D[] characters = new Texture2D[3];
+            characters[(int) CharacterType.Ghost] = Content.Load<Texture2D>(@"Images/Game/octopus");
+            characters[(int) CharacterType.Octopus] = Content.Load<Texture2D>(@"Images/Game/ghost");
+            characters[(int) CharacterType.Player] = Content.Load<Texture2D>(@"Images/Game/robot");
+            characterTextures.AddRange(characters);
+            game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/bomb"),
+                characterTextures);
         }
 
         private void LoadBackGround()
@@ -173,7 +185,8 @@ namespace BomberMan
             textures.Add(Content.Load<Texture2D>(@"Images/Common/heart"));
             textures.Add(Content.Load<Texture2D>(@"Images/Common/star"));
             textures.Add(Content.Load<Texture2D>(@"Images/Common/circle"));
-            starsEngine = new StarsEngine(textures, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), random.Next(5) + 5);
+            starsEngine = new StarsEngine(textures,
+                new Vector2((float)Window.ClientBounds.Width/2, (float)Window.ClientBounds.Height/2), random.Next(5) + 5);
             List<Texture2D> rocket = new List<Texture2D>();
             rocket.Add(Content.Load<Texture2D>(@"Images/Common/Shuttle"));
             rocketeEngine = new RocketsEngine(rocket, random.Next(5) + 3);
