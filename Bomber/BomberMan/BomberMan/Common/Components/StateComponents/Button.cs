@@ -18,10 +18,14 @@ namespace BomberMan.Common.Components.StateComponents
         private int _mx, _my;
         private double _frameTime;
         public Func<Color> Click;
+        private Label _textLabel;
 
-        public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, double timer)
+        public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle,
+            double timer, SpriteFont spriteFont
+                = null, String text = "")
             : base(texture, color, position, scale, angle)
         {
+            _textLabel = new Label(spriteFont, text, color, position, scale, angle);
             _state = state;
             _timer = timer;
         }
@@ -77,6 +81,25 @@ namespace BomberMan.Common.Components.StateComponents
             {
                 OnClick(_timer);
             }
+            if (_textLabel!= null && _textLabel.Text.Length > 0)
+            {
+                _textLabel.Position = new Vector2(Position.X - Texture.Width*Scale.X/2,
+                    Position.Y - Texture.Height*Scale.Y/2);
+            }
+        }
+
+        /// <summary>
+        /// Narysuj na podanym SpriteBatch komponent z labelką.
+        /// </summary>
+        /// <param name="spriteBatch">Obiekt, do ktorego dorysowujemy własny komponent</param>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            if (_textLabel!= null && _textLabel.Text.Length > 0)
+            {
+                spriteBatch.End();
+                _textLabel.Draw(spriteBatch);
+            }
         }
 
         public void OnClick(double timer)
@@ -94,28 +117,29 @@ namespace BomberMan.Common.Components.StateComponents
 
         private bool CheckIfButtonContainsPoint(int x, int y)
         {
-            return CheckIfRectangleContainsPoint(0, 0, (int) ((x - (Position.X - Texture.Width * Scale.X/(float)2 )) / Scale.X),
-                (int)((y - (Position.Y - Texture.Height * Scale.Y / 2)) / Scale.Y));
+            return CheckIfRectangleContainsPoint(0, 0,
+                (int) ((x - (Position.X - Texture.Width*Scale.X/(float) 2))/Scale.X),
+                (int) ((y - (Position.Y - Texture.Height*Scale.Y/2))/Scale.Y));
         }
 
         private bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
         {
             return (x >= tx &&
-                x <= tx + Texture.Width &&
-                y >= ty &&
-                y <= ty + Texture.Height);
+                    x <= tx + Texture.Width &&
+                    y >= ty &&
+                    y <= ty + Texture.Height);
         }
 
         private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
         {
             if (CheckIfTextureContainsPoint(tx, ty, x, y))
             {
-                uint[] data = new uint[Texture.Width * Texture.Height];
+                uint[] data = new uint[Texture.Width*Texture.Height];
                 Texture.GetData(data);
-                if ((x - (int)tx) + (y - (int)ty) *
-                    Texture.Width < Texture.Width * Texture.Height)
+                if ((x - (int) tx) + (y - (int) ty)*
+                    Texture.Width < Texture.Width*Texture.Height)
                 {
-                    return ((data[(x - (int)tx) + (y - (int)ty) * Texture.Width] & 0xFF000000) >> 24) > 20;
+                    return ((data[(x - (int) tx) + (y - (int) ty)*Texture.Width] & 0xFF000000) >> 24) > 20;
                 }
             }
             return false;

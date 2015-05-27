@@ -15,7 +15,7 @@ namespace BomberMan
     public class GameManager : Game
     {
         private GraphicsDeviceManager _graphics;
-        private const int MinWindowWidth = 800;
+        private const int MinWindowWidth = 900;
         private const int MinWindowHeight = 600;
         private SpriteBatch _spriteBatch;
         private StarsEngine _starsEngine;
@@ -135,7 +135,6 @@ namespace BomberMan
             textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/settings"));
             textures.Add(Content.Load<Texture2D>(@"Images/MainMenu/LogOut"));
             _mainMenu = new MainMenuScreen(5, textures);
-            //mainMenu.Title.Texture = Content.Load<Texture2D>(@"Images/AllMenus/BomberMan");
         }
 
         private void LoadHighScores()
@@ -153,8 +152,9 @@ namespace BomberMan
         private void LoadLogin()
         {
             _font = Content.Load<SpriteFont>(@"Fonts/Input");
-            Texture2D fieldBackground = Content.Load<Texture2D>(@"Images/Game/black_block");
-            _login = new LoginScreen(_font, fieldBackground);
+            Texture2D fieldBackground = Content.Load<Texture2D>(@"Images/Game/white_block");
+            Texture2D bombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
+            _login = new LoginScreen(_font, Content.Load<SpriteFont>(@"Fonts/Title"), fieldBackground, bombTexture);
         }
 
         private void LoadGame()

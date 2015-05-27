@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BomberMan.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +13,17 @@ namespace BomberMan.Screens.Menus
 
         public MainMenuScreen(int options, List<Texture2D> buttonsTextures) : base(options, buttonsTextures)
         {
+            Func<Color> newGame = delegate
+            {
+                GameManager.ScreenType = ScreenType.Game;
+                return Color.White;
+            };
+            OptionButtons[(int) MainMenuOptions.NewGame].Click = newGame;
+            OptionButtons[(int) MainMenuOptions.LogOut].Click = delegate
+            {
+                GameManager.ScreenType = ScreenType.Login;
+                return Color.White;
+            };
         }
 
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
