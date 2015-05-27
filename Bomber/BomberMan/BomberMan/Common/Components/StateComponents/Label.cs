@@ -28,10 +28,8 @@ namespace BomberMan.Common.Components.StateComponents
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             Vector2 origin = new Vector2(0,0);
             spriteBatch.DrawString(_spriteFont, Text, Position, Color, Angle, origin, Scale, SpriteEffects.None, 0 );
-            spriteBatch.End();
         }
     }
 }

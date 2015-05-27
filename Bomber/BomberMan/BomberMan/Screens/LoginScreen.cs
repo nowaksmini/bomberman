@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using BomberMan.Common;
 using BomberMan.Common.Components.StateComponents;
+using BomberManViewModel.DataAccessObjects;
+using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -28,37 +30,62 @@ namespace BomberMan.Screens
         private int _inputIndex;
         private float countDuration = 0.2f;
         private float _currentTime;
-        private Button _saveButton;
+        private readonly Button _saveButton;
         private const float SaveWidth = 100f;
         private const float SaveHeight = 40f;
         private const float SaveButtonShift = 50f;
-        private Texture2D _bombTexture;
+        private readonly Texture2D _bombTexture;
         private const float BombWidth = 200f;
         private const float BombHeight = 150f;
         private const String BomberManTitle = "BomberMan";
-        private SpriteFont _spriteFontTitle;
+        private readonly SpriteFont _spriteFontTitle;
+        private Button _showPassword;
+        private Button _regiter;
 
         public LoginScreen(SpriteFont spriteFont, SpriteFont spriteFontTitle, Texture2D texture, Texture2D bombTexture)
         {
             _spriteFontTitle = spriteFontTitle;
             _bombTexture = bombTexture;
-            var color = Color.White;
-            var color_input = Color.Black;
             _spriteFont = spriteFont;
-            _saveButton = new Button(BState.Up, texture, color_input, new Vector2(0,0), 
+            var colorInput = Color.Black;
+            CreateLabelsAndFields(Color.White, colorInput, texture);
+            _saveButton = new Button(BState.Up, texture, colorInput, new Vector2(0,0), 
                 new Vector2(1,1), 0, 2f, spriteFont, "LOG IN");
+            _showPassword = new Button(BState.Up, texture, colorInput, new Vector2(0, 0), new Vector2(0.4f, 0.4f), 0, 2.0f,
+                spriteFontTitle, ">");
+            _showPassword.Click = delegate()
+            {
+                _showPassword.Text = _showPassword.Text.Length == 0 ? ">" : "";
+                return Color.LightBlue;
+            };
             Func<Color> save = delegate()
             {
-                GameManager.ScreenType = ScreenType.MainMenu;
+                String message;
+                Utils.User = new UserDAO() { Name = Fields[0].TextValue, Password = Fields[1].TextValue};
+                if (UserService.VerificateUser(Utils.User, out message))
+                {
+                    GameManager.ScreenType = ScreenType.MainMenu;
+                }
                 return Color.LightBlue;
             };
             _saveButton.Click = save;
+            
+        }
+
+        /// <summary>
+        /// Wygeneruj wszystkie labelki oraz textinputs dla widoku login'a.
+        /// </summary>
+        /// <param name="color">color textu labelek</param>
+        /// <param name="colorInput">color textu textinputs</param>
+        /// <param name="texture">textura koloru tła inputtexts</param>
+        private void CreateLabelsAndFields(Color color, Color colorInput, Texture2D texture)
+        {
             Labels = new List<Label>();
             Fields = new List<TextInput>();
             Labels.Add(new Label(_spriteFont, "User Name", color, new Vector2(0, 0), new Vector2(1, 1), 0));
             Labels.Add(new Label(_spriteFont, "Password", color, new Vector2(0, 0), new Vector2(1, 1), 0));
-            Fields.Add(new TextInput(texture, spriteFont, true, color_input, TextInputType.Name, MaxNameCharacters));
-            Fields.Add(new TextInput(texture, spriteFont, true, color_input, TextInputType.Password, MaxPasswordCharacters));
+            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, MaxNameCharacters));
+            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password, MaxPasswordCharacters));
             Fields[_inputIndex].Enabled = true;
             foreach (var input in Fields)
             {
@@ -73,8 +100,13 @@ namespace BomberMan.Screens
             }
         }
 
+        /// <summary>
+        /// Narysuj wszystkie komponenty.
+        /// </summary>
+        /// <param name="spriteBatch">Obiekt, na którym rysujemy wszytskie komponenty</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
             foreach (var label in Labels)
             {
                 label.Draw(spriteBatch);
@@ -83,7 +115,6 @@ namespace BomberMan.Screens
             {
                 textInput.Draw(spriteBatch);
             }
-            spriteBatch.Begin();
             Vector2 scale = new Vector2(BombWidth/_bombTexture.Width, BombHeight/_bombTexture.Height);
             Rectangle sourceRectangle = new Rectangle(0, 0, _bombTexture.Width, _bombTexture.Height);
             Vector2 origin = new Vector2((float)_bombTexture.Width / 2, (float)_bombTexture.Height / 2);
@@ -91,10 +122,12 @@ namespace BomberMan.Screens
              0.0f, origin, scale, SpriteEffects.None, 0f);
             spriteBatch.DrawString(_spriteFontTitle, BomberManTitle, new Vector2(Labels[0].Position.X,BombHeight/2), Color.White);
             _saveButton.Draw(spriteBatch);
+            _showPassword.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         /// <summary>
-        /// Zaktualizuj 
+        /// Zaktualizuj widok panelu logowania w zależności od czasu trwania gry oraz rozmiaru okna aplikacji.
         /// </summary>
         /// <param name="gameTime">czas trwania gry</param>
         /// <param name="windowWidth">szerokość okna aplikacji</param>
@@ -140,6 +173,11 @@ namespace BomberMan.Screens
             _saveButton.Scale = new Vector2(
                 SaveWidth / _saveButton.Texture.Width , SaveHeight / _saveButton.Texture.Height);
             _saveButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+            Vector2 scaleCheckbox = new Vector2( _spriteFontTitle.MeasureString(">").X/_showPassword.Texture.Width ,
+                _spriteFontTitle.MeasureString(">").Y/_showPassword.Texture.Height);
+            _showPassword.Position = new Vector2(_saveButton.Position.X, _saveButton.Position.Y + DataRowsShift);
+            _showPassword.Scale = scaleCheckbox;
+            _showPassword.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
             _currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (_currentTime >= countDuration)
             {
@@ -148,6 +186,9 @@ namespace BomberMan.Screens
             }
         }
 
+        /// <summary>
+        /// Przechwytuj wciśnięte przyciski na klawiaturze i obsłuż je odpowiednio.
+        /// </summary>
         public override void HandleKeyboard()
         {
             LastKeyboardState = KeyboardState;
@@ -179,6 +220,5 @@ namespace BomberMan.Screens
         }
 
         public void CreateUser() { }
-        public void LoginUser() { }
     }
 }

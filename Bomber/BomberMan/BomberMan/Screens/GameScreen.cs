@@ -75,12 +75,6 @@ namespace BomberMan.Screens
             _characterLocations = new Dictionary<int, List<CharacterType>>();
             if (Utils.Game == null)
             {
-                Utils.User = new UserDAO()
-                {
-                    ID = 1,
-                    Name = "ala",
-                    Password = "ala"
-                };
                 Utils.Game = CreateNewGame();
             }
             else

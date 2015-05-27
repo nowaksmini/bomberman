@@ -18,7 +18,13 @@ namespace BomberMan.Common.Components.StateComponents
         private int _mx, _my;
         private double _frameTime;
         public Func<Color> Click;
-        private Label _textLabel;
+        private readonly Label _textLabel;
+
+        public String Text
+        {
+            get { return _textLabel.Text; }
+            set { _textLabel.Text = value; }
+        }
 
         public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle,
             double timer, SpriteFont spriteFont
@@ -97,7 +103,6 @@ namespace BomberMan.Common.Components.StateComponents
             base.Draw(spriteBatch);
             if (_textLabel!= null && _textLabel.Text.Length > 0)
             {
-                spriteBatch.End();
                 _textLabel.Draw(spriteBatch);
             }
         }
@@ -146,6 +151,9 @@ namespace BomberMan.Common.Components.StateComponents
         }
     }
 
+    /// <summary>
+    /// Reprezentuje stan przycisku: najechanie, brak czynności, właśnie puszczony, przyciśnięty
+    /// </summary>
     public enum BState
     {
         Hover,

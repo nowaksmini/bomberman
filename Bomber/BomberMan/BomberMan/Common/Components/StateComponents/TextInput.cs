@@ -13,7 +13,7 @@ namespace BomberMan.Common.Components.StateComponents
     {
         private const int LongDelay = 500; // milisekundy
         private const int ShortDelay = 50;
-        private string _textValue;
+        public string TextValue { get; set; }
         private int _time;
         private KeyboardState _keyboardState;
         private KeyboardState _lastKeyboardState;
@@ -35,7 +35,7 @@ namespace BomberMan.Common.Components.StateComponents
             _textInputType = textInputType;
             _font = font;
             _texture = texture;
-            _textValue = String.Empty;
+            TextValue = String.Empty;
             ShowCursor = showCursor;
             _color = color;
             _button = new Button(BState.Up, texture, color, new Vector2(0,0), new Vector2(1,1), 0.0f, 2.0f);
@@ -53,15 +53,15 @@ namespace BomberMan.Common.Components.StateComponents
                     //process backspace
                     if (x == '\b')
                     {
-                        if (_textValue.Length >= 1)
+                        if (TextValue.Length >= 1)
                         {
-                            _textValue = _textValue.Remove(_textValue.Length - 1, 1);
+                            TextValue = TextValue.Remove(TextValue.Length - 1, 1);
                         }
                     }
                     else
                     {
-                        if(_textValue.Length < _maxCharacters)
-                            _textValue += x;
+                        if(TextValue.Length < _maxCharacters)
+                            TextValue += x;
                     }
                 }
             }
@@ -72,8 +72,8 @@ namespace BomberMan.Common.Components.StateComponents
         {
             _button.Update(mx, my, frameTime, mousePressed, prevMousePressed);
             String cursor = Enabled ? "_" : "";
-            float width = _font.MeasureString(_textValue + cursor).X;
-            float height = _font.MeasureString(_textValue + cursor).Y;
+            float width = _font.MeasureString(TextValue + cursor).X;
+            float height = _font.MeasureString(TextValue + cursor).Y;
             Vector2 scale = new Vector2(width/_texture.Width, 
                                         height/ _texture.Height);
             _button.Scale = scale;
@@ -83,18 +83,16 @@ namespace BomberMan.Common.Components.StateComponents
         public void Draw(SpriteBatch spriteBatch)
         {
             String password = "";
-            for (int i = 0; i < _textValue.Length; i++)
+            for (int i = 0; i < TextValue.Length; i++)
                 password += "*";
-            String text = _textInputType == TextInputType.Name ? _textValue : password;
+            String text = _textInputType == TextInputType.Name ? TextValue : password;
             Vector2 stringSize = _font.MeasureString(text);
-            spriteBatch.Begin();
             _button.Draw(spriteBatch);
             spriteBatch.DrawString(_font, text, Position, _color);
             if (ShowCursor && Enabled)
             {
                 spriteBatch.DrawString(_font, "_", new Vector2(Position.X + stringSize.X, Position.Y), _color);
             }
-            spriteBatch.End();
         }
 
         private string Convert(Keys[] keys, bool capsLock)
