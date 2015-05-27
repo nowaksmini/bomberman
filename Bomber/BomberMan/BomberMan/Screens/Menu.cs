@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BomberMan.Common;
 
 namespace BomberMan.Screens
 {
@@ -16,7 +17,7 @@ namespace BomberMan.Screens
 
         protected Menu(int options, List<Texture2D> textures)
         {
-            prevSelectedOption = -1;
+            PrevSelectedOption = -1;
             Options = options;
             OptionButtons = new Button[options];
             for(int i = 0 ; i < textures.Count; i++)

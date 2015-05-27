@@ -38,7 +38,7 @@ namespace BomberMan.Common
         /// Narysuj na podanym SpriteBatch komponent.
         /// </summary>
         /// <param name="spriteBatch">Obiekt, do ktorego dorysowujemy własny komponent</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
             Vector2 origin = new Vector2((float)Texture.Width / 2, (float)Texture.Height / 2);

@@ -1,16 +1,11 @@
-﻿using BomberMan.Common.Components.StateComponents;
+﻿using System;
+using System.Collections.Generic;
+using BomberMan.Common;
+using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
-using BomberManModel;
 using BomberManViewModel.DataAccessObjects;
-using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
-using BomberMan.Common;
 using Microsoft.Xna.Framework.Input;
 
 namespace BomberMan.Screens
@@ -58,8 +53,8 @@ namespace BomberMan.Screens
         private readonly List<Texture2D> _characterTextures;
         private readonly List<Texture2D> _bonusesTextures;
 
-        float countDuration = 0.1f; //every  0.5s.
-        float currentTime;
+        private float countDuration = 0.1f; //every  0.5s.
+        private float _currentTime;
 
         /// <summary>
         /// Utwórz widok gry ze wszystkimi polami jednostkowymi
@@ -140,10 +135,10 @@ namespace BomberMan.Screens
             //gameTime.ElapsedGameTime.Milliseconds;
             _boardEngine.Update(_boradBlocksTypes, _bonusLocations,
                 _characterLocations, _bombLocations, windowWidth, windowHeight);
-            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (currentTime >= countDuration)
+            _currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_currentTime >= countDuration)
             {
-                currentTime -= countDuration;
+                _currentTime -= countDuration;
                 HandleKeyboard();
             }
         }
