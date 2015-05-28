@@ -26,9 +26,20 @@ namespace BomberMan.Common.Components.StateComponents
             set { _textLabel.Text = value; }
         }
 
+        /// <summary>
+        /// Utwórz nowy przycisk z napisem na nim.
+        /// </summary>
+        /// <param name="state">stan startowy przycisku <example>Wciśnięty</example></param>
+        /// <param name="texture">tło przycisku</param>
+        /// <param name="color">kolor przycisku</param>
+        /// <param name="position">pozycja przycisku</param>
+        /// <param name="scale">skala rozmiaru przycisku</param>
+        /// <param name="angle">kąt nachylenia przycisku</param>
+        /// <param name="timer">najkrótszy czas od jednej zmiany stanu przycisku do drugiej</param>
+        /// <param name="spriteFont">czcionka napisu na przycisku</param>
+        /// <param name="text">napis na przycisku</param>
         public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle,
-            double timer, SpriteFont spriteFont
-                = null, String text = "")
+            double timer, SpriteFont spriteFont = null, String text = "")
             : base(texture, color, position, scale, angle)
         {
             _textLabel = new Label(spriteFont, text, color, position, scale, angle);
@@ -36,6 +47,26 @@ namespace BomberMan.Common.Components.StateComponents
             _timer = timer;
         }
 
+        /// <summary>
+        /// Utwórz przycisk z tekstem znajdującym się na nim.
+        /// Nie obracaj przycisku, ustaw pozycję startową na <value>0,0</value>
+        /// a skalę na <value>1,1</value>
+        /// </summary>
+        /// <param name="texture">tło przycisku</param>
+        /// <param name="color">kolor przycisku</param>
+        /// <param name="spriteFont">czcionka napisu</param>
+        /// <param name="text">napis</param>
+        public Button(Texture2D texture, Color color, SpriteFont spriteFont, String text)
+            : base(texture, color, new Vector2(0, 0), new Vector2(1, 1), 0f)
+        {
+            _textLabel = new Label(spriteFont, text, color, new Vector2(0, 0), new Vector2(1, 1), 0);
+            _state = BState.Up;
+            _timer = 2f;
+        }
+
+        /// <summary>
+        /// Utwórz przycisk bez napisu.
+        /// </summary>
         public Button()
         {
             Color = _normalColor;
@@ -43,6 +74,14 @@ namespace BomberMan.Common.Components.StateComponents
             _timer = 0.0;
         }
 
+        /// <summary>
+        /// Uaktualnij widok przycisku w zależności od położenia myszki na ekranie.
+        /// </summary>
+        /// <param name="mx">współrzędna x myszki na ekranie</param>
+        /// <param name="my">współrzędna y myszki na ekranie</param>
+        /// <param name="frameTime">czas trwania gry</param>
+        /// <param name="mPressed">stan myszki <true>wciśnięta</true></param>
+        /// <param name="prevMPressed">poprzedni stan myszki <value>true</value> wciśnięta</param>
         public void Update(int mx, int my, double frameTime, bool mPressed, bool prevMPressed)
         {
             _mx = mx;
@@ -87,7 +126,7 @@ namespace BomberMan.Common.Components.StateComponents
             {
                 OnClick(_timer);
             }
-            if (_textLabel!= null && _textLabel.Text.Length > 0)
+            if (_textLabel != null && _textLabel.Text.Length > 0)
             {
                 _textLabel.Position = new Vector2(Position.X - Texture.Width*Scale.X/2,
                     Position.Y - Texture.Height*Scale.Y/2);
@@ -101,12 +140,16 @@ namespace BomberMan.Common.Components.StateComponents
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            if (_textLabel!= null && _textLabel.Text.Length > 0)
+            if (_textLabel != null && _textLabel.Text.Length > 0)
             {
                 _textLabel.Draw(spriteBatch);
             }
         }
 
+        /// <summary>
+        /// Metoda wykonywana podczas kliknięcia na przycisk.
+        /// </summary>
+        /// <param name="timer"></param>
         public void OnClick(double timer)
         {
             _timer = timer;
@@ -119,7 +162,13 @@ namespace BomberMan.Common.Components.StateComponents
             }
         }
 
-
+        /// <summary>
+        /// Metoda sprawdza czy dany punkt należy do przycisku.
+        /// Wykorzystywane do sprawdzenia czy myszka najeżdża na przycisk.
+        /// </summary>
+        /// <param name="x">współrzędna x punktu</param>
+        /// <param name="y">współrzędna y punktu</param>
+        /// <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
         private bool CheckIfButtonContainsPoint(int x, int y)
         {
             return CheckIfRectangleContainsPoint(0, 0,
@@ -127,6 +176,14 @@ namespace BomberMan.Common.Components.StateComponents
                 (int) ((y - (Position.Y - Texture.Height*Scale.Y/2))/Scale.Y));
         }
 
+        /// <summary>
+        /// Metoda sprawdza czy wydzielone tło przyciska zawiera punkt.
+        /// </summary>
+        /// <param name="tx">współrzędna startowa x na tle porównywania</param>
+        /// <param name="ty">współrzędna startowa y na tle porónywania</param>
+        /// <param name="x">współrzędna x punktu</param>
+        /// <param name="y">współrzędna y punktu</param>
+        /// <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
         private bool CheckIfTextureContainsPoint(float tx, float ty, int x, int y)
         {
             return (x >= tx &&
@@ -135,6 +192,14 @@ namespace BomberMan.Common.Components.StateComponents
                     y <= ty + Texture.Height);
         }
 
+        /// <summary>
+        /// Sprawdź czy przycisk zawiera dany punkt, jedynie w miejscach gdzie nie jest on prześwitujący.
+        /// </summary>
+        /// <param name="tx">współrzędna startowa x na tle porównywania</param>
+        /// <param name="ty">współrzędna startowa y na tle porónywania</param>
+        /// <param name="x">współrzędna x punktu</param>
+        /// <param name="y">współrzędna y punktu</param>
+        /// <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
         private bool CheckIfRectangleContainsPoint(float tx, float ty, int x, int y)
         {
             if (CheckIfTextureContainsPoint(tx, ty, x, y))

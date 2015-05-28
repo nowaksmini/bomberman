@@ -21,16 +21,23 @@ namespace BomberMan.Common
 
         public static String Name;
         public static String Password;
-        public static bool IsAnimation;
-        public static bool IsMouse;
+        public static bool IsAnimation = true;
+        public static bool IsMouse = true;
+
     }
 
+    /// <summary>
+    /// Dostępne opcje poruszania się w grze poprzez ustawienia klawiatury.
+    /// </summary>
     public enum KeyboardOption
     {
         Arrows,
         Wsad
     }
 
+    /// <summary>
+    /// Dostępne opje klawiszowe ustawienia kalwisza odpowiadającego za zostawienie bomby.
+    /// </summary>
     public enum BombKeyboardOption
     {
         Spcace,

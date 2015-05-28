@@ -22,7 +22,8 @@ namespace BomberMan.Screens.Menus
             OptionButtons[(int) MainMenuOptions.LogOut].Click = delegate
             {
                 GameManager.ScreenType = ScreenType.Login;
-                return Color.White;
+                Utils.User = null;
+                return Color.Transparent;
             };
         }
 

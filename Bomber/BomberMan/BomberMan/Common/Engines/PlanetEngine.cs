@@ -9,11 +9,15 @@ namespace BomberMan.Common.Engines
     /// </summary>
     internal class PlanetEngine : Engine
     {
-        private const int Shift = 50;
         public float MaxHeight { get; set; }
         public float MaxWidth { get; set; }
         private int _prevWindowWidth, _prevWindowHeight;
 
+        /// <summary>
+        /// Utwórz nowy silnik generujący planety i gwiazdy znajdujące się na tle kosmosu.
+        /// </summary>
+        /// <param name="textures">dostępne tła planet i gwiazd</param>
+        /// <param name="objectsCount">ilość wygenerowanych ciał niebieskich</param>
         public PlanetEngine(List<Texture2D> textures, int objectsCount)
             : base(textures, objectsCount)
         {
@@ -51,7 +55,7 @@ namespace BomberMan.Common.Engines
         /// </summary>
         /// <param name="windowWidth">szerokość okna aplikacji</param>
         /// <param name="windowHeight">wysokosć okna aplikacji</param>
-        /// <returns></returns>
+        /// <returns>zwróć nowe ciało niebieskie</returns>
         private Component GenerateNewPlanet(int windowWidth, int windowHeight)
         {
             _prevWindowWidth = windowWidth;

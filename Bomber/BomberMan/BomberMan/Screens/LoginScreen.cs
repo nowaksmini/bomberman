@@ -28,7 +28,7 @@ namespace BomberMan.Screens
         private const int MaxNameCharacters = 15;
         private const int MaxPasswordCharacters = 15;
         private int _inputIndex;
-        private float countDuration = 0.2f;
+        private const float CountDuration = 0.2f;
         private float _currentTime;
         private readonly Button _saveButton;
         private const float SaveWidth = 100f;
@@ -38,38 +38,58 @@ namespace BomberMan.Screens
         private const float BombWidth = 200f;
         private const float BombHeight = 150f;
         private const String BomberManTitle = "BomberMan";
+        private const String CheckBoxCheckedSymbol = "x";
+        private const String LogInButton = "Zaloguj";
+        private const String UserName = "Login";
+        private const String Password = "Hasło";
+        private const String Register = "Zarejestruj";
+        private const String ShowPassword = "Pokaż hasło";
         private readonly SpriteFont _spriteFontTitle;
-        private Button _showPassword;
-        private Button _regiter;
+        private readonly SpriteFont _spriteFontCheckBox;
+        private readonly Button _showPassword;
+        private readonly Button _regiter;
 
-        public LoginScreen(SpriteFont spriteFont, SpriteFont spriteFontTitle, Texture2D texture, Texture2D bombTexture)
+        /// <summary>
+        /// Utwórz nowy ekran logowania.
+        /// </summary>
+        /// <param name="spriteFont">czcionka dla labelek</param>
+        /// <param name="spriteFontTitle">czcionka dla nagłówka</param>
+        /// <param name="checkBoxFont">czcionka dla dodatkowych opcji jak rejestruj czy pokaż hasło</param>
+        /// <param name="texture">tło przycisków i edytowalnych pól</param>
+        /// <param name="bombTexture">obrazek bomby</param>
+        public LoginScreen(SpriteFont spriteFont, SpriteFont spriteFontTitle, SpriteFont checkBoxFont,
+            Texture2D texture, Texture2D bombTexture)
         {
+            _spriteFontCheckBox = checkBoxFont;
             _spriteFontTitle = spriteFontTitle;
             _bombTexture = bombTexture;
             _spriteFont = spriteFont;
             var colorInput = Color.Black;
             CreateLabelsAndFields(Color.White, colorInput, texture);
-            _saveButton = new Button(BState.Up, texture, colorInput, new Vector2(0,0), 
-                new Vector2(1,1), 0, 2f, spriteFont, "LOG IN");
-            _showPassword = new Button(BState.Up, texture, colorInput, new Vector2(0, 0), new Vector2(0.4f, 0.4f), 0, 2.0f,
-                spriteFontTitle, ">");
+            _regiter = new Button(texture, colorInput, spriteFont, "");
+            _saveButton = new Button(texture, colorInput, spriteFont, LogInButton);
+            _showPassword = new Button(texture, colorInput, spriteFont, "");
             _showPassword.Click = delegate()
             {
-                _showPassword.Text = _showPassword.Text.Length == 0 ? ">" : "";
-                return Color.LightBlue;
+                _showPassword.Text = _showPassword.Text.Length == 0 ? CheckBoxCheckedSymbol : "";
+                Fields[1].TextInputType = Fields[1].TextInputType == TextInputType.Name
+                    ? TextInputType.Password
+                    : TextInputType.Name;
+                Labels[Labels.Count - 1].Text = "";
+                return Color.Transparent;
+            };
+            _regiter.Click = delegate()
+            {
+                _regiter.Text = _regiter.Text.Length == 0 ? CheckBoxCheckedSymbol : "";
+                Labels[Labels.Count - 1].Text = "";
+                return Color.Transparent;
             };
             Func<Color> save = delegate()
             {
-                String message;
-                Utils.User = new UserDAO() { Name = Fields[0].TextValue, Password = Fields[1].TextValue};
-                if (UserService.VerificateUser(Utils.User, out message))
-                {
-                    GameManager.ScreenType = ScreenType.MainMenu;
-                }
-                return Color.LightBlue;
+                LogIn();
+                return Color.Transparent;
             };
             _saveButton.Click = save;
-            
         }
 
         /// <summary>
@@ -82,10 +102,15 @@ namespace BomberMan.Screens
         {
             Labels = new List<Label>();
             Fields = new List<TextInput>();
-            Labels.Add(new Label(_spriteFont, "User Name", color, new Vector2(0, 0), new Vector2(1, 1), 0));
-            Labels.Add(new Label(_spriteFont, "Password", color, new Vector2(0, 0), new Vector2(1, 1), 0));
+            Labels.Add(new Label(_spriteFont, UserName, color));
+            Labels.Add(new Label(_spriteFont, Password, color));
+            Labels.Add(new Label(_spriteFontCheckBox, ShowPassword, color));
+            Labels.Add(new Label(_spriteFontCheckBox, Register, color));
+            Labels.Add(new Label(_spriteFontCheckBox, "", Color.Red));
+
             Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, MaxNameCharacters));
-            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password, MaxPasswordCharacters));
+            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password,
+                MaxPasswordCharacters));
             Fields[_inputIndex].Enabled = true;
             foreach (var input in Fields)
             {
@@ -94,6 +119,7 @@ namespace BomberMan.Screens
                 {
                     Fields.ForEach(x => x.Enabled = false);
                     textInput.Enabled = true;
+                    Labels[Labels.Count - 1].Text = "";
                     return Color.Transparent;
                 };
                 textInput.OnClick(enable);
@@ -117,11 +143,13 @@ namespace BomberMan.Screens
             }
             Vector2 scale = new Vector2(BombWidth/_bombTexture.Width, BombHeight/_bombTexture.Height);
             Rectangle sourceRectangle = new Rectangle(0, 0, _bombTexture.Width, _bombTexture.Height);
-            Vector2 origin = new Vector2((float)_bombTexture.Width / 2, (float)_bombTexture.Height / 2);
-            spriteBatch.Draw(_bombTexture, new Vector2(BombWidth/2,BombHeight/2), sourceRectangle, Color.White,
-             0.0f, origin, scale, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(_spriteFontTitle, BomberManTitle, new Vector2(Labels[0].Position.X,BombHeight/2), Color.White);
+            Vector2 origin = new Vector2((float) _bombTexture.Width/2, (float) _bombTexture.Height/2);
+            spriteBatch.Draw(_bombTexture, new Vector2(BombWidth/2, BombHeight/2), sourceRectangle, Color.White,
+                0.0f, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(_spriteFontTitle, BomberManTitle, new Vector2(Labels[0].Position.X, BombHeight/2),
+                Color.White);
             _saveButton.Draw(spriteBatch);
+            _regiter.Draw(spriteBatch);
             _showPassword.Draw(spriteBatch);
             spriteBatch.End();
         }
@@ -135,18 +163,18 @@ namespace BomberMan.Screens
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
             MouseState mouseState = Mouse.GetState();
-            double frameTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
+            double frameTime = gameTime.ElapsedGameTime.Milliseconds/1000.0;
             PrevMousePressed = MousePressed;
             MousePressed = mouseState.LeftButton == ButtonState.Pressed;
 
-            float x = (float)windowWidth/2 - LoginPanelWidth/2;
-            float y = (float)windowHeight/2 - HeightShift ;
+            float x = (float) windowWidth/2 - LoginPanelWidth/2;
+            float y = (float) windowHeight/2 - HeightShift;
             foreach (var label in Labels)
             {
-                label.Position = new Vector2(x,y);
+                label.Position = new Vector2(x, y);
                 y += _spriteFont.LineSpacing + DataRowsShift;
             }
-            y = (float)windowHeight / 2 - HeightShift;
+            y = (float) windowHeight/2 - HeightShift;
             for (int i = 0; i < Fields.Count; i++)
             {
                 if (i == 0)
@@ -156,7 +184,7 @@ namespace BomberMan.Screens
                 }
                 else
                 {
-                    Fields[i].Position = new Vector2(Fields[i-1].Position.X, y);
+                    Fields[i].Position = new Vector2(Fields[i - 1].Position.X, y);
                 }
                 y += _spriteFont.LineSpacing + DataRowsShift;
                 if (Fields[i].Enabled)
@@ -165,23 +193,40 @@ namespace BomberMan.Screens
                 }
                 Fields[i].Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
             }
-            Vector2 savePosition = Fields[Fields.Count - 1].Position;
-            savePosition.X += SaveWidth/2;
+
+            Vector2 scaleCheckbox =
+                new Vector2(_spriteFontTitle.MeasureString(CheckBoxCheckedSymbol).X/_showPassword.Texture.Width,
+                    _spriteFontTitle.MeasureString(CheckBoxCheckedSymbol).X/_showPassword.Texture.Height);
+            Vector2 showPasswordPosition = Fields[Fields.Count - 1].Position;
+            _showPassword.Scale = scaleCheckbox;
+            float width = scaleCheckbox.X*_showPassword.Texture.Width;
+            float height = scaleCheckbox.Y*_showPassword.Texture.Height;
+            showPasswordPosition.Y += DataRowsShift;
+            showPasswordPosition.Y += SaveHeight/2;
+            showPasswordPosition.Y += height/2;
+            showPasswordPosition.X += width/2;
+            _showPassword.Position = new Vector2(showPasswordPosition.X, showPasswordPosition.Y + DataRowsShift);
+            _showPassword.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+
+            Vector2 checkBoxRegisterPosition = _showPassword.Position;
+            checkBoxRegisterPosition.Y += DataRowsShift + DataInputShift;
+            _regiter.Scale = scaleCheckbox;
+            _regiter.Position = checkBoxRegisterPosition;
+            _regiter.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+
+            Vector2 savePosition = _regiter.Position;
+            savePosition.X += SaveWidth;
             savePosition.Y += SaveButtonShift;
             savePosition.Y += SaveHeight/2;
             _saveButton.Position = savePosition;
             _saveButton.Scale = new Vector2(
-                SaveWidth / _saveButton.Texture.Width , SaveHeight / _saveButton.Texture.Height);
+                SaveWidth/_saveButton.Texture.Width, SaveHeight/_saveButton.Texture.Height);
             _saveButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
-            Vector2 scaleCheckbox = new Vector2( _spriteFontTitle.MeasureString(">").X/_showPassword.Texture.Width ,
-                _spriteFontTitle.MeasureString(">").Y/_showPassword.Texture.Height);
-            _showPassword.Position = new Vector2(_saveButton.Position.X, _saveButton.Position.Y + DataRowsShift);
-            _showPassword.Scale = scaleCheckbox;
-            _showPassword.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
-            _currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (_currentTime >= countDuration)
+
+            _currentTime += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            if (_currentTime >= CountDuration)
             {
-                _currentTime -= countDuration;
+                _currentTime -= CountDuration;
                 HandleKeyboard();
             }
         }
@@ -201,7 +246,7 @@ namespace BomberMan.Screens
                     case Keys.Tab:
                     case Keys.Down:
                         _inputIndex++;
-                        _inputIndex = _inputIndex >= Fields.Count ? Fields.Count-1 : _inputIndex;
+                        _inputIndex = _inputIndex >= Fields.Count ? Fields.Count - 1 : _inputIndex;
                         Fields.ForEach(x => x.Enabled = false);
                         Fields[_inputIndex].Enabled = true;
                         break;
@@ -219,6 +264,36 @@ namespace BomberMan.Screens
             }
         }
 
-        public void CreateUser() { }
+        /// <summary>
+        /// Zaloguj użytkownika lub utwórz nowe konto w zależności od zaznaczonej opcji.
+        /// </summary>
+        private void LogIn()
+        {
+            String message;
+            if (Utils.User == null)
+            {
+                Utils.User = new UserDAO() { Name = Fields[0].TextValue, Password = Fields[1].TextValue };
+            }
+            else
+            {
+                Utils.User.Name = Fields[0].TextValue;
+                Utils.User.Password = Fields[1].TextValue;
+            }
+            if (!_regiter.Text.Equals(CheckBoxCheckedSymbol))
+            {
+                if (UserService.VerificateUser(ref Utils.User, out message))
+                {
+                    GameManager.ScreenType = ScreenType.MainMenu;
+                }
+            }
+            else
+            {
+                if (UserService.CreateUser(Utils.User, out message))
+                {
+                    GameManager.ScreenType = ScreenType.MainMenu;
+                }
+            }
+            if (message != null) Labels[Labels.Count - 1].Text = message;
+        }
     }
 }

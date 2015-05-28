@@ -17,9 +17,15 @@ namespace BomberMan.Common.Engines
         /// symuluje lot o <value>SHIFT</value> jednostek dalej po czym znika
         /// </summary>
         private const int Shift = 50;
+
         public float MaxHeight { get; set; }
         public float MaxWidth { get; set; }
 
+        /// <summary>
+        /// Utwórz nowy silnik odpowiedzialny za generowanie latających rakiet w tle aplikacji.
+        /// </summary>
+        /// <param name="textures">dostępne tła rakiet</param>
+        /// <param name="objectsCount">ilość generowanych rakiet</param>
         public RocketsEngine(List<Texture2D> textures, int objectsCount) : base(textures, objectsCount)
         {
             for (int i = 0; i < ObjectsAmount; i++)

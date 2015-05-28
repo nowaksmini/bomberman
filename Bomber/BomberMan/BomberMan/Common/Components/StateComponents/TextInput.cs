@@ -24,23 +24,37 @@ namespace BomberMan.Common.Components.StateComponents
         public Vector2 Position { get; set; }
         private readonly Button _button;
         private readonly Texture2D _texture;
-        private readonly TextInputType _textInputType;
-        private readonly int _maxCharacters = Int32.MaxValue;
+        private readonly int _maxCharacters;
 
+        public TextInputType TextInputType { get; set; }
         public bool Enabled { get; set; }
 
-        public TextInput(Texture2D texture, SpriteFont font, bool showCursor, Color color, TextInputType textInputType, int maxCharacters = Int32.MaxValue)
+        /// <summary>
+        /// Utwórz nowe pole edytowalne.
+        /// </summary>
+        /// <param name="texture">kolor tła pola</param>
+        /// <param name="font">czcionka tekstu</param>
+        /// <param name="showCursor"><value>true</value> oznacza pokazywanie kursowa, <value>false</value> brak</param>
+        /// <param name="color">kolor czcionki</param>
+        /// <param name="textInputType">rodzaj pola <value>Hasło</value> oznacza zamianę wpisywanych znaków na symbole "*"</param>
+        /// <param name="maxCharacters">maksymalna ilość znaków</param>
+        public TextInput(Texture2D texture, SpriteFont font, bool showCursor,
+            Color color, TextInputType textInputType, int maxCharacters = Int32.MaxValue)
         {
             _maxCharacters = maxCharacters;
-            _textInputType = textInputType;
+            TextInputType = textInputType;
             _font = font;
             _texture = texture;
             TextValue = String.Empty;
             ShowCursor = showCursor;
             _color = color;
-            _button = new Button(BState.Up, texture, color, new Vector2(0,0), new Vector2(1,1), 0.0f, 2.0f);
+            _button = new Button(BState.Up, texture, color, new Vector2(0, 0), new Vector2(1, 1), 0.0f, 2.0f);
         }
 
+        /// <summary>
+        /// Obsłuż wpisywane znaki na klawiaturze, każdy osobno.
+        /// </summary>
+        /// <param name="capsLock"><value>true</value> oznacza włączony CapsLock</param>
         public void ProcessKeyboard(bool capsLock)
         {
             _keyboardState = Keyboard.GetState();
@@ -60,7 +74,7 @@ namespace BomberMan.Common.Components.StateComponents
                     }
                     else
                     {
-                        if(TextValue.Length < _maxCharacters)
+                        if (TextValue.Length < _maxCharacters)
                             TextValue += x;
                     }
                 }
@@ -68,24 +82,40 @@ namespace BomberMan.Common.Components.StateComponents
             _lastKeyboardState = _keyboardState;
         }
 
+        /// <summary>
+        /// Uaktualnij 
+        /// </summary>
+        /// <param name="mx"></param>
+        /// <param name="my"></param>
+        /// <param name="frameTime"></param>
+        /// <param name="mousePressed"></param>
+        /// <param name="prevMousePressed"></param>
         public void Update(int mx, int my, double frameTime, bool mousePressed, bool prevMousePressed)
         {
             _button.Update(mx, my, frameTime, mousePressed, prevMousePressed);
             String cursor = Enabled ? "_" : "";
-            float width = _font.MeasureString(TextValue + cursor).X;
-            float height = _font.MeasureString(TextValue + cursor).Y;
-            Vector2 scale = new Vector2(width/_texture.Width, 
-                                        height/ _texture.Height);
+            String password = "";
+            for (int i = 0; i < TextValue.Length; i++)
+                password += "*";
+            String text = TextInputType == TextInputType.Name ? TextValue : password;
+            float width = _font.MeasureString(text + cursor).X;
+            float height = _font.MeasureString(text + cursor).Y;
+            Vector2 scale = new Vector2(width/_texture.Width,
+                height/_texture.Height);
             _button.Scale = scale;
             _button.Position = new Vector2(Position.X + width/2, Position.Y + height/2);
         }
 
+        /// <summary>
+        /// Narysuj edytowalne pole tekstowe na ekranie aplikacji.
+        /// </summary>
+        /// <param name="spriteBatch">obiekt, na którym rysujemy pole telstowe</param>
         public void Draw(SpriteBatch spriteBatch)
         {
             String password = "";
             for (int i = 0; i < TextValue.Length; i++)
                 password += "*";
-            String text = _textInputType == TextInputType.Name ? TextValue : password;
+            String text = TextInputType == TextInputType.Name ? TextValue : password;
             Vector2 stringSize = _font.MeasureString(text);
             _button.Draw(spriteBatch);
             spriteBatch.DrawString(_font, text, Position, _color);
@@ -95,6 +125,12 @@ namespace BomberMan.Common.Components.StateComponents
             }
         }
 
+        /// <summary>
+        /// Zamień wciśnięty przycisk na klawiaturze na pojedynczy znak.
+        /// </summary>
+        /// <param name="keys">wciśnięte znaki na klawiaturze</param>
+        /// <param name="capsLock"><value>true</value> oznacza, że wciśnięto CapsLock</param>
+        /// <returns></returns>
         private string Convert(Keys[] keys, bool capsLock)
         {
             string output = "";
@@ -174,6 +210,11 @@ namespace BomberMan.Common.Components.StateComponents
             return output;
         }
 
+        /// <summary>
+        /// Sprawdź czy można wpisywać nowy znak do pola tekstowego w zależności od czasu ostatniego wpisania znaku.
+        /// </summary>
+        /// <param name="pressedKeys">wciśnięte znaki</param>
+        /// <returns></returns>
         private bool CheckPressedKeys(Keys[] pressedKeys)
         {
             bool keyPressed = false;
@@ -188,27 +229,31 @@ namespace BomberMan.Common.Components.StateComponents
                         keyPressed = true;
                         break;
                     }
-                    else
+                    if (now.Subtract(_prevUpdate).Milliseconds > _time)
                     {
-                        if (now.Subtract(_prevUpdate).Milliseconds > _time)
-                        {
-                            _time = ShortDelay;
-                            _prevUpdate = now;
-                            keyPressed = true;
-                            break;
-                        }
+                        _time = ShortDelay;
+                        _prevUpdate = now;
+                        keyPressed = true;
+                        break;
                     }
                 }
             }
             return keyPressed;
         }
 
+        /// <summary>
+        /// Metoda wywoływana podczas kliknięcia w pole tekstowe.
+        /// </summary>
+        /// <param name="clickAction">funkjca wywoływana po naciśnięciu na edytowalne pole tekstowe</param>
         public void OnClick(Func<Color> clickAction)
         {
             _button.Click = clickAction;
         }
     }
 
+    /// <summary>
+    /// Rodzaje pól teksowych: zwykłe, hasło
+    /// </summary>
     public enum TextInputType
     {
         Name,

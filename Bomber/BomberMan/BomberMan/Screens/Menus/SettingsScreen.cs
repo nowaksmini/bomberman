@@ -1,17 +1,12 @@
-﻿using BomberMan.Common.Components.StateComponents;
+﻿using System.Collections.Generic;
+using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace BomberMan.Screens
+namespace BomberMan.Screens.Menus
 {
     public class Settings : Menu
     {
-        public List<CheckBox> CkechOptions;
         public List<TextInput> TextInputs;
 
         public Settings(int options, List<Texture2D> textures) : base(options, textures)

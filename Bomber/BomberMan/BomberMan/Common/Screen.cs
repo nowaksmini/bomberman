@@ -18,9 +18,23 @@ namespace BomberMan.Common
         protected bool MousePressed, PrevMousePressed = false;
         protected const int Gap = 10;
 
+        /// <summary>
+        /// Narusuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+        /// </summary>
+        /// <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
         public abstract void Draw(SpriteBatch spriteBatch);
-        public abstract void Update(GameTime gameTime, int windowWidth, int windowHeight);
-        public abstract void HandleKeyboard();
 
+        /// <summary>
+        /// Uaktualnij pozycje i rozmiary komponentów znajdujących się w silniku.
+        /// </summary>
+        /// <param name="gameTime">czas trwania gry</param>
+        /// <param name="windowWidth">szerokość okna aplikacji</param>
+        /// <param name="windowHeight">wysokość okna aplikacji</param>
+        public abstract void Update(GameTime gameTime, int windowWidth, int windowHeight);
+
+        /// <summary>
+        /// Obsłuż wciskane klawisze na klawiaturze.
+        /// </summary>
+        public abstract void HandleKeyboard();
     }
 }

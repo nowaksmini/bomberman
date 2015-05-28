@@ -1,12 +1,9 @@
-﻿using BomberMan.Common.Components.StateComponents;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BomberMan.Common;
+using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BomberMan.Common;
 
 namespace BomberMan.Screens
 {
@@ -15,19 +12,25 @@ namespace BomberMan.Screens
         public Button[] OptionButtons { get; set; }
         public int Options { get; set; }
 
+        /// <summary>
+        /// Utwóz nową instancję menu.
+        /// </summary>
+        /// <param name="options">ilość dostępnych opcji</param>
+        /// <param name="textures">dostępne tła dla przycisków</param>
         protected Menu(int options, List<Texture2D> textures)
         {
             PrevSelectedOption = -1;
             Options = options;
             OptionButtons = new Button[options];
-            for(int i = 0 ; i < textures.Count; i++)
+            for (int i = 0; i < textures.Count; i++)
             {
-                OptionButtons[i] = new Button();
-                OptionButtons[i].Angle = 0;
-                OptionButtons[i].Color = Color.Transparent;
-                OptionButtons[i].Texture = textures.ElementAt<Texture2D>(i);
+                OptionButtons[i] = new Button
+                {
+                    Angle = 0,
+                    Color = Color.Transparent,
+                    Texture = textures.ElementAt(i)
+                };
             }
-
         }
     }
 }

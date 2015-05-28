@@ -10,6 +10,16 @@ namespace BomberMan.Common.Components.StateComponents
     {
         public BonusType BonusType { get; set; }
 
+        /// <summary>
+        /// Utwórz bonus na jednostkowym polu. Bonusy podczas uruchomienia poziomu zawsze znajdują się pod
+        /// szarymi, zniszczalnymi blokami.
+        /// </summary>
+        /// <param name="texture">obrazek bonusa</param>
+        /// <param name="color">kolor bonusa</param>
+        /// <param name="position">pozycja bonusa</param>
+        /// <param name="scale">skala rozmiaru bonnusa</param>
+        /// <param name="angle">kąt nachylenia bonusa</param>
+        /// <param name="bonusType">rodzaj bonusa <example>Uzupełnij życie gracza o 50%</example></param>
         public Bonus(Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle, BonusType bonusType)
             : base(texture, color, position, scale, angle)
         {

@@ -154,7 +154,8 @@ namespace BomberMan
             _font = Content.Load<SpriteFont>(@"Fonts/Input");
             Texture2D fieldBackground = Content.Load<Texture2D>(@"Images/Game/white_block");
             Texture2D bombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
-            _login = new LoginScreen(_font, Content.Load<SpriteFont>(@"Fonts/Title"), fieldBackground, bombTexture);
+            _login = new LoginScreen(_font, Content.Load<SpriteFont>(@"Fonts/Title"), 
+                Content.Load<SpriteFont>(@"Fonts/AdditionalOptions"), fieldBackground, bombTexture);
         }
 
         private void LoadGame()

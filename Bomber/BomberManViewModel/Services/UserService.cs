@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Sockets;
+using BomberManModel;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
 
@@ -21,17 +23,22 @@ namespace BomberManViewModel.Services
         /// <param name="userDao">użytkownik, którego weryfikujemy</param>
         /// <param name="message">wiadomości otrzymane po zakończeniu weryfikacji</param>
         /// <returns>zwróć <value>true</value> w razie poprawnej weryfikacji loginu i hasła, w przeciwnym przypadku zwróć <value>false</value></returns>
-        public static bool VerificateUser(UserDAO userDao, out String message)
+        public static bool VerificateUser(ref UserDAO userDao, out String message)
         {
             if (CheckIfUserExists(userDao, out message) == false)
                 return false;
+            String name = userDao.Name;
             var query = from b in DataManager.DataBaseContext.Users
-                where b.Name == userDao.Name
+                where b.Name == name
                 select b;
             User user = query.First();
             if (user != null)
             {
-                return VerificatePassword(userDao.Password, user.Password, out message);
+                if (VerificatePassword(userDao.Password, user.Password, out message))
+                {
+                    userDao = AutoMapper.Mapper.Map<UserDAO>(user);
+                    return true;
+                }
             }
             return false;
         }
@@ -49,11 +56,11 @@ namespace BomberManViewModel.Services
                 select b;
             if (!query.Any())
             {
-                message = "No user exists with name " + userDao.Name;
+                message = "Nie istnieje użytkownik o podanej nazwie " + userDao.Name;
                 return false;
             }
             message = null;
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -66,9 +73,10 @@ namespace BomberManViewModel.Services
         {
             if (CheckIfUserExists(userDao, out message))
             {
-                message = "Error, user exists already";
+                message = "Błąd, użytkownik o podanej nazwie już istnieje";
                 return false;
             }
+            message = null;
             userDao.Password += Salt;
             userDao.Password = userDao.Password.GetHashCode().ToString();
             DataManager.DataBaseContext.Users.Add(AutoMapper.Mapper.Map<User>(userDao));
@@ -94,7 +102,7 @@ namespace BomberManViewModel.Services
                 return true;
             }
 
-            message = "Wrong password";
+            message = "Niepoprawne hasło";
             return false;
         }
     }

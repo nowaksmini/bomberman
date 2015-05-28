@@ -15,6 +15,9 @@ namespace BomberMan.Common
         public Vector2 Scale { get; set; }
         private const float AngleScale = MathHelper.Pi * 2;
 
+        /// <summary>
+        /// Utwóz nowy komponent bez żadnych ustawionych wartości.
+        /// </summary>
         public Component() { }
 
         /// <summary>

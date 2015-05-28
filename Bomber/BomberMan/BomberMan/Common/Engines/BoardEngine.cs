@@ -31,9 +31,18 @@ namespace BomberMan.Common.Engines
 
         public int Columns
         {
-            get { return _columns;  }
+            get { return _columns; }
         }
 
+        /// <summary>
+        /// Utwóz nowy silnik odpowiedzialny za generowanie planszy do gry dla każdego poziomu.
+        /// </summary>
+        /// <param name="textures">dostępne tła dla pól jednostkowych</param>
+        /// <param name="bonusTextures">dostępne tła dla bonusów</param>
+        /// <param name="characterTextures">dostępne tła dla postaci</param>
+        /// <param name="bombTexture">tło bomb zostawianych przez gracza</param>
+        /// <param name="rows">ilość wierszy w planszy</param>
+        /// <param name="columns">ilość kolumn w planszy</param>
         public BoardEngine(List<Texture2D> textures, List<Texture2D> bonusTextures, List<Texture2D> characterTextures,
             Texture2D bombTexture, int rows, int columns)
             : base(textures, rows*columns)
@@ -160,7 +169,7 @@ namespace BomberMan.Common.Engines
         /// <param name="y">położenie pionowe względem okna gry</param>
         /// <param name="width">oczekiwana szerokość bonusa</param>
         /// <param name="height">oczekiwana wysokość bonusa</param>
-        /// <returns></returns>
+        /// <returns>zwróć nową postać</returns>
         private Character GenerateNewCharacter(CharacterType characterType, int x, int y, int width, int height)
         {
             Texture2D texture = _characterTextures[(int) characterType];

@@ -12,6 +12,12 @@ namespace BomberMan.Common.Engines
     {
         public Vector2 EmitterLocation { get; set; }
 
+        /// <summary>
+        /// Utwórz nowy silnik zarządzający śladem generowanym podczas ruchu myszką.
+        /// </summary>
+        /// <param name="textures">dostęne tła obiektów znajdujących się w śladzie</param>
+        /// <param name="location">początkowe położenie</param>
+        /// <param name="objectsCount">ilość generowanych obiektów w śladzie</param>
         public StarsEngine(List<Texture2D> textures, Vector2 location, int objectsCount) : base(textures, objectsCount)
         {
             EmitterLocation = location;
