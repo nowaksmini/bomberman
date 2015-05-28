@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BomberManViewModel.DataAccessObjects
 {
-    public class GameDAO
+    /// <summary>
+    /// Klasa repreentuje grę wczytaną z widoku i przekazywaną do bazy danych lub odwrotnie.
+    /// </summary>
+    public class GameDao
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int Level { get; set; }
         public int Points { get; set; }
-        public int Time { get; set; }
-        public bool Finished { get; set; }  // czy jest sens ładować
-        public double Life { get; set; } // procentowo npp 10,23
+        public bool Finished { get; set; }
+        public double Life { get; set; }
         public DateTime SaveTime { get; set; }
-        public virtual UserDAO User { get; set; }
+        public virtual UserDao User { get; set; }
         public uint PlayerXLocation { get; set; }
         public uint PlayerYLocation { get; set; }
     }

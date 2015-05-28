@@ -126,11 +126,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Login\LogIn.png">
-      <Name>LogIn</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Images\Common\NoSound.png">
       <Name>NoSound</Name>
       <Importer>TextureImporter</Importer>
@@ -138,11 +133,6 @@
     </Compile>
     <Compile Include="Images\Common\Question.png">
       <Name>Question</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Login\Register.png">
-      <Name>Register</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -200,7 +190,6 @@
     <Folder Include="Images\Help\" />
     <Folder Include="Images\HighScores\" />
     <Folder Include="Images\LoadGame\" />
-    <Folder Include="Images\Settings\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Images\Game\black_block.png">
@@ -285,6 +274,28 @@
       <Name>AdditionalOptions</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Settings\Arrows.png">
+      <Name>Arrows</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Settings\PBomb.png">
+      <Name>PBomb</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Settings\SpaceBomb.png">
+      <Name>SpaceBomb</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Settings\WSAD.png">
+      <Name>WSAD</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

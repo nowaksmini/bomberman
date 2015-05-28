@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BomberManModel.Entities
 {
+    /// <summary>
+    /// Encja reprezentująca elementy nie poruszające się na planszy.
+    /// </summary>
     public class BoardElement
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public String Description { get; set; }
         public BoardElementType ElementType { get; set; }
     }

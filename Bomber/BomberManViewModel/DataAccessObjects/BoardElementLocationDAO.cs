@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BomberManViewModel.DataAccessObjects
 {
-    public class BoardElementLocationDAO
+    /// <summary>
+    /// Klasa reprezentująca rozmieszczenie obiektów planszy, przekazywane z widoku do bazy danych i na odwrót
+    /// </summary>
+    public class BoardElementLocationDao
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public uint XLocation { get; set; }
         public uint YLocation { get; set; }
-        public int Timeout { get; set; } // czas w milisekndach ile np zostało życia bombie czy przyspieszeniu jak < 0 to znaczy że umarło
-        public virtual BoardElementDAO BoardElement { get; set; }
-        public virtual GameDAO Game { get; set; }
+        /// <summary>
+        /// Czas wyrażony w milisekundach oznaczający ilość czasu życia jaki pozostał obiektowi.
+        /// Nie dotyczy wszystkich elementów planszy.
+        /// </summary>
+        public Int64 Timeout { get; set; }
+        public virtual BoardElementDao BoardElement { get; set; }
+        public virtual GameDao Game { get; set; }
     }
 }

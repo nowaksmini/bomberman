@@ -23,7 +23,7 @@ namespace BomberManViewModel.Services
         /// <param name="userDao">użytkownik, którego weryfikujemy</param>
         /// <param name="message">wiadomości otrzymane po zakończeniu weryfikacji</param>
         /// <returns>zwróć <value>true</value> w razie poprawnej weryfikacji loginu i hasła, w przeciwnym przypadku zwróć <value>false</value></returns>
-        public static bool VerificateUser(ref UserDAO userDao, out String message)
+        public static bool VerificateUser(ref UserDao userDao, out String message)
         {
             if (CheckIfUserExists(userDao, out message) == false)
                 return false;
@@ -36,7 +36,7 @@ namespace BomberManViewModel.Services
             {
                 if (VerificatePassword(userDao.Password, user.Password, out message))
                 {
-                    userDao = AutoMapper.Mapper.Map<UserDAO>(user);
+                    userDao = AutoMapper.Mapper.Map<UserDao>(user);
                     return true;
                 }
             }
@@ -49,7 +49,7 @@ namespace BomberManViewModel.Services
         /// <param name="userDao">użytkownik, dla którego sprawdzamy login w bazie danych</param>
         /// <param name="message">wiadomości otrzymane po wykonaniu sprawdzenia loginu użytkownika</param>
         /// <returns>zwróć <value>true</value> w przypdaku znalezienia loginu, w przeciwnym przypadku zwróć <value>false</value></returns>
-        private static bool CheckIfUserExists(UserDAO userDao, out String message)
+        private static bool CheckIfUserExists(UserDao userDao, out String message)
         {
             var query = from b in DataManager.DataBaseContext.Users
                 where b.Name == userDao.Name
@@ -69,7 +69,7 @@ namespace BomberManViewModel.Services
         /// <param name="userDao">nowy użytkownik z podanym loginem i hasłem</param>
         /// <param name="message">wiadomości otrzymane po próbie utworzenia użytkownika</param>
         /// <returns></returns>
-        public static bool CreateUser(UserDAO userDao, out String message)
+        public static bool CreateUser(UserDao userDao, out String message)
         {
             if (CheckIfUserExists(userDao, out message))
             {

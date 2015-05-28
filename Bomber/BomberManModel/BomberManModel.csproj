@@ -55,8 +55,8 @@
     <Compile Include="Entities\BoardElement.cs" />
     <Compile Include="Entities\BoardElementLocation.cs" />
     <Compile Include="Entities\Game.cs" />
-    <Compile Include="Entities\Oponent.cs" />
-    <Compile Include="Entities\OponentLocation.cs" />
+    <Compile Include="Entities\Opponent.cs" />
+    <Compile Include="Entities\OpponentLocation.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

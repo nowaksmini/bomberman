@@ -272,7 +272,7 @@ namespace BomberMan.Screens
             String message;
             if (Utils.User == null)
             {
-                Utils.User = new UserDAO() { Name = Fields[0].TextValue, Password = Fields[1].TextValue };
+                Utils.User = new UserDao() { Name = Fields[0].TextValue, Password = Fields[1].TextValue };
             }
             else
             {

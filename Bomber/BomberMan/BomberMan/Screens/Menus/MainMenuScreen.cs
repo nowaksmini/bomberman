@@ -25,6 +25,12 @@ namespace BomberMan.Screens.Menus
                 Utils.User = null;
                 return Color.Transparent;
             };
+            OptionButtons[(int) MainMenuOptions.Settings].Click = delegate
+            {
+                GameManager.ScreenType = ScreenType.Settings;
+                return Color.Transparent;
+            };
+
         }
 
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)

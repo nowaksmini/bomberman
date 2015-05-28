@@ -10,7 +10,7 @@ namespace BomberMan.Common
     /// </summary>
     public abstract class Screen
     {
-        public Button Music;
+        public Button MusicButton;
         public static Texture2D[] MusicTexture;
         public Button Back;
         protected int PrevSelectedOption, SelectedOption;

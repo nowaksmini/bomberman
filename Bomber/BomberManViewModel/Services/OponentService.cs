@@ -9,7 +9,7 @@ namespace BomberManViewModel.Services
 {
     public class OponentService
     {
-        static public bool CreateNewOponent(OponentDAO oponentDAO, out String message)
+        static public bool CreateNewOponent(OpponentDao oponentDAO, out String message)
         {
             if (CheckIfOponentExists(oponentDAO, out message) == false)
                 return false;
@@ -17,49 +17,49 @@ namespace BomberManViewModel.Services
             return false;
         }
 
-        static public bool CheckIfOponentExists(OponentDAO oponentDAO, out String message)
+        static public bool CheckIfOponentExists(OpponentDao oponentDAO, out String message)
         {
             message = null;
             return false;
         }
 
-        static public bool CheckIfOponentLocationExists(OponentLocationDAO oponentDAO, out String message)
+        static public bool CheckIfOponentLocationExists(OpponentLocationDao oponentDAO, out String message)
         {
             message = null;
             return false;
         }
 
-        static public bool CreateNewOponentLocation(OponentLocationDAO oponentDAO, out String message)
+        static public bool CreateNewOponentLocation(OpponentLocationDao oponentDAO, out String message)
         {
             message = null;
             return false;
         }
 
-        static public List<OponentDAO> GetAllOponentsByGame(GameDAO gameDAO, out String message)
+        static public List<OpponentDao> GetAllOponentsByGame(GameDao gameDAO, out String message)
         {
             message = null;
             return null;
         }
 
-        static public List<OponentDAO> GetAllOponentsByGameAndLocation(GameDAO gameDAO, uint x, uint y, out String message)
+        static public List<OpponentDao> GetAllOponentsByGameAndLocation(GameDao gameDAO, uint x, uint y, out String message)
         {
             message = null;
             return null;
         }
 
-        static public List<OponentLocationDAO> GetAllOponentsWithLocationsByGame(GameDAO gameDAO, out String message)
+        static public List<OpponentLocationDao> GetAllOponentsWithLocationsByGame(GameDao gameDAO, out String message)
         {
             message = null;
             return null;
         }
 
-        static public List<OponentLocationDAO> GetAllOponentsWithLocationsByGameAndLocation(GameDAO gameDAO,  uint x, uint y, out String message)
+        static public List<OpponentLocationDao> GetAllOponentsWithLocationsByGameAndLocation(GameDao gameDAO,  uint x, uint y, out String message)
         {
             message = null;
             return null;
         }
 
-        static public bool UpdateOponentLocation(OponentLocationDAO gameDAO,  uint x, uint y, out String message)
+        static public bool UpdateOponentLocation(OpponentLocationDao gameDAO,  uint x, uint y, out String message)
         {
             message = null;
             return false;

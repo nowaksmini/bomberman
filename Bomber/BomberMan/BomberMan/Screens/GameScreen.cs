@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BomberMan.Common;
 using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
+using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,8 +28,8 @@ namespace BomberMan.Screens
         private const int PercentageOfOpponents = 5;
 
         private readonly Random _random;
-        private List<OponentLocationDAO> _opponents;
-        private List<BoardElementDAO> _boardElements;
+        private List<OpponentLocationDao> _opponents;
+        private List<BoardElementDao> _boardElements;
         private BoardEngine _boardEngine;
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace BomberMan.Screens
             int y = gamer - x*columns;
             foreach (Keys k in keymap)
             {
-                if (Configuration.KeyboardOption.Equals(KeyboardOption.Arrows))
+                if (Utils.User.KeyboardOption.Equals(KeyboardOption.Arrows))
                 {
                     switch (k)
                     {
@@ -265,13 +266,13 @@ namespace BomberMan.Screens
                 switch (k)
                 {
                     case Keys.Space:
-                        if (Configuration.BombKeyboardOption.Equals(BombKeyboardOption.Spcace))
+                        if (Utils.User.BombKeyboardOption.Equals(BombKeyboardOption.Spcace))
                         {
                             _bombLocations.Add(gamer);
                         }
                         break;
                     case Keys.P:
-                        if (Configuration.BombKeyboardOption.Equals(BombKeyboardOption.P))
+                        if (Utils.User.BombKeyboardOption.Equals(BombKeyboardOption.P))
                         {
                             _bombLocations.Add(gamer);
                         }
@@ -284,10 +285,10 @@ namespace BomberMan.Screens
         /// Utwórz nową instancję gry z poziomem 0, rozpoczynającym grę
         /// </summary>
         /// <returns>Zwróć instancję GameDAO i operuj na niej do zakończenia jednej gry</returns>
-        private GameDAO CreateNewGame()
+        private GameDao CreateNewGame()
         {
             GenerateGameForSpecifiedLevel(0);
-            GameDAO gameDao = new GameDAO()
+            GameDao gameDao = new GameDao()
             {
                 Level = 0,
                 Life = 100,
@@ -296,7 +297,6 @@ namespace BomberMan.Screens
                 PlayerYLocation = (uint) 1,
                 Points = 0,
                 SaveTime = DateTime.Now,
-                Time = 100,
                 User = Utils.User
             };
             return gameDao;

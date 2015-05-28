@@ -11,7 +11,7 @@ namespace BomberManViewModel.Services
 {
     public class BoardService
     {
-        static public bool CreateNewBoardElement(BoardElementDAO gameDAO, out String message)
+        static public bool CreateNewBoardElement(BoardElementDao gameDAO, out String message)
         {
             if (CheckIfElementExists(gameDAO, out message) == false)
                 return false;
@@ -19,30 +19,30 @@ namespace BomberManViewModel.Services
             return false;
         }
 
-        static public bool CheckIfElementExists(BoardElementDAO gameDAO, out String message)
+        static public bool CheckIfElementExists(BoardElementDao gameDAO, out String message)
         {
             message = null;
             return false;
         }
 
-        static public List<BoardElementDAO> GetAllBoardElementsForGame(GameDAO gameDAO, out String message)
+        static public List<BoardElementDao> GetAllBoardElementsForGame(GameDao gameDAO, out String message)
         {
             message = null;
             return null;
         }
 
-        static public bool UpdateBoardElementForGame(GameDAO gameDAO, BoardElementDAO boardElementDAO, out String message)
+        static public bool UpdateBoardElementForGame(GameDao gameDAO, BoardElementDao boardElementDAO, out String message)
         {
             message = null;
             return false;
         }
 
-        static public List<BoardElementLocationDAO> GetAllBlocksForGame(GameDAO gameDAO, out String message)
+        static public List<BoardElementLocationDao> GetAllBlocksForGame(GameDao gameDAO, out String message)
         {
             message = null;
-            List<BoardElementLocationDAO> blocks = new List<BoardElementLocationDAO>();
+            List<BoardElementLocationDao> blocks = new List<BoardElementLocationDao>();
             var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                        where element.Game.ID == gameDAO.ID &&
+                        where element.Game.Id == gameDAO.Id &&
                         element.BoardElement.ElementType == BomberManModel.BoardElementType.BlackBlock || 
                         element.BoardElement.ElementType == BomberManModel.BoardElementType.GrayBlock ||
                         element.BoardElement.ElementType == BomberManModel.BoardElementType.WhiteBlock ||
@@ -53,16 +53,16 @@ namespace BomberManViewModel.Services
             BoardElementLocation[] bElements = query.ToArray<BoardElementLocation>();
             for(int i = 0; i < bElements.Length; i++)
             {
-                BoardElementLocationDAO block = Mapper.Map<BoardElementLocation, BoardElementLocationDAO>(bElements[i]);
+                BoardElementLocationDao block = Mapper.Map<BoardElementLocation, BoardElementLocationDao>(bElements[i]);
                 blocks.Add(block);
             }
             return blocks;
         }
 
-        static public List<BoardElementDAO> GetAllBombsForGame(GameDAO gameDAO, out String message)
+        static public List<BoardElementDao> GetAllBombsForGame(GameDao gameDAO, out String message)
         {
             message = null;
-            List<BoardElementDAO> bombs = new List<BoardElementDAO>();
+            List<BoardElementDao> bombs = new List<BoardElementDao>();
             var query = from element in DataManager.DataBaseContext.BoardElements
                         where element.ElementType == BomberManModel.BoardElementType.Bomb
                         select element;
@@ -70,16 +70,16 @@ namespace BomberManViewModel.Services
             BoardElement[] bElements = query.ToArray<BoardElement>();
             for (int i = 0; i < bElements.Length; i++)
             {
-                BoardElementDAO block = Mapper.Map<BoardElement, BoardElementDAO>(bElements[i]);
+                BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
                 bombs.Add(block);
             }
             return bombs;
         }
 
-        static public List<BoardElementDAO> GetAllBonusesForGame(GameDAO gameDAO, out String message)
+        static public List<BoardElementDao> GetAllBonusesForGame(GameDao gameDAO, out String message)
         {
             message = null;
-            List<BoardElementDAO> bonuses = new List<BoardElementDAO>();
+            List<BoardElementDao> bonuses = new List<BoardElementDao>();
             var query = from element in DataManager.DataBaseContext.BoardElements
                         where element.ElementType == BomberManModel.BoardElementType.BombAmountBonus ||
                         element.ElementType == BomberManModel.BoardElementType.FastBonus ||
@@ -92,7 +92,7 @@ namespace BomberManViewModel.Services
             BoardElement[] bElements = query.ToArray<BoardElement>();
             for (int i = 0; i < bElements.Length; i++)
             {
-                BoardElementDAO block = Mapper.Map<BoardElement, BoardElementDAO>(bElements[i]);
+                BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
                 bonuses.Add(block);
             }
             return bonuses;

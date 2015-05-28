@@ -91,7 +91,6 @@
     <Compile Include="Common\Components\StateComponents\Label.cs" />
     <Compile Include="Common\Components\StateComponents\ProgressBar.cs" />
     <Compile Include="Common\Components\StateComponents\TextInput.cs" />
-    <Compile Include="Common\Configuration.cs" />
     <Compile Include="Common\Engine.cs" />
     <Compile Include="Common\Engines\BoardEngine.cs" />
     <Compile Include="Common\Engines\PlanetEngine.cs" />
@@ -108,7 +107,7 @@
     <Compile Include="Screens\Menu.cs" />
     <Compile Include="Screens\Menus\LoadGameScreen.cs" />
     <Compile Include="Screens\Menus\MainMenuScreen.cs" />
-    <Compile Include="Screens\Menus\SettingsScreen.cs" />
+    <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

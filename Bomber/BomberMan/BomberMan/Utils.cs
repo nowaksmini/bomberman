@@ -10,10 +10,10 @@ namespace BomberMan
         /// <summary>
         /// Aktualnie trwająca gra
         /// </summary>
-        public static GameDAO Game;
+        public static GameDao Game;
         /// <summary>
         /// Zalogowany użytkownik
         /// </summary>
-        public static UserDAO User;
+        public static UserDao User;
     }
 }

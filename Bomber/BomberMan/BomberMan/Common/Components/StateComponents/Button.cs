@@ -49,8 +49,8 @@ namespace BomberMan.Common.Components.StateComponents
 
         /// <summary>
         /// Utwórz przycisk z tekstem znajdującym się na nim.
-        /// Nie obracaj przycisku, ustaw pozycję startową na <value>0,0</value>
-        /// a skalę na <value>1,1</value>
+        /// Nie obracaj przycisku, ustaw pozycję startową na 0,0
+        /// a skalę na 1,1
         /// </summary>
         /// <param name="texture">tło przycisku</param>
         /// <param name="color">kolor przycisku</param>

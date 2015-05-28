@@ -1,32 +1,38 @@
 ﻿using AutoMapper;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BomberManViewModel.Converters
 {
-    public class GameEntityToGameDAO : ITypeConverter<Game, GameDAO>
+    /// <summary>
+    /// Konwerter rekordu tabeli odpowiedzialnej za przetrzymywanie informacji o grze na obiekt gry
+    /// przekazywany do widoku.
+    /// </summary>
+    public class GameEntityToGameDao : ITypeConverter<Game, GameDao>
     {
-        public GameDAO Convert(Game Source)
+        /// <summary>
+        /// Konwertuj rekord tabeli z informacją o grze na obiekt przekazywany do widoku.
+        /// </summary>
+        /// <param name="source">obiekt to konwertowania</param>
+        /// <returns>zwróć instancję obiektu gry, przekazywaną do widoku</returns>
+        public GameDao Convert(Game source)
         {
-            GameDAO Target = new GameDAO();
-            Target.Finished = Source.Finished;
-            Target.ID = Source.ID;
-            Target.Level = Source.Level;
-            Target.Life = Source.Life;
-            Target.PlayerXLocation = Source.PlayerXLocation;
-            Target.PlayerYLocation = Source.PlayerYLocation;
-            Target.Points = Source.Points;
-            Target.SaveTime = Source.SaveTime;
-            Target.User = Mapper.Map<UserDAO>(Source.User);
-            return Target;
+            GameDao target = new GameDao
+            {
+                Finished = source.Finished,
+                Id = source.Id,
+                Level = source.Level,
+                Life = source.Life,
+                PlayerXLocation = source.PlayerXLocation,
+                PlayerYLocation = source.PlayerYLocation,
+                Points = source.Points,
+                SaveTime = source.SaveTime,
+                User = Mapper.Map<UserDao>(source.User)
+            };
+            return target;
         }
 
-        public GameDAO Convert(ResolutionContext context)
+        public GameDao Convert(ResolutionContext context)
         {
             return Convert((Game)context.SourceValue);
         }

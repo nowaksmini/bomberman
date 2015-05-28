@@ -1,26 +1,32 @@
 ﻿using AutoMapper;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BomberManViewModel.Converters
 {
-    public class BoardElementEntityToBoardElementDAO : ITypeConverter<BoardElement, BoardElementDAO>
+    /// <summary>
+    /// Konwerter rekordu tabeli odpowiedzialnej za przetrzymywanie informacji o elementach planszy
+    /// na obiekt przekazywany do widoku.
+    /// </summary>
+    public class BoardElementEntityToBoardElementDao : ITypeConverter<BoardElement, BoardElementDao>
     {
-        public BoardElementDAO Convert(BoardElement Source)
+        /// <summary>
+        /// Konwertuj rekord tabeli z informacją o elemencie planszy na obiek przekazywany do widoku
+        /// </summary>
+        /// <param name="source">obiekt to konwertowania</param>
+        /// <returns>zwróć instancję obiektu elementu planszy, przekazywaną do widoku</returns>
+        public BoardElementDao Convert(BoardElement source)
         {
-            BoardElementDAO Target = new BoardElementDAO();
-            Target.Description = Source.Description;
-            Target.ElementType = Source.ElementType;
-            Target.ID = Source.ID;
-            return Target;
+            BoardElementDao target = new BoardElementDao
+            {
+                Description = source.Description,
+                ElementType = source.ElementType,
+                Id = source.Id
+            };
+            return target;
         }
 
-        public BoardElementDAO Convert(ResolutionContext context)
+        public BoardElementDao Convert(ResolutionContext context)
         {
             return Convert((BoardElement)context.SourceValue);
         }

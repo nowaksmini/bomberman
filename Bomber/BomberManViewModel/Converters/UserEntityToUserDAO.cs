@@ -1,27 +1,35 @@
 ﻿using AutoMapper;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace BomberManViewModel.Converters
 {
-    public class UserEntityToUserDAO : ITypeConverter<User, UserDAO>
+    /// <summary>
+    /// Konwerter rekordu tabeli User w bazie danych na obiekt gracza przekazywany do widoku.
+    /// </summary>
+    public class UserEntityToUserDao : ITypeConverter<User, UserDao>
     {
-        public UserDAO Convert(User Source)
+        /// <summary>
+        /// Konwertuj encję użytkownika otrzymaną z bazy danych na obiekt użytkownika widoku.
+        /// </summary>
+        /// <param name="source">obiekt do konwertowania</param>
+        /// <returns>zwróć obiekt użytkownika przekazywany dalej do widoku</returns>
+        public UserDao Convert(User source)
         {
-            UserDAO Target = new UserDAO();
-            Target.ID = Source.ID;
-            Target.Name = Source.Name;
-            Target.Password = Source.Password;
-            return Target;
+            UserDao target = new UserDao
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Password = source.Password,
+                BombKeyboardOption = source.BombKeyboardOption,
+                KeyboardOption = source.KeyboardOption,
+                IsAnimation = source.IsAnimation,
+                IsMusic = source.IsMusic
+            };
+            return target;
         }
 
-        public UserDAO Convert(ResolutionContext context)
+        public UserDao Convert(ResolutionContext context)
         {
             return Convert((User)context.SourceValue);
         }

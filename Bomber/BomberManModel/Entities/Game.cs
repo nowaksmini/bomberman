@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BomberManModel.Entities
 {
+    /// <summary>
+    /// Encja reprezentująca całą grę.
+    /// </summary>
     public class Game
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int Level { get; set; }
-        public int Time { get; set; }
         public int Points { get; set; }
-        public bool Finished { get; set; }  // czy jest sens ładować
-        public double Life { get; set; } // procentowo npp 10,23
+        /// <summary>
+        /// Jeżeli gra została zakończona nie pozwala ładować gry użytkownikowi, bierze tylko pod uwagę do najlepszych wyników.
+        /// </summary>
+        public bool Finished { get; set; }
+        /// <summary>
+        /// Procentowo oznaczona ilość życia, która pozostała graczowi
+        /// </summary>
+        public double Life { get; set; }
+        /// <summary>
+        /// Ostatni czas zapisu gry.
+        /// </summary>
         public DateTime SaveTime { get;set; }
         public virtual User User { get; set; }
         public uint PlayerXLocation { get; set; }
         public uint PlayerYLocation { get; set; }
 
-        public virtual ICollection<OponentLocation> OponentLocation { get; set; }
+        public virtual ICollection<OpponentLocation> OponentLocation { get; set; }
         public virtual ICollection<BoardElementLocation> BoardElementLocation { get; set; }
     }
 }

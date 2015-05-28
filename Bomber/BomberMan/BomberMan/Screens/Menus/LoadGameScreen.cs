@@ -9,7 +9,7 @@ namespace BomberMan.Screens.Menus
 {
     public class LoadGameScreen : Menu
     {
-        public List<GameDAO> Gamse;
+        public List<GameDao> Gamse;
 
         public LoadGameScreen(List<Texture2D> textures, int options) : base(options, textures)
         {

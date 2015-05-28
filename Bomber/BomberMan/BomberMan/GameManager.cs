@@ -23,17 +23,16 @@ namespace BomberMan
         private PlanetEngine _planetEngine;
         private Texture2D _background;
 
-        public static ScreenType ScreenType = ScreenType.Login;
+        public static ScreenType ScreenType = ScreenType.Settings;
         private MainMenuScreen _mainMenu;
         private GameScreen _game;
         private HelpMenuScreen _help;
         private HighScoresScreen _highScores;
         private LoginScreen _login;
+        private SettingsScreen _settings;
 
         private Song _song;
-        private SpriteFont _font;
-        private Random random;
-        private bool showCursorForInput;
+        private Random _random;
 
         public GameManager()
         {
@@ -46,18 +45,13 @@ namespace BomberMan
             Window.ClientSizeChanged += Window_ClientSizeChanged;
         }
 
-        protected override void Initialize()
-        {
-            showCursorForInput = true;
-            base.Initialize();
-        }
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             LoadLogin();
             LoadBackGround();
             LoadMainMenu();
+            LoadSettings();
             LoadGame();
         }
 
@@ -75,6 +69,9 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     _mainMenu.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
+                    break;
+                case ScreenType.Settings:
+                    _settings.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.Help:
                     break;
@@ -96,7 +93,7 @@ namespace BomberMan
         {
             GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width, 
+            _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width,
                 Window.ClientBounds.Height), Color.White);
             _spriteBatch.End();
             _planetEngine.Draw(_spriteBatch);
@@ -105,8 +102,11 @@ namespace BomberMan
             {
                 case ScreenType.MainMenu:
                     IsMouseVisible = true;
-                    showCursorForInput = ((gameTime.TotalGameTime.TotalSeconds*2)%2 < 1);
                     _mainMenu.Draw(_spriteBatch);
+                    break;
+                case ScreenType.Settings:
+                    IsMouseVisible = true;
+                    _settings.Draw(_spriteBatch);
                     break;
                 case ScreenType.Help:
                     break;
@@ -118,6 +118,7 @@ namespace BomberMan
                 case ScreenType.LoadGame:
                     break;
                 case ScreenType.Login:
+                    IsMouseVisible = true;
                     _login.Draw(_spriteBatch);
                     break;
             }
@@ -126,6 +127,7 @@ namespace BomberMan
         }
 
         #region LoadResources
+
         private void LoadMainMenu()
         {
             List<Texture2D> textures = new List<Texture2D>();
@@ -143,6 +145,15 @@ namespace BomberMan
 
         private void LoadSettings()
         {
+            SpriteFont labelSpriteFont = Content.Load<SpriteFont>(@"Fonts/Input");
+            SpriteFont additionalFont = Content.Load<SpriteFont>(@"Fonts/AdditionalOptions");
+            List<Texture2D> buttonsTextures = new List<Texture2D>()
+            {
+                Content.Load<Texture2D>(@"Images/Settings/Arrows"),
+                Content.Load<Texture2D>(@"Images/Settings/WSAD"),
+                 Content.Load<Texture2D>(@"Images/Settings/SpaceBomb"),
+                Content.Load<Texture2D>(@"Images/Settings/PBomb")
+            }; _settings = new SettingsScreen(labelSpriteFont, additionalFont, buttonsTextures);
         }
 
         private void LoadHelp()
@@ -151,10 +162,10 @@ namespace BomberMan
 
         private void LoadLogin()
         {
-            _font = Content.Load<SpriteFont>(@"Fonts/Input");
+            SpriteFont font = Content.Load<SpriteFont>(@"Fonts/Input");
             Texture2D fieldBackground = Content.Load<Texture2D>(@"Images/Game/white_block");
             Texture2D bombTexture = Content.Load<Texture2D>(@"Images/Game/Bomb");
-            _login = new LoginScreen(_font, Content.Load<SpriteFont>(@"Fonts/Title"), 
+            _login = new LoginScreen(font, Content.Load<SpriteFont>(@"Fonts/Title"),
                 Content.Load<SpriteFont>(@"Fonts/AdditionalOptions"), fieldBackground, bombTexture);
         }
 
@@ -188,26 +199,28 @@ namespace BomberMan
 
         private void LoadBackGround()
         {
-            random = new Random();
+            _random = new Random();
             List<Texture2D> textures = new List<Texture2D>();
             _background = Content.Load<Texture2D>(@"Images/Common/stars");
             textures.Add(Content.Load<Texture2D>(@"Images/Common/heart"));
             textures.Add(Content.Load<Texture2D>(@"Images/Common/star"));
             textures.Add(Content.Load<Texture2D>(@"Images/Common/circle"));
             _starsEngine = new StarsEngine(textures,
-                new Vector2((float)Window.ClientBounds.Width/2, (float)Window.ClientBounds.Height/2), random.Next(5) + 5);
+                new Vector2((float) Window.ClientBounds.Width/2, (float) Window.ClientBounds.Height/2),
+                _random.Next(5) + 5);
             List<Texture2D> rocket = new List<Texture2D>();
             rocket.Add(Content.Load<Texture2D>(@"Images/Common/Shuttle"));
-            _rocketeEngine = new RocketsEngine(rocket, random.Next(5) + 3);
+            _rocketeEngine = new RocketsEngine(rocket, _random.Next(5) + 3);
             List<Texture2D> planets = new List<Texture2D>();
             planets.Add(Content.Load<Texture2D>(@"Images/Common/earth"));
             planets.Add(Content.Load<Texture2D>(@"Images/Common/saturn"));
             planets.Add(Content.Load<Texture2D>(@"Images/Common/dyingstar"));
             planets.Add(Content.Load<Texture2D>(@"Images/Common/redstar"));
-            _planetEngine = new PlanetEngine(planets, random.Next(4) + 4);
+            _planetEngine = new PlanetEngine(planets, _random.Next(4) + 4);
             _song = (Content.Load<Song>(@"Music/OneRepublic"));
             MediaPlayer.Play(_song);
         }
+
         #endregion
 
         private void UpdateBackground(int windowWidth, int windowHeight)
@@ -239,6 +252,7 @@ namespace BomberMan
         MainMenu,
         Help,
         HighScores,
+        Settings,
         Game,
         LoadGame,
         Login

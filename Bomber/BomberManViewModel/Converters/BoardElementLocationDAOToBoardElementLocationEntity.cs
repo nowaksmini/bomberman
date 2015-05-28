@@ -1,31 +1,35 @@
 ﻿using AutoMapper;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BomberManViewModel.Converters
 {
-    public class BoardElementLocationDAOToBoardElementLocationEntity : ITypeConverter<BoardElementLocationDAO, BoardElementLocation>
+    /// <summary>
+    /// Konwerter obiektu odpowiedzialnego za przetrzymywanie informacji o lokalizacji elementów na planszy
+    /// na rekord tabeli BoardElementLocation.
+    /// </summary>
+    public class BoardElementLocationDaoToBoardElementLocationEntity : ITypeConverter<BoardElementLocationDao, BoardElementLocation>
     {
-        public BoardElementLocation Convert(BoardElementLocationDAO Source)
+        /// <summary>
+        /// Konwertuj obiekt z widoku z informacją o lokalizacji elementów na planszy na rekord tabeli BoardElementLocation w bazie danych.
+        /// </summary>
+        /// <param name="source">obiekt to konwertowania</param>
+        /// <returns>zwróć encję obiektu informującą o lokalizacji elementów na planszy</returns>
+        public BoardElementLocation Convert(BoardElementLocationDao source)
         {
-            BoardElementLocation Target = new BoardElementLocation();
-            Target.YLocation = Target.YLocation;
-            Target.XLocation = Target.XLocation;
-            Target.ID = Source.ID;
-            Target.Game = Mapper.Map<Game>(Source.Game);
-            Target.BoardElement = Mapper.Map<BoardElement>(Source.BoardElement);
-            Target.Timeout = Source.Timeout;
-            return Target;
+            BoardElementLocation target = new BoardElementLocation();
+            target.YLocation = target.YLocation;
+            target.XLocation = target.XLocation;
+            target.Id = source.Id;
+            target.Game = Mapper.Map<Game>(source.Game);
+            target.BoardElement = Mapper.Map<BoardElement>(source.BoardElement);
+            target.Timeout = source.Timeout;
+            return target;
         }
 
         public BoardElementLocation Convert(ResolutionContext context)
         {
-            return Convert((BoardElementLocationDAO)context.SourceValue);
+            return Convert((BoardElementLocationDao)context.SourceValue);
         }
     }
 }
