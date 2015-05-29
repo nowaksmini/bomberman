@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection;
 using BomberManModel;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
@@ -25,20 +27,29 @@ namespace BomberManViewModel.Services
         /// <returns>zwróć <value>true</value> w razie poprawnej weryfikacji loginu i hasła, w przeciwnym przypadku zwróć <value>false</value></returns>
         public static bool VerificateUser(ref UserDao userDao, out String message)
         {
-            if (CheckIfUserExists(userDao, out message) == false)
-                return false;
-            String name = userDao.Name;
-            var query = from b in DataManager.DataBaseContext.Users
-                where b.Name == name
-                select b;
-            User user = query.First();
-            if (user != null)
+            try
             {
-                if (VerificatePassword(userDao.Password, user.Password, out message))
+                if (CheckIfUserExists(userDao, out message) == false)
+                    return false;
+                String name = userDao.Name;
+                var query = from b in DataManager.DataBaseContext.Users
+                    where b.Name == name
+                    select b;
+                User user = query.First();
+                if (user != null)
                 {
-                    userDao = AutoMapper.Mapper.Map<UserDao>(user);
-                    return true;
+                    if (VerificatePassword(userDao.Password, user.Password, out message))
+                    {
+                        userDao = AutoMapper.Mapper.Map<UserDao>(user);
+                        return true;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
+                    e.StackTrace);
+                message = e.Message;
             }
             return false;
         }
@@ -51,15 +62,25 @@ namespace BomberManViewModel.Services
         /// <returns>zwróć <value>true</value> w przypdaku znalezienia loginu, w przeciwnym przypadku zwróć <value>false</value></returns>
         private static bool CheckIfUserExists(UserDao userDao, out String message)
         {
-            var query = from b in DataManager.DataBaseContext.Users
-                where b.Name == userDao.Name
-                select b;
-            if (!query.Any())
+            try
             {
-                message = "Nie istnieje użytkownik o podanej nazwie " + userDao.Name;
+                var query = from b in DataManager.DataBaseContext.Users
+                    where b.Name == userDao.Name
+                    select b;
+                if (!query.Any())
+                {
+                    message = "Nie istnieje użytkownik o podanej nazwie " + userDao.Name;
+                    return false;
+                }
+                message = null;
+            }
+            catch (Exception e)
+            {
+                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
+                    e.StackTrace);
+                message = e.Message;
                 return false;
             }
-            message = null;
             return true;
         }
 
@@ -71,17 +92,83 @@ namespace BomberManViewModel.Services
         /// <returns></returns>
         public static bool CreateUser(UserDao userDao, out String message)
         {
-            if (CheckIfUserExists(userDao, out message))
+            try
             {
-                message = "Błąd, użytkownik o podanej nazwie już istnieje";
+                if (userDao.Name.Length < 4 || userDao.Password.Length < 4)
+                {
+                    message = "Login i hasło powinny zawierać po minimum 4 znaki";
+                    return false;
+                }
+                if (CheckIfUserExists(userDao, out message))
+                {
+                    message = "Błąd, użytkownik o podanej nazwie już istnieje";
+                    return false;
+                }
+                message = null;
+                userDao.Password += Salt;
+                userDao.Password = userDao.Password.GetHashCode().ToString();
+                DataManager.DataBaseContext.Users.Add(AutoMapper.Mapper.Map<User>(userDao));
+                DataManager.DataBaseContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
+                    e.StackTrace);
+                message = e.Message;
                 return false;
             }
-            message = null;
-            userDao.Password += Salt;
-            userDao.Password = userDao.Password.GetHashCode().ToString();
-            DataManager.DataBaseContext.Users.Add(AutoMapper.Mapper.Map<User>(userDao));
-            DataManager.DataBaseContext.SaveChanges();
             return true;
+        }
+
+        /// <summary>
+        /// Zapisz zmiany na koncie użytkownika
+        /// </summary>
+        /// <param name="userDao">użytkownik</param>
+        /// <param name="message">wiadomość przesyłana w razie niepowodzenia</param>
+        /// <returns>zwróć true o ile udało się wykonać zaminy na encji użytkownika</returns>
+        public static bool UpdateUser(UserDao userDao, out String message)
+        {
+            try
+            {
+                var query = from b in DataManager.DataBaseContext.Users
+                    where b.Id == userDao.Id
+                    select b;
+                if (!query.Any())
+                {
+                    message = "Nie ma takiego użytkownika";
+                    return false;
+                }
+                User user = query.First();
+                if (user.Name.Length < 4 || user.Password.Length < 4)
+                {
+                    message = "Login i hasło powinny zawierać po minimum 4 znaki";
+                    return false;
+                }
+                var q = from b in DataManager.DataBaseContext.Users
+                    where b.Name == userDao.Name
+                    select b;
+                if (q.Any())
+                {
+                    if (q.First().Id != user.Id)
+                    {
+                        message = "Istnieje już użytkownik o takim loginie";
+                        return false;
+                    }
+                }
+                userDao.Password = (userDao.Password + Salt).GetHashCode().ToString();
+                user = AutoMapper.Mapper.Map<User>(userDao);
+                DataManager.DataBaseContext.Entry(user).State = EntityState.Modified;
+                DataManager.DataBaseContext.SaveChanges();
+                message = null;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
+                    e.StackTrace);
+                message = e.Message;
+            }
+            return false;
         }
 
         /// <summary>
@@ -93,16 +180,25 @@ namespace BomberManViewModel.Services
         /// <returns></returns>
         private static bool VerificatePassword(String passwordIn, String passwordDataBase, out String message)
         {
-            String tmp = passwordIn;
-            tmp += Salt;
-            tmp = tmp.GetHashCode().ToString();
-            if (tmp.Equals(passwordDataBase))
+            try
             {
-                message = null;
-                return true;
-            }
+                String tmp = passwordIn;
+                tmp += Salt;
+                tmp = tmp.GetHashCode().ToString();
+                if (tmp.Equals(passwordDataBase))
+                {
+                    message = null;
+                    return true;
+                }
 
-            message = "Niepoprawne hasło";
+                message = "Niepoprawne hasło";
+            }
+            catch (Exception e)
+            {
+                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
+                    e.StackTrace);
+                message = e.Message;
+            }
             return false;
         }
     }

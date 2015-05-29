@@ -26,6 +26,10 @@ namespace BomberMan.Screens
         private const int PercentageOfGreyBlocks = 40;
         private const int PercentageOfBonuses = 5;
         private const int PercentageOfOpponents = 5;
+        private const string Level = "Poziom";
+        private const string Points = "Punkty";
+        private int _rows;
+        private int _columns;
 
         private readonly Random _random;
         private List<OpponentLocationDao> _opponents;
@@ -39,10 +43,11 @@ namespace BomberMan.Screens
         private List<BlockType> _boradBlocksTypes;
 
         private readonly Dictionary<int, BonusType> _bonusLocations;
-        private readonly Dictionary<int, List<CharacterType>> _characterLocations;
+        private Dictionary<int, List<CharacterType>> _characterLocations;
         private readonly List<int> _bombLocations;
         private List<ProgressBar> _bonuses;
         private List<ProgressBar> _hearts;
+        private readonly Label _levelLabel;
 
         /// <summary>
         /// Przechowywane textury ładowane podczas włączania gry
@@ -53,9 +58,13 @@ namespace BomberMan.Screens
         private readonly Texture2D _bombTexture;
         private readonly List<Texture2D> _characterTextures;
         private readonly List<Texture2D> _bonusesTextures;
+        private Button _backButton;
 
-        private float countDuration = 0.1f; //every  0.5s.
+        private float _countDuration = 0.1f; //every  0.1s.
         private float _currentTime;
+        private float _opponentMoveCycyle = 0.3f; // every 0.5s
+        private float _currentOpponentTime;
+
 
         /// <summary>
         /// Utwórz widok gry ze wszystkimi polami jednostkowymi
@@ -63,7 +72,8 @@ namespace BomberMan.Screens
         /// W przeciwnym przypadku załąduj grę z Utils i utwórz widok całej planszy
         /// </summary>
         public GameScreen(List<Texture2D> blockTextures, List<Texture2D> bonusesTextures,
-            Texture2D bombTexture, List<Texture2D> characterTextures)
+            Texture2D bombTexture, List<Texture2D> characterTextures, Texture2D backButtonTexture,
+            SpriteFont titleFont)
         {
             _bonusesTextures = bonusesTextures;
             _blockTextures = blockTextures;
@@ -74,6 +84,7 @@ namespace BomberMan.Screens
             _bonusLocations = new Dictionary<int, BonusType>();
             _bombLocations = new List<int>();
             _characterLocations = new Dictionary<int, List<CharacterType>>();
+            CreateBackButton(backButtonTexture);
             if (Utils.Game == null)
             {
                 Utils.Game = CreateNewGame();
@@ -109,11 +120,40 @@ namespace BomberMan.Screens
             // potem bomby + inne lementy znaczące
             // potem generujemy opponentów
             // na koniec gracza
+            _levelLabel = new Label(titleFont, Level + " " + (Utils.Game.Level + 1) + " " + Points + Utils.Game.Points
+                , Color.White);
         }
 
+        /// <summary>
+        /// Utwórz przycisk powrotu do głównego menu.
+        /// </summary>
+        /// <param name="backButtonTexture">tło przycisku powrotu</param>
+        private void CreateBackButton(Texture2D backButtonTexture)
+        {
+            _backButton = new Button(backButtonTexture, Color.White, null, "", Color.White)
+            {
+                Click = delegate()
+                {
+                    GameManager.ScreenType = ScreenType.MainMenu;
+                    return Color.Transparent;
+                }
+            };
+            _backButton.Scale = new Vector2(GameManager.BackButtonSize/_backButton.Texture.Width,
+                GameManager.BackButtonSize/_backButton.Texture.Height);
+            _backButton.Position = new Vector2(GameManager.BackButtonSize/2, GameManager.BackButtonSize/2);
+        }
+
+        /// <summary>
+        /// Narysuj wsyztskie komponenty w oknie gry.
+        /// </summary>
+        /// <param name="spriteBatch">Obiekt, w którym rysowane są komponenty.</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
             _boardEngine.Draw(spriteBatch);
+            spriteBatch.Begin();
+            _backButton.Draw(spriteBatch);
+            _levelLabel.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         /// <summary>
@@ -124,18 +164,490 @@ namespace BomberMan.Screens
         /// <param name="windowHeight">Wysokość okna</param>
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
-            // dla każdej bomby która nie ma ustawione <0  w czaie do wybuchu zmniejszyć czas o interval jak zmniejszymy i pojawi się mniej niż zero
-            // "usuwamy obiekt" z listy do rysowania
-
-            //gameTime.ElapsedGameTime.Milliseconds;
+            double frameTime = gameTime.ElapsedGameTime.Milliseconds/1000.0;
+            MouseState mouseState = Mouse.GetState();
+            PrevMousePressed = MousePressed;
+            MousePressed = mouseState.LeftButton == ButtonState.Pressed;
+            _backButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+            _currentTime += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _currentOpponentTime += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            if (_currentOpponentTime >= _opponentMoveCycyle)
+            {
+                _currentOpponentTime -= _opponentMoveCycyle;
+                Dictionary<int, List<CharacterType>> tmpDictionary = new Dictionary<int, List<CharacterType>>();
+                foreach (var record in _characterLocations)
+                {
+                    foreach (var character in record.Value)
+                    {
+                        if (character == CharacterType.Octopus)
+                        {
+                            GenerateOneMoveForOctpus(ref tmpDictionary, record.Key, character);
+                        }
+                        else if (character == CharacterType.Ghost)
+                        {
+                            GenerateOneMoveForGhoast(ref tmpDictionary, record.Key, character);
+                        }
+                        else
+                        {
+                            if (!tmpDictionary.ContainsKey(record.Key))
+                            {
+                                tmpDictionary.Add(record.Key, new List<CharacterType>());
+                            }
+                            tmpDictionary[record.Key].Add(character);
+                        }
+                    }
+                }
+                _characterLocations = tmpDictionary;
+            }
             _boardEngine.Update(_boradBlocksTypes, _bonusLocations,
                 _characterLocations, _bombLocations, windowWidth, windowHeight);
-            _currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (_currentTime >= countDuration)
+            if (_currentTime >= _countDuration)
             {
-                _currentTime -= countDuration;
+                _currentTime -= _countDuration;
                 HandleKeyboard();
             }
+            _levelLabel.Position = new Vector2(GameManager.BackButtonSize*2, 0);
+            _levelLabel.Text = Level + " " + (Utils.Game.Level + 1) + " " + Points + " " + Utils.Game.Points;
+        }
+
+        /// <summary>
+        /// Szczegółowa analiza ruchu, który powinna wykonać ośmiornica.
+        /// </summary>
+        /// <param name="tmpDictionary">słownik, do którego dodawana jest ośmiornica zpozycją, na której stoi</param>
+        /// <param name="actualPosition">aktualna pozycja ośmiornicy</param>
+        /// <param name="character">ośmiornica</param>
+        private void GenerateOneMoveForOctpus(ref Dictionary<int, List<CharacterType>> tmpDictionary, int actualPosition,
+            CharacterType character)
+        {
+            //sprwadź czy ośmiornica widzi gracza
+            if (CheckIfOctopusSeesPlayer(actualPosition, _boardEngine.PlayerLocation))
+            {
+                int octopusPosition = actualPosition;
+                int playerPosition = _boardEngine.PlayerLocation;
+                if (octopusPosition > playerPosition)
+                {
+                    if ((octopusPosition - playerPosition)%_columns == 0)
+                    {
+                        //ośmiornica i gracz w tej samej kolumnie
+                        if (!tmpDictionary.ContainsKey(octopusPosition - _columns))
+                        {
+                            tmpDictionary.Add(octopusPosition - _columns, new List<CharacterType>());
+                        }
+                        tmpDictionary[octopusPosition - _columns].Add(character);
+                    }
+                    else
+                    {
+                        // ośmiornica i gracz w tym samym wierszu
+                        if (!tmpDictionary.ContainsKey(actualPosition - 1))
+                        {
+                            tmpDictionary.Add(actualPosition - 1, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition - 1].Add(character);
+                    }
+                }
+                else
+                {
+                    if ((playerPosition - octopusPosition)%_columns == 0)
+                    {
+                        //ośmiornica i gracz w tej samej kolumnie
+                        if (!tmpDictionary.ContainsKey(actualPosition + _columns))
+                        {
+                            tmpDictionary.Add(actualPosition + _columns, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition + _columns].Add(character);
+                    }
+                    else
+                    {
+                        // ośmiornica i gracz w tym samym wierszu
+                        if (!tmpDictionary.ContainsKey(actualPosition + 1))
+                        {
+                            tmpDictionary.Add(actualPosition + 1, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition + 1].Add(character);
+                    }
+                }
+            }
+            else
+            {
+                //wylosuj kierunek ruchu lub stój w miejscu
+                bool[] directions = new bool[4] {true, true, true, true};
+                int goodDirections = 4;
+                if (actualPosition%_columns == 0)
+                {
+                    //lewy brzeg planszy
+                    goodDirections--;
+                    directions[0] = false;
+                }
+
+                if (actualPosition%_columns + 1 == 0)
+                {
+                    //prawy brzeg planszy
+                    goodDirections--;
+                    directions[1] = false;
+                }
+                if (actualPosition < _columns)
+                {
+                    //górny brzeg planszy
+                    goodDirections--;
+                    directions[2] = false;
+                }
+                if (actualPosition >= (_rows - 1)*_columns)
+                {
+                    //dolny brzeg planszy
+                    goodDirections--;
+                    directions[3] = false;
+                }
+                int newKey = -1;
+                if (goodDirections == 1)
+                {
+                    for (int i = 0; i < directions.Length; i++)
+                    {
+                        if (directions[i])
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    //lewo
+                                    if (_boradBlocksTypes[actualPosition - 1] == BlockType.White)
+                                        newKey = actualPosition - 1;
+                                    break;
+                                case 1:
+                                    // prawo
+                                    if (_boradBlocksTypes[actualPosition + 1] == BlockType.White)
+                                        newKey = actualPosition + 1;
+                                    break;
+                                case 2:
+                                    // góra
+                                    if (_boradBlocksTypes[actualPosition - _columns] == BlockType.White)
+                                        newKey = actualPosition - _columns;
+                                    break;
+                                case 3:
+                                    // dół
+                                    if (_boradBlocksTypes[actualPosition + _columns] == BlockType.White)
+                                        newKey = actualPosition + _columns;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                if (goodDirections > 1)
+                {
+                    int a = _random.Next(goodDirections - 1);
+                    a++;
+                    int index = 0;
+                    for (int i = 0; i < directions.Length; i++)
+                    {
+                        if (directions[i])
+                        {
+                            if (index == a) break;
+                            switch (i)
+                            {
+                                case 0:
+                                    //lewo
+                                    if (_boradBlocksTypes[actualPosition - 1] == BlockType.White)
+                                    {
+                                        index++;
+                                        newKey = actualPosition - 1;
+                                    }
+                                    break;
+                                case 1:
+                                    // prawo
+                                    if (_boradBlocksTypes[actualPosition + 1] == BlockType.White)
+                                    {
+                                        newKey = actualPosition + 1;
+                                        index++;
+                                    }
+                                    break;
+                                case 2:
+                                    // góra
+                                    if (_boradBlocksTypes[actualPosition - _columns] == BlockType.White)
+                                    {
+                                        newKey = actualPosition - _columns;
+                                        index++;
+                                    }
+                                    break;
+                                case 3:
+                                    // dół
+                                    if (_boradBlocksTypes[actualPosition + _columns] == BlockType.White)
+                                    {
+                                        newKey = actualPosition + _columns;
+                                        index++;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+                if (goodDirections != 0 && newKey != -1 && _boradBlocksTypes[newKey] == BlockType.White)
+                {
+                    if (!tmpDictionary.ContainsKey(newKey))
+                    {
+                        tmpDictionary.Add(newKey, new List<CharacterType>());
+                    }
+                    tmpDictionary[newKey].Add(character);
+                }
+                else
+                {
+                    if (!tmpDictionary.ContainsKey(actualPosition))
+                    {
+                        tmpDictionary.Add(actualPosition, new List<CharacterType>());
+                    }
+                    tmpDictionary[actualPosition].Add(character);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Szczegółowa analiza ruchu, który powinien wykonać duch.
+        /// </summary>
+        /// <param name="tmpDictionary"></param>
+        /// <param name="actualPosition"></param>
+        /// <param name="character"></param>
+        private void GenerateOneMoveForGhoast(ref Dictionary<int, List<CharacterType>> tmpDictionary, int actualPosition,
+            CharacterType character)
+        {
+            //sprwadź czy ośmiornica widzi gracza
+            if (CheckIfOctopusSeesPlayer(actualPosition, _boardEngine.PlayerLocation))
+            {
+                int octopusPosition = actualPosition;
+                int playerPosition = _boardEngine.PlayerLocation;
+                if (octopusPosition > playerPosition)
+                {
+                    if ((octopusPosition - playerPosition)%_columns == 0)
+                    {
+                        //ośmiornica i gracz w tej samej kolumnie
+                        if (!tmpDictionary.ContainsKey(octopusPosition - _columns))
+                        {
+                            tmpDictionary.Add(octopusPosition - _columns, new List<CharacterType>());
+                        }
+                        tmpDictionary[octopusPosition - _columns].Add(character);
+                    }
+                    else
+                    {
+                        // ośmiornica i gracz w tym samym wierszu
+                        if (!tmpDictionary.ContainsKey(actualPosition - 1))
+                        {
+                            tmpDictionary.Add(actualPosition - 1, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition - 1].Add(character);
+                    }
+                }
+                else
+                {
+                    if ((playerPosition - octopusPosition)%_columns == 0)
+                    {
+                        //ośmiornica i gracz w tej samej kolumnie
+                        if (!tmpDictionary.ContainsKey(actualPosition + _columns))
+                        {
+                            tmpDictionary.Add(actualPosition + _columns, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition + _columns].Add(character);
+                    }
+                    else
+                    {
+                        // ośmiornica i gracz w tym samym wierszu
+                        if (!tmpDictionary.ContainsKey(actualPosition + 1))
+                        {
+                            tmpDictionary.Add(actualPosition + 1, new List<CharacterType>());
+                        }
+                        tmpDictionary[actualPosition + 1].Add(character);
+                    }
+                }
+            }
+            else
+            {
+                //wylosuj kierunek ruchu lub stój w miejscu
+                bool[] directions = new bool[4] {true, true, true, true};
+                int goodDirections = 4;
+                if (actualPosition%_columns == 0)
+                {
+                    //lewy brzeg planszy
+                    goodDirections--;
+                    directions[0] = false;
+                }
+
+                if (actualPosition%_columns + 1 == 0)
+                {
+                    //prawy brzeg planszy
+                    goodDirections--;
+                    directions[1] = false;
+                }
+                if (actualPosition < _columns)
+                {
+                    //górny brzeg planszy
+                    goodDirections--;
+                    directions[2] = false;
+                }
+                if (actualPosition >= (_rows - 1)*_columns)
+                {
+                    //dolny brzeg planszy
+                    goodDirections--;
+                    directions[3] = false;
+                }
+                int newKey = -1;
+                if (goodDirections == 1)
+                {
+                    for (int i = 0; i < directions.Length; i++)
+                    {
+                        if (directions[i])
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    //lewo
+                                    if (_boradBlocksTypes[actualPosition - 1] == BlockType.White)
+                                        newKey = actualPosition - 1;
+                                    break;
+                                case 1:
+                                    // prawo
+                                    if (_boradBlocksTypes[actualPosition + 1] == BlockType.White)
+                                        newKey = actualPosition + 1;
+                                    break;
+                                case 2:
+                                    // góra
+                                    if (_boradBlocksTypes[actualPosition - _columns] == BlockType.White)
+                                        newKey = actualPosition - _columns;
+                                    break;
+                                case 3:
+                                    // dół
+                                    if (_boradBlocksTypes[actualPosition + _columns] == BlockType.White)
+                                        newKey = actualPosition + _columns;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                if (goodDirections > 1)
+                {
+                    int a = _random.Next(goodDirections - 1);
+                    a++;
+                    int index = 0;
+                    for (int i = 0; i < directions.Length; i++)
+                    {
+                        if (directions[i])
+                        {
+                            if (index == a) break;
+                            switch (i)
+                            {
+                                case 0:
+                                    //lewo
+                                    if (_boradBlocksTypes[actualPosition - 1] == BlockType.White)
+                                    {
+                                        index++;
+                                        newKey = actualPosition - 1;
+                                    }
+                                    break;
+                                case 1:
+                                    // prawo
+                                    if (_boradBlocksTypes[actualPosition + 1] == BlockType.White)
+                                    {
+                                        newKey = actualPosition + 1;
+                                        index++;
+                                    }
+                                    break;
+                                case 2:
+                                    // góra
+                                    if (_boradBlocksTypes[actualPosition - _columns] == BlockType.White)
+                                    {
+                                        newKey = actualPosition - _columns;
+                                        index++;
+                                    }
+                                    break;
+                                case 3:
+                                    // dół
+                                    if (_boradBlocksTypes[actualPosition + _columns] == BlockType.White)
+                                    {
+                                        newKey = actualPosition + _columns;
+                                        index++;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+                if (goodDirections != 0 && newKey != -1 && _boradBlocksTypes[newKey] == BlockType.White)
+                {
+                    if (!tmpDictionary.ContainsKey(newKey))
+                    {
+                        tmpDictionary.Add(newKey, new List<CharacterType>());
+                    }
+                    tmpDictionary[newKey].Add(character);
+                }
+                else
+                {
+                    if (!tmpDictionary.ContainsKey(actualPosition))
+                    {
+                        tmpDictionary.Add(actualPosition, new List<CharacterType>());
+                    }
+                    tmpDictionary[actualPosition].Add(character);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sprawdż czy ośmiornica widzi gracza w lini prostej bez przeszkód. Nie jest ona samobujcą więc nie wiejdzie
+        /// na pole czerwone, które by ją spaliło.
+        /// </summary>
+        /// <param name="octopusPosition">pozycja ośmiornicy</param>
+        /// <param name="playerPosition">pozycja gracza</param>
+        /// <returns></returns>
+        private bool CheckIfOctopusSeesPlayer(int octopusPosition, int playerPosition)
+        {
+            int octopusRow = octopusPosition/_columns;
+            int octopusColumn = octopusPosition - _columns*octopusRow;
+            int playerRow = playerPosition/_columns;
+            int playerColumn = playerPosition - _columns*octopusRow;
+            if (playerRow != octopusRow && playerColumn != octopusColumn) return false;
+            if (playerColumn == octopusColumn)
+            {
+                int minRow = Math.Min(playerRow, octopusRow);
+                int maxRow = Math.Max(playerRow, octopusRow);
+                //ośmiornica musi widzieć gracza
+                for (int i = minRow + 1; i < maxRow; i++)
+                {
+                    if (_boradBlocksTypes[i*_columns + playerColumn].Equals(BlockType.Black)
+                        || _boradBlocksTypes[i*_columns + playerColumn].Equals(BlockType.Grey))
+                        return false;
+                }
+                // ośmiornica nie chce iść prosto na czerwone pole
+                if (octopusRow < playerRow)
+                {
+                    if (_boradBlocksTypes[(octopusRow + 1)*_columns + playerColumn].Equals(BlockType.Red))
+                        return false;
+                }
+                // ośmiornica nie chce iść prosto na czerwone pole
+                if (octopusRow > playerRow)
+                {
+                    if (_boradBlocksTypes[(octopusRow - 1)*_columns + playerColumn].Equals(BlockType.Red))
+                        return false;
+                }
+            }
+            if (playerRow == octopusRow)
+            {
+                int minColumn = Math.Min(playerColumn, octopusColumn);
+                int maxColumn = Math.Max(playerColumn, octopusColumn);
+                //ośmiornica musi widzieć gracza
+                for (int i = minColumn + 1; i < maxColumn; i++)
+                {
+                    if (_boradBlocksTypes[playerRow*_columns + i].Equals(BlockType.Black)
+                        || _boradBlocksTypes[playerRow*_columns + i].Equals(BlockType.Grey))
+                        return false;
+                }
+                // ośmiornica nie chce iść prosto na czerwone pole
+                if (octopusColumn < playerColumn)
+                {
+                    if (_boradBlocksTypes[(octopusRow)*_columns + octopusColumn + 1].Equals(BlockType.Red))
+                        return false;
+                }
+                // ośmiornica nie chce iść prosto na czerwone pole
+                if (octopusRow > playerRow)
+                {
+                    if (_boradBlocksTypes[(octopusRow)*_columns + octopusColumn - 1].Equals(BlockType.Red))
+                        return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -245,6 +757,11 @@ namespace BomberMan.Screens
                                 }
                             }
                             break;
+                        case Keys.Back:
+                        case Keys.B:
+                        case Keys.Escape:
+                            _backButton.Click();
+                            break;
                     }
                 }
                 else
@@ -252,12 +769,97 @@ namespace BomberMan.Screens
                     switch (k)
                     {
                         case Keys.W:
+                            if (x > 0)
+                            {
+                                int tmp = (x - 1)*columns + y;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    x--;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
                             break;
                         case Keys.S:
+                            if (x < rows - 1)
+                            {
+                                int tmp = (x + 1)*columns + y;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    x++;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
                             break;
                         case Keys.A:
+                            if (y > 0)
+                            {
+                                int tmp = x*columns + y - 1;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    y--;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
                             break;
                         case Keys.D:
+                            if (y < columns - 1)
+                            {
+                                int tmp = x*columns + y + 1;
+                                if (_boradBlocksTypes[tmp].Equals(BlockType.White) ||
+                                    _boradBlocksTypes[tmp].Equals(BlockType.Red))
+                                {
+                                    _characterLocations[gamer].Remove(CharacterType.Player);
+                                    y++;
+                                    gamer = x*columns + y;
+                                    if (_characterLocations.ContainsKey(gamer))
+                                        _characterLocations[gamer].Add(CharacterType.Player);
+                                    else
+                                    {
+                                        _characterLocations.Add(gamer, new List<CharacterType>()
+                                        {
+                                            CharacterType.Player
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case Keys.Back:
+                        case Keys.B:
+                        case Keys.Escape:
+                            _backButton.Click();
                             break;
                     }
                 }
@@ -326,6 +928,8 @@ namespace BomberMan.Screens
         {
             _boardEngine = new BoardEngine(_blockTextures, _bonusesTextures, _characterTextures,
                 _bombTexture, rows, columns);
+            _rows = rows;
+            _columns = columns;
         }
 
         /// <summary>
@@ -373,6 +977,54 @@ namespace BomberMan.Screens
         #region RandomBoardValues
 
         /// <summary>
+        /// Sprawdza czy gracz może dojść do każdego pola nie czarnego i na nie wejść.
+        /// Wystarczy sprawdzić czy z dowolnego nie czarnego pola można dojść do wszystkich nie czarnych pól.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckIfBoardIsNiceGenerated(int blackBlockAmount, int colummns)
+        {
+            int verticles = 0;
+            bool[] visited = new bool[_boradBlocksTypes.Count];
+            int start = 0;
+            while (_boradBlocksTypes[start] == BlockType.Black)
+            {
+                start ++;
+            }
+            int max = visited.Length - blackBlockAmount;
+            WalkOnBoard(ref visited, ref verticles, start, max, colummns);
+            if (verticles == max) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Pomocnicza funkjca wywoływana rekurencyjnie aby sprawdzić czy można dojść z
+        /// dowolnego pola planszy (nie czarnego) do dowolnego pola planszy (nie czarnego)
+        /// </summary>
+        /// <param name="visited">pola odwiedzone</param>
+        /// <param name="verticles">ilość wierchołków, które można odiwedzić</param>
+        /// <param name="index">index wierchołka, na którym jesteśmy</param>
+        /// <param name="max">oczekiwana ilość odwiedzonych wierzchołków</param>
+        /// <param name="columns">ilość kolumn w jednym wierszu planszy</param>
+        private void WalkOnBoard(ref bool[] visited, ref int verticles, int index, int max, int columns)
+        {
+            if (index == visited.Length) return;
+            if (_boradBlocksTypes[index] == BlockType.Black) return;
+            if (verticles == max) return;
+            if (visited[index]) return;
+            // zwiększamy ilośc odwiedzonych wierzchołków
+            if (!visited[index])
+            {
+                visited[index] = true;
+                verticles++;
+            }
+            if ((index + 1)%columns != 0) WalkOnBoard(ref visited, ref verticles, index + 1, max, columns);
+            if (index%columns != 0) WalkOnBoard(ref visited, ref verticles, index - 1, max, columns);
+            if (index - columns >= 0) WalkOnBoard(ref visited, ref verticles, index - columns, max, columns);
+            if (index + columns < visited.Length)
+                WalkOnBoard(ref visited, ref verticles, index + columns, max, columns);
+        }
+
+        /// <summary>
         /// Wylosuj pola, które powinny być niezniszczalne lub zniszczalne, pozostałe ustaw na białe, zwykłe
         /// Pola ustawiane jedynie na wartości <value>GREY</value>, <value>BLACK</value>, <value>WHITE</value>
         /// Do wszystkich pól white/grey da się dojść
@@ -381,41 +1033,46 @@ namespace BomberMan.Screens
         /// <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
         private void RandomBlocks(int rows, int columns)
         {
+            int percentage = PercentageOfSolidBlocks*rows*columns;
+            int blackBlocks = percentage%100 == 0 ? percentage/100 : percentage/100 + 1;
             CreateBoardEngine(rows, columns);
-            int randomBlocks = PercentageOfSolidBlocks*rows*columns/100;
-            _boradBlocksTypes = new List<BlockType>();
-            // zapełnij całą listę szarymi zniszczalnymi blokami
-            for (int i = 0; i < rows; i++)
+            do
             {
-                for (int j = 0; j < columns; j++)
+                int randomBlocks = PercentageOfSolidBlocks*rows*columns/100;
+                _boradBlocksTypes = new List<BlockType>();
+                // zapełnij całą listę szarymi zniszczalnymi blokami
+                for (int i = 0; i < rows; i++)
                 {
-                    _boradBlocksTypes.Add(BlockType.White);
+                    for (int j = 0; j < columns; j++)
+                    {
+                        _boradBlocksTypes.Add(BlockType.White);
+                    }
                 }
-            }
-            // wylosuj pozycje na których ma znajdować się czarny block
-            for (int i = 0; i < randomBlocks; i++)
-            {
-                int x, y;
-                do
+                // wylosuj pozycje na których ma znajdować się czarny block
+                for (int i = 0; i < randomBlocks; i++)
                 {
-                    x = _random.Next(rows);
-                    y = _random.Next(columns);
-                } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
-                _boradBlocksTypes[x*columns + y] = BlockType.Black;
-            }
-            randomBlocks = PercentageOfGreyBlocks*rows*columns/100;
-            // wylosuj pozycje na których ma znajdować się szary block
-            for (int i = 0; i < randomBlocks; i++)
-            {
-                int x, y;
-                do
+                    int x, y;
+                    do
+                    {
+                        x = _random.Next(rows);
+                        y = _random.Next(columns);
+                    } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
+                    _boradBlocksTypes[x*columns + y] = BlockType.Black;
+                }
+                randomBlocks = PercentageOfGreyBlocks*rows*columns/100;
+                // wylosuj pozycje na których ma znajdować się szary block
+                for (int i = 0; i < randomBlocks; i++)
                 {
-                    x = _random.Next(rows);
-                    y = _random.Next(columns);
-                } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Grey) ||
-                         _boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
-                _boradBlocksTypes[x*columns + y] = BlockType.Grey;
-            }
+                    int x, y;
+                    do
+                    {
+                        x = _random.Next(rows);
+                        y = _random.Next(columns);
+                    } while (_boradBlocksTypes[x*columns + y].Equals(BlockType.Grey) ||
+                             _boradBlocksTypes[x*columns + y].Equals(BlockType.Black));
+                    _boradBlocksTypes[x*columns + y] = BlockType.Grey;
+                }
+            } while (!CheckIfBoardIsNiceGenerated(blackBlocks, columns));
         }
 
         /// <summary>

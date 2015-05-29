@@ -13,7 +13,7 @@ namespace BomberMan.Common.Components.StateComponents
         private double _timer;
         private readonly Color _pressedColor = Color.DarkBlue;
         private readonly Color _hoverColor = Color.LightBlue;
-        private readonly Color _normalColor = Color.White;
+        private Color _normalColor = Color.White;
         private bool _mpressed, _prevMpressed;
         private int _mx, _my;
         private double _frameTime;
@@ -25,6 +25,8 @@ namespace BomberMan.Common.Components.StateComponents
             get { return _textLabel.Text; }
             set { _textLabel.Text = value; }
         }
+
+        public Color NormalColor { set { _normalColor = value; } }
 
         /// <summary>
         /// Utwórz nowy przycisk z napisem na nim.
@@ -38,11 +40,12 @@ namespace BomberMan.Common.Components.StateComponents
         /// <param name="timer">najkrótszy czas od jednej zmiany stanu przycisku do drugiej</param>
         /// <param name="spriteFont">czcionka napisu na przycisku</param>
         /// <param name="text">napis na przycisku</param>
+        /// <param name="textColor">kolor tekstu na przycisku</param>
         public Button(BState state, Texture2D texture, Color color, Vector2 position, Vector2 scale, float angle,
-            double timer, SpriteFont spriteFont = null, String text = "")
+            double timer, Color textColor, SpriteFont spriteFont = null, String text = "")
             : base(texture, color, position, scale, angle)
         {
-            _textLabel = new Label(spriteFont, text, color, position, scale, angle);
+            _textLabel = new Label(spriteFont, text, textColor, position, scale, angle);
             _state = state;
             _timer = timer;
         }
@@ -56,10 +59,11 @@ namespace BomberMan.Common.Components.StateComponents
         /// <param name="color">kolor przycisku</param>
         /// <param name="spriteFont">czcionka napisu</param>
         /// <param name="text">napis</param>
-        public Button(Texture2D texture, Color color, SpriteFont spriteFont, String text)
+        /// <param name="textColor">kolor tekstu znajdującego się na przycisku</param>
+        public Button(Texture2D texture, Color color, SpriteFont spriteFont, String text, Color textColor)
             : base(texture, color, new Vector2(0, 0), new Vector2(1, 1), 0f)
         {
-            _textLabel = new Label(spriteFont, text, color, new Vector2(0, 0), new Vector2(1, 1), 0);
+            _textLabel = new Label(spriteFont, text, textColor, new Vector2(0, 0), new Vector2(1, 1), 0);
             _state = BState.Up;
             _timer = 2f;
         }
@@ -158,7 +162,7 @@ namespace BomberMan.Common.Components.StateComponents
             {
                 Color color = Click();
                 if (color != Color.Transparent)
-                    Color = color;
+                    _normalColor = color;
             }
         }
 

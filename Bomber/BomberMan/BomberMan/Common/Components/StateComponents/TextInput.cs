@@ -48,7 +48,7 @@ namespace BomberMan.Common.Components.StateComponents
             TextValue = String.Empty;
             ShowCursor = showCursor;
             _color = color;
-            _button = new Button(BState.Up, texture, color, new Vector2(0, 0), new Vector2(1, 1), 0.0f, 2.0f);
+            _button = new Button(BState.Up, texture, color, new Vector2(0, 0), new Vector2(1, 1), 0.0f, 2.0f, Color.Black);
         }
 
         /// <summary>

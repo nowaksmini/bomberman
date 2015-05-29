@@ -21,7 +21,7 @@ namespace BomberMan.Common.Engines
         private readonly List<Texture2D> _bonusTextures;
         private readonly List<Texture2D> _characterTextures;
         private readonly Texture2D _bombTexture;
-        private const int Shift = 50;
+        private const int Shift = 60;
         public int PlayerLocation { get; set; }
 
         public int Rows

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration.Configuration;
 using BomberMan.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +11,9 @@ namespace BomberMan.Screens.Menus
     public class MainMenuScreen : Menu
     {
         private const int Shift = 100;
+        private float countDuration = 0.1f; //every  0.5s.
+        private float _currentTime;
+        private int _currentIndex;
 
         public MainMenuScreen(int options, List<Texture2D> buttonsTextures) : base(options, buttonsTextures)
         {
@@ -51,7 +55,12 @@ namespace BomberMan.Screens.Menus
                 OptionButtons[i].Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 y += height + Gap;
             }
-            HandleKeyboard();
+            _currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_currentTime >= countDuration)
+            {
+                _currentTime -= countDuration;
+                HandleKeyboard();
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -69,20 +78,10 @@ namespace BomberMan.Screens.Menus
             Keys[] keymap = KeyboardState.GetPressedKeys();
             foreach (Keys k in keymap)
             {
-                char key = k.ToString()[0];
-                switch (key)
+                switch (k)
                 {
-                    case 'e':
-                    case 'E':
+                    case Keys.Enter:
                         OptionButtons[0].OnClick(0.25);
-                        break;
-                    case 'm':
-                    case 'M':
-                        OptionButtons[1].OnClick(0.25);
-                        break;
-                    case 'h':
-                    case 'H':
-                        OptionButtons[2].OnClick(0.25);
                         break;
                 }
             }

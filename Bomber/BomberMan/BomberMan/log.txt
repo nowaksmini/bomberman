@@ -1,0 +1,2 @@
+CLASS : UserService METHODE : CreateUser ERROR :    at BomberManViewModel.Services.UserService.CreateUser(UserDao userDao, String& message) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberManViewModel\Services\UserService.cs:line 95
+CLASS : UserService METHODE : CreateUser ERROR :    at BomberManViewModel.Services.UserService.CreateUser(UserDao userDao, String& message) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberManViewModel\Services\UserService.cs:line 95

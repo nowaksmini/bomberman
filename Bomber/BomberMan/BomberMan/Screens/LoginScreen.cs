@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using BomberMan.Common;
 using BomberMan.Common.Components.StateComponents;
+using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
 using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
@@ -65,10 +66,11 @@ namespace BomberMan.Screens
             _bombTexture = bombTexture;
             _spriteFont = spriteFont;
             var colorInput = Color.Black;
-            CreateLabelsAndFields(Color.White, colorInput, texture);
-            _regiter = new Button(texture, colorInput, spriteFont, "");
-            _saveButton = new Button(texture, colorInput, spriteFont, LogInButton);
-            _showPassword = new Button(texture, colorInput, spriteFont, "");
+            var colorButtons = Color.White;
+            CreateLabelsAndFields(colorButtons, colorInput, texture);
+            _regiter = new Button(texture, colorButtons, spriteFont, "", colorInput);
+            _saveButton = new Button(texture, colorButtons, spriteFont, LogInButton, colorInput);
+            _showPassword = new Button(texture, colorButtons, spriteFont, "", colorInput);
             _showPassword.Click = delegate()
             {
                 _showPassword.Text = _showPassword.Text.Length == 0 ? CheckBoxCheckedSymbol : "";
@@ -288,6 +290,10 @@ namespace BomberMan.Screens
             }
             else
             {
+                Utils.User.BombKeyboardOption = BombKeyboardOption.Spcace;
+                Utils.User.IsAnimation = true;
+                Utils.User.IsMusic = true;
+                Utils.User.KeyboardOption = KeyboardOption.Arrows;
                 if (UserService.CreateUser(Utils.User, out message))
                 {
                     GameManager.ScreenType = ScreenType.MainMenu;

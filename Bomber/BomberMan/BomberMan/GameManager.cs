@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
@@ -22,8 +23,10 @@ namespace BomberMan
         private RocketsEngine _rocketeEngine;
         private PlanetEngine _planetEngine;
         private Texture2D _background;
+        private Texture2D _back;
 
-        public static ScreenType ScreenType = ScreenType.Settings;
+        public static ScreenType ScreenType = ScreenType.Login;
+        public const float BackButtonSize = 50f;
         private MainMenuScreen _mainMenu;
         private GameScreen _game;
         private HelpMenuScreen _help;
@@ -50,9 +53,6 @@ namespace BomberMan
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             LoadLogin();
             LoadBackGround();
-            LoadMainMenu();
-            LoadSettings();
-            LoadGame();
         }
 
         protected override void UnloadContent()
@@ -65,6 +65,25 @@ namespace BomberMan
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             UpdateBackground(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            if (ScreenType != ScreenType.Login && _mainMenu == null)
+            {
+                LoadRestSreens();
+            }
+            if (Utils.User != null && Utils.User.IsMusic == false)
+            {
+                if (MediaPlayer.State != MediaState.Paused)
+                {
+                    MediaPlayer.Pause();
+                }
+            }
+            else
+            {
+                if (MediaPlayer.State != MediaState.Playing)
+                {
+                    MediaPlayer.Play(_song);
+                }
+            }
+
             switch (ScreenType)
             {
                 case ScreenType.MainMenu:
@@ -91,13 +110,20 @@ namespace BomberMan
 
         protected override void Draw(GameTime gameTime)
         {
+            if (ScreenType != ScreenType.Login && _mainMenu == null)
+            {
+                LoadRestSreens();
+            }
             GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin();
             _spriteBatch.Draw(_background, new Rectangle(0, 0, Window.ClientBounds.Width,
                 Window.ClientBounds.Height), Color.White);
             _spriteBatch.End();
             _planetEngine.Draw(_spriteBatch);
-            _rocketeEngine.Draw(_spriteBatch);
+            if (Utils.User == null || Utils.User.IsAnimation)
+            {
+                _rocketeEngine.Draw(_spriteBatch);
+            }
             switch (ScreenType)
             {
                 case ScreenType.MainMenu:
@@ -122,11 +148,21 @@ namespace BomberMan
                     _login.Draw(_spriteBatch);
                     break;
             }
-            _starsEngine.Draw(_spriteBatch);
+            if (Utils.User == null || Utils.User.IsAnimation)
+            {
+                _starsEngine.Draw(_spriteBatch);
+            }
             base.Draw(gameTime);
         }
 
         #region LoadResources
+
+        private void LoadRestSreens()
+        {
+            LoadMainMenu();
+            LoadSettings();
+            LoadGame();
+        }
 
         private void LoadMainMenu()
         {
@@ -151,9 +187,12 @@ namespace BomberMan
             {
                 Content.Load<Texture2D>(@"Images/Settings/Arrows"),
                 Content.Load<Texture2D>(@"Images/Settings/WSAD"),
-                 Content.Load<Texture2D>(@"Images/Settings/SpaceBomb"),
+                Content.Load<Texture2D>(@"Images/Settings/SpaceBomb"),
                 Content.Load<Texture2D>(@"Images/Settings/PBomb")
-            }; _settings = new SettingsScreen(labelSpriteFont, additionalFont, buttonsTextures);
+            };
+            _settings = new SettingsScreen(labelSpriteFont, additionalFont,
+                buttonsTextures, Content.Load<Texture2D>(@"Images/Game/white_block"),
+                Content.Load<Texture2D>(@"Images/Settings/SaveChanges"), _back);
         }
 
         private void LoadHelp()
@@ -193,8 +232,9 @@ namespace BomberMan
             characters[(int) CharacterType.Ghost] = Content.Load<Texture2D>(@"Images/Game/ghost");
             characters[(int) CharacterType.Player] = Content.Load<Texture2D>(@"Images/Game/robot");
             characterTextures.AddRange(characters);
+            SpriteFont titleFont = Content.Load<SpriteFont>(@"Fonts/Title");
             _game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/bomb"),
-                characterTextures);
+                characterTextures, _back, titleFont);
         }
 
         private void LoadBackGround()
@@ -218,6 +258,7 @@ namespace BomberMan
             planets.Add(Content.Load<Texture2D>(@"Images/Common/redstar"));
             _planetEngine = new PlanetEngine(planets, _random.Next(4) + 4);
             _song = (Content.Load<Song>(@"Music/OneRepublic"));
+            _back = Content.Load<Texture2D>(@"Images/Common/Back");
             MediaPlayer.Play(_song);
         }
 
