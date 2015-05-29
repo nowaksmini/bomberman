@@ -60,7 +60,7 @@
     <Compile Include="DataAccessObjects\BoardElementLocationDao.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Services\BoardService.cs" />
-    <Compile Include="Services\OponentService.cs" />
+    <Compile Include="Services\OpponentService.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Converters\BoardElementDaoToBoardElementEntity.cs" />
     <Compile Include="Converters\BoardElementEntityToBoardElementDao.cs" />

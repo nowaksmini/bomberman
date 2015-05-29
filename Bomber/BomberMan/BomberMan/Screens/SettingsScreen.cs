@@ -10,6 +10,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BomberMan.Screens
 {
+    /// <summary>
+    /// Klasa reprezentująca widok zmiany ustawień konta użytkownika.
+    /// </summary>
     public class SettingsScreen : Screen
     {
         private const int MaxNameCharacters = 15;

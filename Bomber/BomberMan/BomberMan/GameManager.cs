@@ -13,6 +13,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace BomberMan
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za zarz¹dzanie prze³¹czaniem widoków, ³¹dowaniem resources.
+    /// </summary>
     public class GameManager : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -48,6 +51,9 @@ namespace BomberMan
             Window.ClientSizeChanged += Window_ClientSizeChanged;
         }
 
+        /// <summary>
+        /// Za³aduj wszytskie zewnêtrzne resources.
+        /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -55,11 +61,18 @@ namespace BomberMan
             LoadBackGround();
         }
 
+        /// <summary>
+        /// Od³aduj wszytskie zewnêtrzne resources.
+        /// </summary>
         protected override void UnloadContent()
         {
             Content.Unload();
         }
 
+        /// <summary>
+        /// Zaktualizuj rozmiary i po³o¿enie wszystkich komponentów w zale¿noœci od zmieniaj¹cego siê rozmiaru okna.
+        /// </summary>
+        /// <param name="gameTime">czas trwania gry</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -95,6 +108,7 @@ namespace BomberMan
                 case ScreenType.Help:
                     break;
                 case ScreenType.HighScores:
+                    _highScores.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.Game:
                     _game.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
@@ -108,6 +122,11 @@ namespace BomberMan
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Narysuj wszytskie elementy znajduj¹ce siê w aplikacji. W zaleznoœci od ustawionego okna wybierz odpowiedni
+        /// Screen do rysowania
+        /// </summary>
+        /// <param name="gameTime">czas trwanie gry</param>
         protected override void Draw(GameTime gameTime)
         {
             if (ScreenType != ScreenType.Login && _mainMenu == null)
@@ -137,6 +156,8 @@ namespace BomberMan
                 case ScreenType.Help:
                     break;
                 case ScreenType.HighScores:
+                    IsMouseVisible = true;
+                    _highScores.Draw(_spriteBatch);
                     break;
                 case ScreenType.Game:
                     _game.Draw(_spriteBatch);
@@ -157,11 +178,15 @@ namespace BomberMan
 
         #region LoadResources
 
+        /// <summary>
+        /// Za³aduj komponenty po poprawnym zalogowaniu siê.
+        /// </summary>
         private void LoadRestSreens()
         {
             LoadMainMenu();
             LoadSettings();
             LoadGame();
+            LoadHighScores();
         }
 
         private void LoadMainMenu()
@@ -177,6 +202,9 @@ namespace BomberMan
 
         private void LoadHighScores()
         {
+            SpriteFont labelSpriteFont = Content.Load<SpriteFont>(@"Fonts/Input");
+            SpriteFont title = Content.Load<SpriteFont>(@"Fonts/Title");
+            _highScores  = new HighScoresScreen(labelSpriteFont, title, _back);
         }
 
         private void LoadSettings()
@@ -233,8 +261,10 @@ namespace BomberMan
             characters[(int) CharacterType.Player] = Content.Load<Texture2D>(@"Images/Game/robot");
             characterTextures.AddRange(characters);
             SpriteFont titleFont = Content.Load<SpriteFont>(@"Fonts/Title");
+            Texture2D saveButton = Content.Load<Texture2D>(@"Images/Common/Save");
+            Texture2D restartButton = Content.Load<Texture2D>(@"Images/Game/restart");
             _game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/bomb"),
-                characterTextures, _back, titleFont);
+                characterTextures, _back, titleFont, saveButton, restartButton);
         }
 
         private void LoadBackGround()
