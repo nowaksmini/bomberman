@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using AutoMapper;
 using BomberManModel;
 using BomberManModel.Entities;
@@ -40,17 +41,37 @@ namespace BomberManViewModel.Services
         }
 
         /// <summary>
+        /// Znajdź obiekt planszy na podstawie typu.
+        /// </summary>
+        /// <param name="boardElementType">typ szukanego elementu</param>
+        /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
+        /// <returns></returns>
+        public static BoardElementDao FindBoardElementByType(BoardElementType boardElementType, out String message)
+        {
+            var query = from b in DataManager.DataBaseContext.BoardElements
+                where b.ElementType == boardElementType
+                select b;
+            if (query.Any())
+            {
+                message = null;
+                return AutoMapper.Mapper.Map<BoardElementDao>(query.First());
+            }
+            message = "Nie znaleziono szukanego elementu planszy";
+            return null;
+        }
+
+        /// <summary>
         /// Zaktualizuj rozmieszczenie elementów na planszy.
         /// </summary>
         /// <param name="elements">elementy</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public bool UpdateBoardElementLocations(List<BoardElementLocation> elements, out String message)
+        static public bool UpdateBoardElementLocations(List<BoardElementLocationDao> elements, out String message)
         {
-
+            uint gameid = (uint) elements[0].Game.Id;
             message = null;
             var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                        where element.Game.Id == elements[0].Game.Id
+                        where element.Game.Id == gameid
                         select element;
 
             BoardElementLocation [] bElements = query.ToArray();
@@ -122,22 +143,23 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public List<BoardElementDao> GetAllBonusesForGame(GameDao gameDao, out String message)
+        static public List<BoardElementLocationDao> GetAllBonusesForGame(GameDao gameDao, out String message)
         {
             message = null;
-            List<BoardElementDao> bonuses = new List<BoardElementDao>();
-            var query = from element in DataManager.DataBaseContext.BoardElements
-                        where element.ElementType == BoardElementType.BombAmountBonus ||
-                        element.ElementType == BoardElementType.FastBonus ||
-                        element.ElementType == BoardElementType.InmortalBonus ||
-                        element.ElementType == BoardElementType.LifeBonus ||
-                        element.ElementType == BoardElementType.SlowBonus ||
-                        element.ElementType == BoardElementType.StrenghtBonus
+            List<BoardElementLocationDao> bonuses = new List<BoardElementLocationDao>();
+            var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                where (element.BoardElement.ElementType == BoardElementType.BombAmountBonus ||
+                       element.BoardElement.ElementType == BoardElementType.FastBonus ||
+                       element.BoardElement.ElementType == BoardElementType.InmortalBonus ||
+                       element.BoardElement.ElementType == BoardElementType.LifeBonus ||
+                       element.BoardElement.ElementType == BoardElementType.SlowBonus ||
+                       element.BoardElement.ElementType == BoardElementType.StrenghtBonus)
+                      && element.Game.Id == gameDao.Id 
                         select element;
-            BoardElement[] bElements = query.ToArray();
+            BoardElementLocation[] bElements = query.ToArray();
             for (int i = 0; i < bElements.Length; i++)
             {
-                BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
+                BoardElementLocationDao block = Mapper.Map<BoardElementLocationDao>(bElements[i]);
                 bonuses.Add(block);
             }
             return bonuses;

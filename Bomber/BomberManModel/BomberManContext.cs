@@ -13,7 +13,7 @@ namespace BomberManModel
 
         public DbSet<Game> Games { get; set; }
         public DbSet<BoardElementLocation> BoardElementLocations { get; set; }
-        public DbSet<Opponent> Oponents { get; set; }
+        public DbSet<Opponent> Opponents { get; set; }
         public DbSet<OpponentLocation> OponentLocations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<BoardElement> BoardElements { get; set; }

@@ -83,10 +83,10 @@ namespace BomberManViewModel
                 DataBaseContext.Users.Remove(query3.First());
                 DataBaseContext.SaveChanges();
             }
-            var query4 = from b in DataBaseContext.Oponents select b;
+            var query4 = from b in DataBaseContext.Opponents select b;
             while (query4.Any())
             {
-                DataBaseContext.Oponents.Remove(query4.First());
+                DataBaseContext.Opponents.Remove(query4.First());
                 DataBaseContext.SaveChanges();
             }
             var query5 = from b in DataBaseContext.BoardElements select b;
@@ -105,7 +105,7 @@ namespace BomberManViewModel
         /// <returns></returns>
         private static void CreateOponents()
         {
-            if (!DataBaseContext.Oponents.Any())
+            if (!DataBaseContext.Opponents.Any())
             {
                 var oponents = new List<Opponent>
                 {
@@ -131,7 +131,7 @@ namespace BomberManViewModel
                         Id = 2
                     },
                 };
-                oponents.ForEach(s => DataBaseContext.Oponents.Add(s));
+                oponents.ForEach(s => DataBaseContext.Opponents.Add(s));
                 DataBaseContext.SaveChanges();
             }
         }

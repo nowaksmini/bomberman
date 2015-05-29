@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using BomberManModel;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
 
@@ -35,6 +36,26 @@ namespace BomberManViewModel.Services
         }
 
         /// <summary>
+        /// Znajdź przeciwnika planszy na podstawie typu.
+        /// </summary>
+        /// <param name="opponentType">typ szukanego przeciwnika</param>
+        /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
+        /// <returns></returns>
+        public static OpponentDao FindBoardElementByType(OpponentType opponentType, out String message)
+        {
+            var query = from b in DataManager.DataBaseContext.Opponents
+                        where b.OpponentType == opponentType
+                        select b;
+            if (query.Any())
+            {
+                message = null;
+                return AutoMapper.Mapper.Map<OpponentDao>(query.First());
+            }
+            message = "Nie znaleziono szukanego przeciwnika";
+            return null;
+        }
+
+        /// <summary>
         /// Zaktualizuj rozmieszczenie przeciwników.
         /// </summary>
         /// <param name="opponents">przeciwnicy</param>
@@ -42,10 +63,10 @@ namespace BomberManViewModel.Services
         /// <returns></returns>
         static public bool UpdateOpponentLocations(List<OpponentLocationDao> opponents, out String message)
         {
-
+            uint gameid = (uint)opponents[0].Game.Id;
             message = null;
             var query = from element in DataManager.DataBaseContext.OponentLocations
-                        where element.Game.Id == opponents[0].Game.Id
+                        where element.Game.Id == gameid
                         select element;
 
             OpponentLocation[] bElements = query.ToArray();

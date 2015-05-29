@@ -1,0 +1,886 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BomberMan</name>
+    </assembly>
+    <members>
+        <member name="T:BomberMan.Common.Component">
+            <summary>
+            Klasa bazowa reprezentująca wszystkie obiekty pojawiające się w aplikacji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Component.#ctor">
+            <summary>
+            Utwóz nowy komponent bez żadnych ustawionych wartości.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Component.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Utwórz nowy komponent.
+            </summary>
+            <param name="texture">tło komponentu</param>
+            <param name="color">kolor komponentu</param>
+            <param name="position">pozycja wektorowa komponentu</param>
+            <param name="scale">skala wektorowa rozmiaru komponentu</param>
+            <param name="angle">kąt obrotu komponentu</param>
+        </member>
+        <member name="M:BomberMan.Common.Component.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj na podanym SpriteBatch komponent.
+            </summary>
+            <param name="spriteBatch">Obiekt, do ktorego dorysowujemy własny komponent</param>
+        </member>
+        <member name="T:BomberMan.Common.Components.MovingComponent">
+            <summary>
+            Klasa bazowa elementów poruszających się z przewidzianym kierunkiem bądź prędkością.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponent.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Utwóz nowy poruszający się komponent.
+            </summary>
+            <param name="texture">tło komponentu</param>
+            <param name="position">pozycja startowa komponentu</param>
+            <param name="velocity">prędkośc poruszania się</param>
+            <param name="angle">kąt nachylenia</param>
+            <param name="scale">skala rozmiaru</param>
+            <param name="color">kolor komponentu</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponent.Update">
+            <summary>
+            Metoda wykonywana podczas aktualizacji rozmiarów i położenia komponentu.
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.Character">
+            <summary>
+            Klasa reprezentująca postacie wyświetlane na ekranie: przeciwnicy + gracz
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Character.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,BomberMan.Common.Components.StateComponents.CharacterType)">
+            <summary>
+            Utwórz nową postać do wyświetlenia na planszy. 
+            </summary>
+            <param name="texture">tło postaci</param>
+            <param name="color">kolor tła postaci</param>
+            <param name="position">pozycja postaci</param>
+            <param name="scale">skala rozmiaru postaci</param>
+            <param name="angle">kąt nachylenia postaci</param>
+            <param name="characterType">rodzaj postaci <example>Ośmiornica</example></param>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.CharacterType">
+            <summary>
+            Rodzaje postaci wyświetlanych na planszy
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.Block">
+            <summary>
+            Klasa reprezentująca pojedyncze pole planszy o tle wyszczególnionego kwadratu jednostkowego
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Block.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,BomberMan.Common.Components.StateComponents.BlockType)">
+            <summary>
+            Utwórz pojedyncze pole planszy z wybranym tłem.
+            </summary>
+            <param name="texture">tło jednostkowego pola</param>
+            <param name="color">kolor jednostkowego pola</param>
+            <param name="position">pozycja jednostkowego pola</param>
+            <param name="scale">skala rozmiaru jednostkowego pola</param>
+            <param name="angle">kąt nachylenia jednostkowego pola</param>
+            <param name="blockType">rodzaj jednostkowego pola <example>Zniszczalne</example></param>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.BlockType">
+            <summary>
+            Rodzaje jednostkowych kwadratów
+            Niezniszczalny, Zniszczalny, W trakcie niszczenia, Zwykły
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.Bonus">
+            <summary>
+            Klasa reprezentująca pojedyncze pole planszy o tle wyszczególnionego bonusa
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Bonus.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,BomberMan.Common.Components.StateComponents.BonusType)">
+            <summary>
+            Utwórz bonus na jednostkowym polu. Bonusy podczas uruchomienia poziomu zawsze znajdują się pod
+            szarymi, zniszczalnymi blokami.
+            </summary>
+            <param name="texture">obrazek bonusa</param>
+            <param name="color">kolor bonusa</param>
+            <param name="position">pozycja bonusa</param>
+            <param name="scale">skala rozmiaru bonnusa</param>
+            <param name="angle">kąt nachylenia bonusa</param>
+            <param name="bonusType">rodzaj bonusa <example>Uzupełnij życie gracza o 50%</example></param>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.BonusType">
+            <summary>
+            Rodzaje bonusów :
+            zwiększ życie o 50%, przyspiesz ruch grcza dwukrotnie na określony czas,
+            zwolnij ruch gracza dwukrotnie na określony czas, sraw by gracz stał się niezniszczalny na określony czas,
+            zwiększ moc bomb 1,5 krotnie na określony czas, zwiększ ilość bomb do wykorzystania na planszy o 1
+            Wszystkie bonusy początkowo znajdują się pod polami szarymi
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.Button">
+            <summary>
+            Reprezentacja przyciska, możliwośc najechania na przycisk, wciśnięcia, wykonania akcji
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.#ctor(BomberMan.Common.Components.StateComponents.BState,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Double,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteFont,System.String)">
+            <summary>
+            Utwórz nowy przycisk z napisem na nim.
+            </summary>
+            <param name="state">stan startowy przycisku <example>Wciśnięty</example></param>
+            <param name="texture">tło przycisku</param>
+            <param name="color">kolor przycisku</param>
+            <param name="position">pozycja przycisku</param>
+            <param name="scale">skala rozmiaru przycisku</param>
+            <param name="angle">kąt nachylenia przycisku</param>
+            <param name="timer">najkrótszy czas od jednej zmiany stanu przycisku do drugiej</param>
+            <param name="spriteFont">czcionka napisu na przycisku</param>
+            <param name="text">napis na przycisku</param>
+            <param name="textColor">kolor tekstu na przycisku</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Utwórz przycisk z tekstem znajdującym się na nim.
+            Nie obracaj przycisku, ustaw pozycję startową na 0,0
+            a skalę na 1,1
+            </summary>
+            <param name="texture">tło przycisku</param>
+            <param name="color">kolor przycisku</param>
+            <param name="spriteFont">czcionka napisu</param>
+            <param name="text">napis</param>
+            <param name="textColor">kolor tekstu znajdującego się na przycisku</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.#ctor">
+            <summary>
+            Utwórz przycisk bez napisu.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.Update(System.Int32,System.Int32,System.Double,System.Boolean,System.Boolean)">
+            <summary>
+            Uaktualnij widok przycisku w zależności od położenia myszki na ekranie.
+            </summary>
+            <param name="mx">współrzędna x myszki na ekranie</param>
+            <param name="my">współrzędna y myszki na ekranie</param>
+            <param name="frameTime">czas trwania gry</param>
+            <param name="mPressed">stan myszki <true>wciśnięta</true></param>
+            <param name="prevMPressed">poprzedni stan myszki <value>true</value> wciśnięta</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj na podanym SpriteBatch komponent z labelką.
+            </summary>
+            <param name="spriteBatch">Obiekt, do ktorego dorysowujemy własny komponent</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.OnClick(System.Double)">
+            <summary>
+            Metoda wykonywana podczas kliknięcia na przycisk.
+            </summary>
+            <param name="timer"></param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.CheckIfButtonContainsPoint(System.Int32,System.Int32)">
+            <summary>
+            Metoda sprawdza czy dany punkt należy do przycisku.
+            Wykorzystywane do sprawdzenia czy myszka najeżdża na przycisk.
+            </summary>
+            <param name="x">współrzędna x punktu</param>
+            <param name="y">współrzędna y punktu</param>
+            <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.CheckIfTextureContainsPoint(System.Single,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Metoda sprawdza czy wydzielone tło przyciska zawiera punkt.
+            </summary>
+            <param name="tx">współrzędna startowa x na tle porównywania</param>
+            <param name="ty">współrzędna startowa y na tle porónywania</param>
+            <param name="x">współrzędna x punktu</param>
+            <param name="y">współrzędna y punktu</param>
+            <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Button.CheckIfRectangleContainsPoint(System.Single,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Sprawdź czy przycisk zawiera dany punkt, jedynie w miejscach gdzie nie jest on prześwitujący.
+            </summary>
+            <param name="tx">współrzędna startowa x na tle porównywania</param>
+            <param name="ty">współrzędna startowa y na tle porónywania</param>
+            <param name="x">współrzędna x punktu</param>
+            <param name="y">współrzędna y punktu</param>
+            <returns>zwróć <value>true</value> jeżeli punkt zawiera się w przeciwnym przypadku zwróć <value>false</value></returns>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.BState">
+            <summary>
+            Reprezentuje stan przycisku: najechanie, brak czynności, właśnie puszczony, przyciśnięty
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.MovingComponents.Star">
+            <summary>
+            Klasa odpowiedzialna za generowanie gwiazdek i innych symboli podczas ruchu myszką
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponents.Star.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,System.Int32)">
+            <summary>
+            Utwórz nowy sybol pojawiający się podczas ruchu myszką.
+            </summary>
+            <param name="texture">tło obiektu</param>
+            <param name="position">pozycja startowa obiektu</param>
+            <param name="velocity">prędkość poruszania się obiektu w pionie i poziomie</param>
+            <param name="angle">kąt nachylenia obiektu</param>
+            <param name="angularVelocity">prędkość kątowa obiektu</param>
+            <param name="color">kolor obiektu</param>
+            <param name="scale">skala rozmiaru obiektu</param>
+            <param name="ttl">czas życia obiektu</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponents.Star.Update">
+            <summary>
+            Uaktualnij pozycję symbolu, zmień kąt poruszania się oraz pozostały czas życia elementu
+            </summary>
+        </member>
+        <member name="P:BomberMan.Common.Components.MovingComponents.Star.Ttl">
+            <summary>
+            Czas życia elementu
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.MovingComponents.Rocket">
+            <summary>
+            Klasa odpowiedzialna za tworzenie rakiet w tle podczas trwania całej aplikacji
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponents.Rocket.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Utwórz nową latającą w tle rakietę.
+            </summary>
+            <param name="texture">obrazek rakiety</param>
+            <param name="position">pozycja startowa rakiety</param>
+            <param name="velocity">prędkość poruszania się rakiety w obu kierunkach</param>
+            <param name="angle">kąt nachylenia rakiety</param>
+            <param name="color">kolor rakiety</param>
+            <param name="scale">skala rozmiaru rakiety</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.MovingComponents.Rocket.Update">
+            <summary>
+            Uaktualnij pozycję rakiety, która porusza się z określoną prędkością w zadanym kierunku
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.Label">
+            <summary>
+            Klasa reprezentująca odpowiednik Label bez możliwości rysowania textury
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Label.#ctor(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Utwórz nową labelkę.
+            </summary>
+            <param name="spriteFont">czcionka</param>
+            <param name="text">tekst</param>
+            <param name="color">kolor napisu</param>
+            <param name="position">pozycja obiektu</param>
+            <param name="scale">skala rozmiaru obiektu</param>
+            <param name="angle">kąt nachylenia obiektu</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Label.#ctor(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Utwóz nową labelkę z domyślną pozycją <value>0,0</value>,
+            skalą <value>1,1</value> i kątem nachylenia <value>0</value>
+            </summary>
+            <param name="spriteFont">czcionka</param>
+            <param name="text">tekst</param>
+            <param name="color">kolor napisu</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.Label.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj w aplikacji labelkę.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy labelkę</param>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.TextInput">
+            <summary>
+            Klasa reprezentująca EditText z możliwościć wpisywania niewyświetlanego hasła
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Boolean,Microsoft.Xna.Framework.Color,BomberMan.Common.Components.StateComponents.TextInputType,System.Int32)">
+            <summary>
+            Utwórz nowe pole edytowalne.
+            </summary>
+            <param name="texture">kolor tła pola</param>
+            <param name="font">czcionka tekstu</param>
+            <param name="showCursor"><value>true</value> oznacza pokazywanie kursowa, <value>false</value> brak</param>
+            <param name="color">kolor czcionki</param>
+            <param name="textInputType">rodzaj pola <value>Hasło</value> oznacza zamianę wpisywanych znaków na symbole "*"</param>
+            <param name="maxCharacters">maksymalna ilość znaków</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.ProcessKeyboard(System.Boolean)">
+            <summary>
+            Obsłuż wpisywane znaki na klawiaturze, każdy osobno.
+            </summary>
+            <param name="capsLock"><value>true</value> oznacza włączony CapsLock</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.Update(System.Int32,System.Int32,System.Double,System.Boolean,System.Boolean)">
+            <summary>
+            Uaktualnij 
+            </summary>
+            <param name="mx"></param>
+            <param name="my"></param>
+            <param name="frameTime"></param>
+            <param name="mousePressed"></param>
+            <param name="prevMousePressed"></param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj edytowalne pole tekstowe na ekranie aplikacji.
+            </summary>
+            <param name="spriteBatch">obiekt, na którym rysujemy pole telstowe</param>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.Convert(Microsoft.Xna.Framework.Input.Keys[],System.Boolean)">
+            <summary>
+            Zamień wciśnięty przycisk na klawiaturze na pojedynczy znak.
+            </summary>
+            <param name="keys">wciśnięte znaki na klawiaturze</param>
+            <param name="capsLock"><value>true</value> oznacza, że wciśnięto CapsLock</param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.CheckPressedKeys(Microsoft.Xna.Framework.Input.Keys[])">
+            <summary>
+            Sprawdź czy można wpisywać nowy znak do pola tekstowego w zależności od czasu ostatniego wpisania znaku.
+            </summary>
+            <param name="pressedKeys">wciśnięte znaki</param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.OnClick(System.Func{Microsoft.Xna.Framework.Color})">
+            <summary>
+            Metoda wywoływana podczas kliknięcia w pole tekstowe.
+            </summary>
+            <param name="clickAction">funkjca wywoływana po naciśnięciu na edytowalne pole tekstowe</param>
+        </member>
+        <member name="T:BomberMan.Common.Components.StateComponents.TextInputType">
+            <summary>
+            Rodzaje pól teksowych: zwykłe, hasło
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Engine">
+            <summary>
+            Bazowa klasa reprezentująca silniki generujące zbiory komponentów w aplikacji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Int32)">
+            <summary>
+            Utwórz silnik do generowania zbiorów komponentów.
+            </summary>
+            <param name="textures">dostępne tła dla komponentów</param>
+            <param name="objectsCount">ilość komponentów</param>
+        </member>
+        <member name="M:BomberMan.Common.Engine.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszystkie komponenty przechowywane w liście komponentów w obiekcie.
+            </summary>
+            <param name="spriteBatch">Obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="T:BomberMan.Common.Engines.BoardEngine">
+            <summary>
+            Klasa rysuje wszystkie jednostkowe pola planszy, każde pole może być narysowane z przeciwnikami, 
+            bonusami, graczem lub bombami.
+            Przechowywana jest informacja na temat rodzajów blocków.
+            Tło pojedynczego pola rysowane jest na podstawie sklejenia textur.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.BoardEngine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,System.Int32,System.Int32)">
+            <summary>
+            Utwóz nowy silnik odpowiedzialny za generowanie planszy do gry dla każdego poziomu.
+            </summary>
+            <param name="textures">dostępne tła dla pól jednostkowych</param>
+            <param name="bonusTextures">dostępne tła dla bonusów</param>
+            <param name="characterTextures">dostępne tła dla postaci</param>
+            <param name="bombTexture">tło bomb zostawianych przez gracza</param>
+            <param name="rows">ilość wierszy w planszy</param>
+            <param name="columns">ilość kolumn w planszy</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.BoardEngine.Update(System.Collections.Generic.List{BomberMan.Common.Components.StateComponents.BlockType},System.Collections.Generic.Dictionary{System.Int32,BomberMan.Common.Components.StateComponents.BonusType},System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{BomberMan.Common.Components.StateComponents.CharacterType}},System.Collections.Generic.List{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            Zaktualizuj widok każdego kwadratu jednostkowego planszy.
+            Na polu plnaszy narysowana jest zawsze na samej górze gracz, potem bomba, następnie przeciwnik, pole lub bonus w zależności od typu
+            </summary>
+            <param name="blocksTypes">lista opisująca każde pole planszy ze względu na rodzaj tła kawdratu <example>characterType.Black</example> </param>
+            <param name="bonusLocations">słownik opisujący rozmieszczenie wszystkich bonusów na planszy, gdzie klucz oznacza miesjce na planszy</param>
+            <param name="characterLocations">słownik opisujący rozmieszczenie wszystkich postaci na planszy, gdzie klucz oznacza miesjce na planszy</param>
+            <param name="bombLocations">lista opisująca rozmieszczenie wszystkich bomb na planszy</param>
+            <param name="windowWidth">szerokość okna gry</param>
+            <param name="windowHeight">wysokość okna gry</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.BoardEngine.GenerateNewBlock(BomberMan.Common.Components.StateComponents.BlockType,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Utwórz jednostkowy kwadrat planszy na podstawie rozmiaru i wybranego tła.
+            </summary>
+            <param name="blockType">rodzaj kwadratu jednostkowego <example>characterType.White</example></param>
+            <param name="x">położenie poziome względem okna gry</param>
+            <param name="y">położenie pionowe względem okna gry</param>
+            <param name="width">oczekiwana szerokość pola jednostkowego planszy</param>
+            <param name="height">oczekiwana wysokość pola jednostkowego planszy</param>
+            <returns>Zwróć nowy jednostkowy kwadrat planszy z ustalonym tłem.</returns>
+        </member>
+        <member name="M:BomberMan.Common.Engines.BoardEngine.GenerateNewBonus(BomberMan.Common.Components.StateComponents.BonusType,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Utwórz jednostkowy kwadrat planszy z tłem wybranego bonusa.
+            </summary>
+            <param name="bonusType">rodzaj bonusa <example>BonusType.Fast</example></param>
+            <param name="x">położenie poziome względem okna gry</param>
+            <param name="y">położenie pionowe względem okna gry</param>
+            <param name="width">oczekiwana szerokość bonusa</param>
+            <param name="height">oczekiwana wysokość bonusa</param>
+            <returns>Zwróć nowy jednostkowy kwadrat planszy z ustalonym tłem bonusa.</returns>
+        </member>
+        <member name="M:BomberMan.Common.Engines.BoardEngine.GenerateNewCharacter(BomberMan.Common.Components.StateComponents.CharacterType,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Utwórz postać na wybranym jednostkowym kwadracie planszy
+            </summary>
+            <param name="characterType">rodzaj postaci</param>
+            <param name="x">położenie poziome względem okna gry</param>
+            <param name="y">położenie pionowe względem okna gry</param>
+            <param name="width">oczekiwana szerokość bonusa</param>
+            <param name="height">oczekiwana wysokość bonusa</param>
+            <returns>zwróć nową postać</returns>
+        </member>
+        <member name="T:BomberMan.Common.Engines.PlanetEngine">
+            <summary>
+            Silnik generujący planety znajdujące się w tle aplikacji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.PlanetEngine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Int32)">
+            <summary>
+            Utwórz nowy silnik generujący planety i gwiazdy znajdujące się na tle kosmosu.
+            </summary>
+            <param name="textures">dostępne tła planet i gwiazd</param>
+            <param name="objectsCount">ilość wygenerowanych ciał niebieskich</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.PlanetEngine.Update(System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary planet podczas resize okna aplikacji.
+            </summary>
+            <param name="windowWidth">nowa szerokość okna aplikacji</param>
+            <param name="windowHeight">nowa wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.PlanetEngine.GenerateNewPlanet(System.Int32,System.Int32)">
+            <summary>
+            Utwórz nową planetę gotową do wyświetlenia w aplikacji.
+            </summary>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokosć okna aplikacji</param>
+            <returns>zwróć nowe ciało niebieskie</returns>
+        </member>
+        <member name="T:BomberMan.Common.Engines.RocketsEngine">
+            <summary>
+            Klasa generująca latające rakiety w tle aplikacji podczas jej działania.
+            </summary>
+        </member>
+        <member name="F:BomberMan.Common.Engines.RocketsEngine.Shift">
+            <summary>
+            Bariera graniczna dla widoku okna, wykorzystywana gdy samolot doleci do końca okna 
+            symuluje lot o <value>SHIFT</value> jednostek dalej po czym znika
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.RocketsEngine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Int32)">
+            <summary>
+            Utwórz nowy silnik odpowiedzialny za generowanie latających rakiet w tle aplikacji.
+            </summary>
+            <param name="textures">dostępne tła rakiet</param>
+            <param name="objectsCount">ilość generowanych rakiet</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.RocketsEngine.Update">
+            <summary>
+            Uaktualnij pozycjie wszystkich rakiet w aplikacji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.RocketsEngine.GenerateNewRocket">
+            <summary>
+            Utwórz nową rakietę. Wyznacz punkt startowy, prędkość, kierunek, kolor.
+            </summary>
+            <returns>Zwróć nową rakietę gotową do wyświetlenia</returns>
+        </member>
+        <member name="T:BomberMan.Common.Engines.StarsEngine">
+            <summary>
+            Klasa odpowiedzialna za generowanie "śladu" podczas poruszania się myszki
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.StarsEngine.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Vector2,System.Int32)">
+            <summary>
+            Utwórz nowy silnik zarządzający śladem generowanym podczas ruchu myszką.
+            </summary>
+            <param name="textures">dostęne tła obiektów znajdujących się w śladzie</param>
+            <param name="location">początkowe położenie</param>
+            <param name="objectsCount">ilość generowanych obiektów w śladzie</param>
+        </member>
+        <member name="M:BomberMan.Common.Engines.StarsEngine.Update">
+            <summary>
+            Uaktualnij ślad generowany za myszką, podczas ruchu. Zniszcz niektóre cząstki oraz wygeneruj na ich miejsce inne.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Engines.StarsEngine.GenerateNewParticle">
+            <summary>
+            Utwórz nową gwiazdkę, nadaj jej prędkość poruszania, kąt obrotu oraz czas życia
+            </summary>
+            <returns>Zwróć utworzoną gwiazdkę</returns>
+        </member>
+        <member name="M:BomberMan.Program.Main(System.String[])">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:BomberMan.GameManager">
+            <summary>
+            Klasa odpowiedzialna za zarządzanie przełączaniem widoków, łądowaniem resources.
+            </summary>
+        </member>
+        <member name="M:BomberMan.GameManager.LoadContent">
+            <summary>
+            Załaduj wszytskie zewnętrzne resources.
+            </summary>
+        </member>
+        <member name="M:BomberMan.GameManager.UnloadContent">
+            <summary>
+            Odładuj wszytskie zewnętrzne resources.
+            </summary>
+        </member>
+        <member name="M:BomberMan.GameManager.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Zaktualizuj rozmiary i położenie wszystkich komponentów w zależności od zmieniającego się rozmiaru okna.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+        </member>
+        <member name="M:BomberMan.GameManager.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Narysuj wszytskie elementy znajdujące się w aplikacji. W zalezności od ustawionego okna wybierz odpowiedni
+            Screen do rysowania
+            </summary>
+            <param name="gameTime">czas trwanie gry</param>
+        </member>
+        <member name="M:BomberMan.GameManager.LoadRestSreens">
+            <summary>
+            Załaduj komponenty po poprawnym zalogowaniu się.
+            </summary>
+        </member>
+        <member name="T:BomberMan.Common.Screen">
+            <summary>
+            Klasa reprezentująca widok poszczególnego okna <example>Menu, Gra, Opcje</example>
+            </summary>
+        </member>
+        <member name="M:BomberMan.Common.Screen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narusuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="M:BomberMan.Common.Screen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary komponentów znajdujących się w silniku.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Common.Screen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze.
+            </summary>
+        </member>
+        <member name="F:BomberMan.Screens.GameScreen._boardBlocksTypes">
+            <summary>
+            Lista zawierająca wszystkie jednostkowe pola planszy ze wzgędu na typ pola
+            Przekazywana do BoardEngine w celu narysowania jednostkowych pól
+            </summary>
+        </member>
+        <member name="F:BomberMan.Screens.GameScreen._blockTextures">
+            <summary>
+            Przechowywane textury ładowane podczas włączania gry
+            Jedna textura na jeden obrazek
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz widok gry ze wszystkimi polami jednostkowymi
+            Jeżeli nie ma utworzonego GameDAO w Utils to wygeneruj nową grę z poziomem 0
+            W przeciwnym przypadku załąduj grę z Utils i utwórz widok całej planszy
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CreateBackButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz przycisk powrotu do głównego menu.
+            </summary>
+            <param name="backButtonTexture">tło przycisku powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wsyztskie komponenty w oknie gry.
+            </summary>
+            <param name="spriteBatch">Obiekt, w którym rysowane są komponenty.</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij widok planszy w zależności od rozmiaru okna gry
+            </summary>
+            <param name="gameTime">Czas gry</param>
+            <param name="windowWidth">Szerokość okna</param>
+            <param name="windowHeight">Wysokość okna</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.DeleteCharacters(System.Int32)">
+            <summary>
+            Zniszcz znajdujących się na polach czerownych przeciwników.
+            </summary>
+            <param name="position"></param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.GenerateOneMoveForOpponent(System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{BomberMan.Common.Components.StateComponents.CharacterType}}@,System.Int32,BomberMan.Common.Components.StateComponents.CharacterType)">
+            <summary>
+            Szczegółowa analiza ruchu, który powinien wykonać przeciwnik.
+            </summary>
+            <param name="tmpDictionary">pomocniczy słownik przechowywujący lokalizaje przeciwników</param>
+            <param name="actualPosition">aktualna pozycja przeciwnika</param>
+            <param name="character">typ przeciwnika</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CheckIfOpponentSeesPlayer(System.Int32,System.Int32)">
+            <summary>
+            Sprawdż czy przeciwnik widzi gracza w lini prostej bez przeszkód. Nie jest ona samobujcą więc nie wejdzie
+            na pole czerwone, które by go spaliło.
+            </summary>
+            <param name="octopusPosition">pozycja przeciwnika</param>
+            <param name="playerPosition">pozycja gracza</param>
+            <returns></returns>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze w zależności od wybranej opcji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CreateNewGame">
+            <summary>
+            Utwórz nową instancję gry z poziomem 0, rozpoczynającym grę
+            </summary>
+            <returns>Zwróć instancję GameDAO i operuj na niej do zakończenia jednej gry</returns>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CreateBoardEngine(System.Int32,System.Int32)">
+            <summary>
+            Utwórz nowy BoadEngine potrzebny do zarządzania polami planszy
+            </summary>
+            <param name="rows">ilość jednoskowych pól w jednej kolumnie</param>
+            <param name="columns">ilość jednostkowych pól w jednym wierszu</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.SaveGame">
+            <summary>
+            Zapisz dotychczasowy stan gry do bazie danych
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.GenerateGameForSpecifiedLevel(System.Int32)">
+            <summary>
+            Utwórz wszytskie potrzebne informacje wymagane do wyświetlenia planszy, bonusów, przeciników oraz gracza
+            poziomy [0,4] plansza ma wyniary <value>SIMPLE</value>
+            poziomy [5,9] plansza ma wymiary <value>MEDIUM</value>
+            poziomy [10,14] plansza ma wymiary <value>HIGH</value>
+            poziomy [15,19] plansza ma wymiary <value>SUPER</value>
+            </summary>
+            <param name="level">poziom, dla którego generowana jest plansza</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CheckIfBoardIsNiceGenerated(System.Int32,System.Int32)">
+            <summary>
+            Sprawdza czy gracz może dojść do każdego pola nie czarnego i na nie wejść.
+            Wystarczy sprawdzić czy z dowolnego nie czarnego pola można dojść do wszystkich nie czarnych pól.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.WalkOnBoard(System.Boolean[]@,System.Int32@,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Pomocnicza funkjca wywoływana rekurencyjnie aby sprawdzić czy można dojść z
+            dowolnego pola planszy (nie czarnego) do dowolnego pola planszy (nie czarnego)
+            </summary>
+            <param name="visited">pola odwiedzone</param>
+            <param name="verticles">ilość wierchołków, które można odiwedzić</param>
+            <param name="index">index wierchołka, na którym jesteśmy</param>
+            <param name="max">oczekiwana ilość odwiedzonych wierzchołków</param>
+            <param name="columns">ilość kolumn w jednym wierszu planszy</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.RandomBlocks(System.Int32,System.Int32)">
+            <summary>
+            Wylosuj pola, które powinny być niezniszczalne lub zniszczalne, pozostałe ustaw na białe, zwykłe
+            Pola ustawiane jedynie na wartości <value>GREY</value>, <value>BLACK</value>, <value>WHITE</value>
+            Do wszystkich pól white/grey da się dojść
+            </summary>
+            <param name="rows">ilość wierszy pól jednostkowch na planszy</param>
+            <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.RandomBonuses">
+            <summary>
+            Wylosuj pola, na których powinny znaleźć się bonusy
+            Każdy typ bonusa losuj z częstotliwością w zależności od poziomu
+            Bonusy tworzone są tylko na polach szarych, na każdym polu szarym wsytępuje maksymalnie jeden bonus.
+            Ilość wszystkich bonusów na planszy po rozpoczęsciu poziomu to <value>PercentageOfBonuses</value> * ilość pól
+            Wylosuj z prawdopodobieństwem 1/10 Bonus Inmortal, 3/10 Life, 2/10 Fast, 1/10 Slow, 2/10 Strength, 1/10 Extra Bomb
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.RandomCharacters(System.Int32)">
+            <summary>
+            Wylosuj pola, na których powinny znaleźć się postacie przeciwników i gracz.
+            Ilość przeciwników zależy od poziomu i jest równa <value>PercentageOfOpponents</value>
+            Prawdopodobieństwo wylosowania ośmiornicy wynosi 65% a ducha 35%
+            </summary>
+            <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
+        </member>
+        <member name="T:BomberMan.Screens.HighScoresScreen">
+            <summary>
+            Klasa odpowiedzialna za generowanie widoku najlepszych wyników.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.HighScoresScreen.#ctor(Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Inicjalizuje nową instancję <see cref="T:BomberMan.Screens.HighScoresScreen"/> class.
+            </summary>
+            <param name="labelSpriteFont">czcionka labelek</param>
+            <param name="titleSpriteFont">czcionka  tytułu</param>
+            <param name="backButtonTexture">przycisk powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.HighScoresScreen.LoadHighScores">
+            <summary>
+            Załaduj najlepsze wyniki.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.HighScoresScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narusuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="M:BomberMan.Screens.HighScoresScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary komponentów znajdujących się w silniku.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Screens.HighScoresScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze.
+            </summary>
+        </member>
+        <member name="T:BomberMan.Screens.LoginScreen">
+            <summary>
+            Ekran pojawiający się na starcie aplikacji.
+            Weryfikuje poprawność danych logowania do aplikacji.
+            Pozwala założyć konto i zalogować się do aplikacji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.#ctor(Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz nowy ekran logowania.
+            </summary>
+            <param name="spriteFont">czcionka dla labelek</param>
+            <param name="spriteFontTitle">czcionka dla nagłówka</param>
+            <param name="checkBoxFont">czcionka dla dodatkowych opcji jak rejestruj czy pokaż hasło</param>
+            <param name="texture">tło przycisków i edytowalnych pól</param>
+            <param name="bombTexture">obrazek bomby</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.CreateLabelsAndFields(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Wygeneruj wszystkie labelki oraz textinputs dla widoku login'a.
+            </summary>
+            <param name="color">color textu labelek</param>
+            <param name="colorInput">color textu textinputs</param>
+            <param name="texture">textura koloru tła inputtexts</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszystkie komponenty.
+            </summary>
+            <param name="spriteBatch">Obiekt, na którym rysujemy wszytskie komponenty</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Zaktualizuj widok panelu logowania w zależności od czasu trwania gry oraz rozmiaru okna aplikacji.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.HandleKeyboard">
+            <summary>
+            Przechwytuj wciśnięte przyciski na klawiaturze i obsłuż je odpowiednio.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.LoginScreen.LogIn">
+            <summary>
+            Zaloguj użytkownika lub utwórz nowe konto w zależności od zaznaczonej opcji.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.Menu.#ctor(System.Int32,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D})">
+            <summary>
+            Utwóz nową instancję menu.
+            </summary>
+            <param name="options">ilość dostępnych opcji</param>
+            <param name="textures">dostępne tła dla przycisków</param>
+        </member>
+        <member name="T:BomberMan.Screens.SettingsScreen">
+            <summary>
+            Klasa reprezentująca widok zmiany ustawień konta użytkownika.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.#ctor(Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Klasa odpowiedzialna za widok ustawień konta użytkownika
+            </summary>
+            <param name="spriteFontLabels">czcionka dla labelek</param>
+            <param name="spriteFontAdditionalOption">czcionka dla dodatkowych opcji</param>
+            <param name="buttonsTextures">tło przycisków</param>
+            <param name="checkBoxTexture">tło chceckboxów</param>
+            <param name="saveChangesTexture">tło przycisku zapisz zamiany</param>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.GenerateLabelsAndTextInputs">
+            <summary>
+            Utwórz wszytskie labelki na ekranie.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.CreateButtons">
+            <summary>
+            Utwórz wszytskie przyciski na ekranie Settings.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.CreateClickHandlersForButtons">
+            <summary>
+            Utwórz obsługę przyciskania przycisków.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.SaveChanges">
+            <summary>
+            Zapisz dotychczasową konfigurację. Ta opcja próbuje nadpisać hasło znajdujące się w bazie danych.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij widok całego panelu
+            </summary>
+            <param name="gameTime">czas gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikcaji</param>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszytskie komponenty.
+            </summary>
+            <param name="spriteBatch">obiekt do rysowania komponentów</param>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane przyciski na klawiaturze.
+            </summary>
+        </member>
+        <member name="T:BomberMan.Utils">
+            <summary>
+            Klasa przechowująca informacje na temat zalogowanego uczestnika i aktualnie toczącej się gry.
+            </summary>
+        </member>
+        <member name="F:BomberMan.Utils.Game">
+            <summary>
+            Aktualnie trwająca gra
+            </summary>
+        </member>
+        <member name="F:BomberMan.Utils.User">
+            <summary>
+            Zalogowany użytkownik
+            </summary>
+        </member>
+    </members>
+</doc>

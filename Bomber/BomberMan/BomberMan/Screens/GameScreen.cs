@@ -24,8 +24,8 @@ namespace BomberMan.Screens
         private const int SuperLevelRows = 22;
         private const int SuperLevelColumns = 32;
         private const int MaxNumberOfLevel = 19;
-        private const int PercentageOfSolidBlocks = 10;
-        private const int PercentageOfGreyBlocks = 40;
+        private const int PercentageOfSolidBlocks = 7;
+        private const int PercentageOfGreyBlocks = 30;
         private const int PercentageOfBonuses = 5;
         private const int PercentageOfOpponents = 3;
         private const int DeletingGreyField = 10;
@@ -151,7 +151,33 @@ namespace BomberMan.Screens
                     }
                     _boardBlocksTypes.Add(blockKind);
                 }
-                List<BoardElementDao> bonuses = BoardService.GetAllBonusesForGame(Utils.Game, out message);
+                List<BoardElementLocationDao> bonuses = BoardService.GetAllBonusesForGame(Utils.Game, out message);
+                for (int i = 0; i < bonuses.Count; i++)
+                {
+                    BonusType bonusType = BonusType.BombAmount;
+                    switch (bonuses[i].BoardElement.ElementType)
+                    {
+                        case BoardElementType.LifeBonus:
+                            bonusType = BonusType.Life;
+                            break;
+                        case BoardElementType.BombAmountBonus:
+                            bonusType = BonusType.BombAmount;
+                            break;
+                        case BoardElementType.InmortalBonus:
+                            bonusType = BonusType.Inmortal;
+                            break;
+                        case BoardElementType.StrenghtBonus:
+                            bonusType = BonusType.Strenght;
+                            break;
+                        case BoardElementType.FastBonus:
+                            bonusType = BonusType.Fast;
+                            break;
+                        case BoardElementType.SlowBonus:
+                            bonusType = BonusType.Slow;
+                            break;
+                    }
+                    //_bonusLocations.Add(bonuses[i].);
+                }
                 List<BoardElementDao> bombs = BoardService.GetAllBombsForGame(Utils.Game, out message);
             }
             // najpierw generujemy blocki
@@ -224,7 +250,7 @@ namespace BomberMan.Screens
                     }
                 }
             }
-            if (_bonusLocations.ContainsKey(_boardEngine.PlayerLocation) && 
+            if (_bonusLocations.ContainsKey(_boardEngine.PlayerLocation) &&
                 _boardBlocksTypes[_boardEngine.PlayerLocation] == BlockType.White)
             {
                 BonusType bonusType = _bonusLocations[_boardEngine.PlayerLocation];
@@ -286,7 +312,7 @@ namespace BomberMan.Screens
                 if (_currentBombTimes[i] >= _bombCycle && _bombLocations.Count > 0)
                 {
                     ChangeBlocksAndKillOpponents(_bombLocations[i]);
-                    _bombLocations.RemoveAt(i);
+                    if (_bombLocations.Count > 0) _bombLocations.RemoveAt(i);
                     _bombAmount++;
                 }
                 else
@@ -986,8 +1012,116 @@ namespace BomberMan.Screens
             {
                 UserService.UpdateUser(Utils.User, out message);
             }
-            GameService.UpdateGame(Utils.Game, out message);
-            //OpponentService.UpdateOpponentLocations()
+            int x = _boardEngine.PlayerLocation/_columns;
+            int y = _boardEngine.PlayerLocation - x*_columns;
+            Utils.Game.PlayerXLocation = (uint) x;
+            Utils.Game.PlayerYLocation = (uint) y;
+            GameService.UpdateGame(ref Utils.Game, out message);
+            List<OpponentLocationDao> opponentLocations = new List<OpponentLocationDao>();
+            List<BoardElementLocationDao> boardElementLocation = new List<BoardElementLocationDao>();
+
+            for (int i = 0; i < _boardBlocksTypes.Count; i++)
+            {
+                if (_characterLocations.ContainsKey(i))
+                {
+                    List<CharacterType> characters = _characterLocations[i];
+                    foreach (var c in characters)
+                    {
+                        if (c != CharacterType.Player)
+                        {
+                            OpponentType opponent = OpponentType.Ghost;
+                            if (c == CharacterType.Octopus) opponent = OpponentType.Octopus;
+                            OpponentDao opponentDao = OpponentService.FindBoardElementByType(opponent, out message);
+                            opponentLocations.Add(new OpponentLocationDao()
+                            {
+                                Game = Utils.Game,
+                                IsAlive = true,
+                                Oponent = opponentDao,
+                                XLocation = (uint) (i/_columns),
+                                YLocation = (uint) (i - i/_columns*_columns),
+                            });
+                        }
+                    }
+                }
+                BoardElementType boardElementType = BoardElementType.WhiteBlock;
+                switch (_boardBlocksTypes[i])
+                {
+                    case BlockType.Black:
+                        boardElementType = BoardElementType.BlackBlock;
+                        break;
+                    case BlockType.Grey:
+                        boardElementType = BoardElementType.GrayBlock;
+                        break;
+                    case BlockType.Red:
+                        boardElementType = BoardElementType.RedBlock;
+                        break;
+                    case BlockType.White:
+                        boardElementType = BoardElementType.WhiteBlock;
+                        break;
+                }
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(boardElementType, out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = 100,
+                    XLocation = (uint) (i/_columns),
+                    YLocation = (uint) (i - i/_columns*_columns),
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+            for (int i = 0; i < _bombLocations.Count; i++)
+            {
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.Bomb, out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = 100,
+                    XLocation = (uint) (i/_columns),
+                    YLocation = (uint) (i - i/_columns*_columns),
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+            for (int i = 0; i < _bonusLocations.Count; i++)
+            {
+                if (_bonusLocations.ContainsKey(i))
+                {
+                    BoardElementType boardElementType = BoardElementType.BombAmountBonus;
+                    switch (_bonusLocations[i])
+                    {
+                        case BonusType.BombAmount:
+                            boardElementType = BoardElementType.BombAmountBonus;
+                            break;
+                        case BonusType.Fast:
+                            boardElementType = BoardElementType.FastBonus;
+                            break;
+                        case BonusType.Inmortal:
+                            boardElementType = BoardElementType.InmortalBonus;
+                            break;
+                        case BonusType.Slow:
+                            boardElementType = BoardElementType.SlowBonus;
+                            break;
+                        case BonusType.Life:
+                            boardElementType = BoardElementType.LifeBonus;
+                            break;
+                        case BonusType.Strenght:
+                            break;
+                    }
+                    BoardElementDao boardElementDao = BoardService.FindBoardElementByType(boardElementType, out message);
+                    BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                    {
+                        Game = Utils.Game,
+                        BoardElement = boardElementDao,
+                        Timeout = 100,
+                        XLocation = (uint) (i/_columns),
+                        YLocation = (uint) (i - i/_columns*_columns),
+                    };
+                    boardElementLocation.Add(boardElementLocationDao);
+                }
+            }
+            OpponentService.UpdateOpponentLocations(opponentLocations, out message);
+            BoardService.UpdateBoardElementLocations(boardElementLocation, out message);
         }
 
         /// <summary>

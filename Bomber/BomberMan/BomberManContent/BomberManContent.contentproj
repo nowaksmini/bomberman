@@ -153,12 +153,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GifAnimation\GifAnimation.csproj">
-      <Project>{76b7215d-8172-4ff9-a1a9-4989b0d4c15b}</Project>
-      <Name>GifAnimation</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\Common\BomberMan.png">
       <Name>BomberMan</Name>
       <Importer>TextureImporter</Importer>

@@ -59,12 +59,6 @@
     <Compile Include="Quantizer.cs" />
     <Compile Include="TextureData.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GifAnimation\GifAnimation.csproj">
-      <Project>{76B7215D-8172-4FF9-A1A9-4989B0D4C15B}</Project>
-      <Name>GifAnimation</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.ContentPipelineExtensions.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

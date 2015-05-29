@@ -61,15 +61,17 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomości otrzymane po zakończeniu weryfikacji</param>
         /// <returns>status powodzenia</returns>
-        static public bool UpdateGame(GameDao gameDao, out String message)
+        static public bool UpdateGame(ref GameDao gameDao, out String message)
         {
+            GameDao dao = gameDao;
             var query = from b in DataManager.DataBaseContext.Games
-                        where b.Id == gameDao.Id
+                        where b.Id == dao.Id
                         select b;
             if (!query.Any())
             {
+                GameDao dao1 = gameDao;
                 var userquery = from b in DataManager.DataBaseContext.Users
-                                where b.Name == gameDao.User.Name
+                                where b.Name == dao1.User.Name
                                 select b;
                 if (!userquery.Any())
                 {
@@ -80,7 +82,11 @@ namespace BomberManViewModel.Services
                 Game game = Mapper.Map<Game>(gameDao);
                 game.User = u;
                 DataManager.DataBaseContext.Users.Add(u);
+                DataManager.DataBaseContext.Entry(u).State = EntityState.Added;
+                DataManager.DataBaseContext.Games.Add(game);
+                DataManager.DataBaseContext.Entry(game).State = EntityState.Added;
                 DataManager.DataBaseContext.SaveChanges();
+                gameDao.Id = game.Id;
                 message = null;
                 return true;
             }
@@ -104,6 +110,7 @@ namespace BomberManViewModel.Services
         {
             var query = from b in DataManager.DataBaseContext.Games
                         orderby b.Points
+                        descending 
                         select  b;
             var top = query.Take(n);
             List<GameDao> gamesDaos = new List<GameDao>();
