@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using AutoMapper;
 using BomberManModel;
 using BomberManModel.Entities;
@@ -19,20 +20,32 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomość przesyłana w razie niepowodzenia</param>
         /// <returns></returns>
-        static public List<OpponentLocationDao> GetAllOponentsWithLocationsByGame(GameDao gameDao, out String message)
+        public static List<OpponentLocationDao> GetAllOponentsWithLocationsByGame(GameDao gameDao, out String message)
         {
-            message = null;
-            List<OpponentLocationDao> opponentLocation = new List<OpponentLocationDao>();
-            var query = from element in DataManager.DataBaseContext.OponentLocations
-                        where element.Game.Id == gameDao.Id
-                        select element;
-            OpponentLocation[] bElements = query.ToArray();
-            for (int i = 0; i < bElements.Length; i++)
+            try
             {
-                OpponentLocationDao opponentL = Mapper.Map<OpponentLocationDao>(bElements[i]);
-                opponentLocation.Add(opponentL);
+                message = null;
+                List<OpponentLocationDao> opponentLocation = new List<OpponentLocationDao>();
+                var query = from element in DataManager.DataBaseContext.OponentLocations
+                    where element.Game.Id == gameDao.Id
+                    select element;
+                OpponentLocation[] bElements = query.ToArray();
+                for (int i = 0; i < bElements.Length; i++)
+                {
+                    OpponentLocationDao opponentL = Mapper.Map<OpponentLocationDao>(bElements[i]);
+                    opponentLocation.Add(opponentL);
+                }
+                return opponentLocation;
             }
-            return opponentLocation;
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
+            return null;
         }
 
         /// <summary>
@@ -43,15 +56,27 @@ namespace BomberManViewModel.Services
         /// <returns></returns>
         public static OpponentDao FindBoardElementByType(OpponentType opponentType, out String message)
         {
-            var query = from b in DataManager.DataBaseContext.Opponents
-                        where b.OpponentType == opponentType
-                        select b;
-            if (query.Any())
+            try
             {
-                message = null;
-                return AutoMapper.Mapper.Map<OpponentDao>(query.First());
+                var query = from b in DataManager.DataBaseContext.Opponents
+                    where b.OpponentType == opponentType
+                    select b;
+                if (query.Any())
+                {
+                    message = null;
+                    return Mapper.Map<OpponentDao>(query.First());
+                }
+                message = "Nie znaleziono szukanego przeciwnika";
+                return null;
             }
-            message = "Nie znaleziono szukanego przeciwnika";
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
             return null;
         }
 
@@ -62,31 +87,43 @@ namespace BomberManViewModel.Services
         /// <param name="opponents">przeciwnicy</param>
         /// <param name="message">wiadomość przesyłana w razie niepowodzenia</param>
         /// <returns></returns>
-        static public bool UpdateOpponentLocations(int gameId, List<OpponentLocationDao> opponents, out String message)
+        public static bool UpdateOpponentLocations(int gameId, List<OpponentLocationDao> opponents, out String message)
         {
-            message = null;
-            var query = from element in DataManager.DataBaseContext.OponentLocations
-                        where element.Game.Id == gameId
-                        select element;
-            DataManager.DataBaseContext.OponentLocations.RemoveRange(query);
-            DataManager.DataBaseContext.SaveChanges();
-            var gameQuery = from element in DataManager.DataBaseContext.Games
-                            where element.Id == gameId
-                            select element;
-            if (!gameQuery.Any())
+            try
             {
-                message = "Nie istnieje taka gra";
-                return false;
+                message = null;
+                var query = from element in DataManager.DataBaseContext.OponentLocations
+                    where element.Game.Id == gameId
+                    select element;
+                DataManager.DataBaseContext.OponentLocations.RemoveRange(query);
+                DataManager.DataBaseContext.SaveChanges();
+                var gameQuery = from element in DataManager.DataBaseContext.Games
+                    where element.Id == gameId
+                    select element;
+                if (!gameQuery.Any())
+                {
+                    message = "Nie istnieje taka gra";
+                    return false;
+                }
+                Game game = gameQuery.First();
+                for (int i = 0; i < opponents.Count; i++)
+                {
+                    OpponentLocation opponentLocation = Mapper.Map<OpponentLocation>(opponents[i]);
+                    opponentLocation.Game = game;
+                    DataManager.DataBaseContext.OponentLocations.Add(opponentLocation);
+                }
+                DataManager.DataBaseContext.SaveChanges();
+                return true;
             }
-            Game game = gameQuery.First();
-            for (int i = 0; i < opponents.Count; i++)
+            catch (Exception e)
             {
-                OpponentLocation opponentLocation = Mapper.Map<OpponentLocation>(opponents[i]);
-                opponentLocation.Game = game;
-                DataManager.DataBaseContext.OponentLocations.Add(opponentLocation);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
             }
-            DataManager.DataBaseContext.SaveChanges();
-            return true;
+            return false;
         }
     }
 }

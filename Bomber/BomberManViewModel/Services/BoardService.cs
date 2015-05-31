@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using AutoMapper;
 using BomberManModel;
 using BomberManModel.Entities;
@@ -19,23 +20,34 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public List<BoardElementLocationDao> GetAllBoardElementsForGame(GameDao gameDao, out String message)
+        public static List<BoardElementLocationDao> GetAllBoardElementsForGame(GameDao gameDao, out String message)
         {
-            List<BoardElementLocationDao> elements = new List<BoardElementLocationDao>();
-            var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                select element;
-            if (query.Any())
+            try
             {
                 message = null;
-                List<BoardElementLocation> list = query.ToList();
-                list.All(x =>
+                List<BoardElementLocationDao> elements = new List<BoardElementLocationDao>();
+                var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                    select element;
+                if (query.Any())
                 {
-                    elements.Add(Mapper.Map<BoardElementLocationDao>(x));
-                    return true;
-                });
-                return elements;
+                    List<BoardElementLocation> list = query.ToList();
+                    list.All(x =>
+                    {
+                        elements.Add(Mapper.Map<BoardElementLocationDao>(x));
+                        return true;
+                    });
+                    return elements;
+                }
+                return null;
             }
-            message = null;
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
             return null;
         }
 
@@ -47,15 +59,27 @@ namespace BomberManViewModel.Services
         /// <returns></returns>
         public static BoardElementDao FindBoardElementByType(BoardElementType boardElementType, out String message)
         {
-            var query = from b in DataManager.DataBaseContext.BoardElements
-                where b.ElementType == boardElementType
-                select b;
-            if (query.Any())
+            try
             {
-                message = null;
-                return Mapper.Map<BoardElementDao>(query.First());
+                var query = from b in DataManager.DataBaseContext.BoardElements
+                    where b.ElementType == boardElementType
+                    select b;
+                if (query.Any())
+                {
+                    message = null;
+                    return Mapper.Map<BoardElementDao>(query.First());
+                }
+                message = "Nie znaleziono szukanego elementu planszy";
+                return null;
             }
-            message = "Nie znaleziono szukanego elementu planszy";
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
             return null;
         }
 
@@ -66,31 +90,44 @@ namespace BomberManViewModel.Services
         /// <param name="elements">elementy</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public bool UpdateBoardElementLocations(int gameId, List<BoardElementLocationDao> elements, out String message)
+        public static bool UpdateBoardElementLocations(int gameId, List<BoardElementLocationDao> elements,
+            out String message)
         {
-            message = null;
-            var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                        where element.Game.Id == gameId
-                        select element;
+            try
+            {
+                message = null;
+                var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                    where element.Game.Id == gameId
+                    select element;
 
-            DataManager.DataBaseContext.BoardElementLocations.RemoveRange(query);
-            DataManager.DataBaseContext.SaveChanges();
-            var gameQuery = from b in DataManager.DataBaseContext.Games
-                where b.Id == gameId
-                select b;
-            if (!gameQuery.Any())
-            {
-                message = "Nie istnieje taka gra";
-                return false;
+                DataManager.DataBaseContext.BoardElementLocations.RemoveRange(query);
+                DataManager.DataBaseContext.SaveChanges();
+                var gameQuery = from b in DataManager.DataBaseContext.Games
+                    where b.Id == gameId
+                    select b;
+                if (!gameQuery.Any())
+                {
+                    message = "Nie istnieje taka gra";
+                    return false;
+                }
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    BoardElementLocation boardElementLocation = Mapper.Map<BoardElementLocation>(elements[i]);
+                    boardElementLocation.Game = gameQuery.First();
+                    DataManager.DataBaseContext.BoardElementLocations.Add(boardElementLocation);
+                }
+                DataManager.DataBaseContext.SaveChanges();
+                return true;
             }
-            for (int i = 0; i < elements.Count; i++)
+            catch (Exception e)
             {
-                BoardElementLocation boardElementLocation = Mapper.Map<BoardElementLocation>(elements[i]);
-                boardElementLocation.Game = gameQuery.First();
-                DataManager.DataBaseContext.BoardElementLocations.Add(boardElementLocation);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
             }
-            DataManager.DataBaseContext.SaveChanges();
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -99,25 +136,38 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public List<BoardElementLocationDao> GetAllBlocksForGame(GameDao gameDao, out String message)
+        public static List<BoardElementLocationDao> GetAllBlocksForGame(GameDao gameDao, out String message)
         {
-            message = null;
-            List<BoardElementLocationDao> blocks = new List<BoardElementLocationDao>();
-            var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                        where element.Game.Id == gameDao.Id &&
-                        element.BoardElement.ElementType == BoardElementType.BlackBlock || 
-                        element.BoardElement.ElementType == BoardElementType.GrayBlock ||
-                        element.BoardElement.ElementType == BoardElementType.WhiteBlock ||
-                        element.BoardElement.ElementType == BoardElementType.RedBlock
-                        orderby element.XLocation, element.YLocation
-                        select element;
-            BoardElementLocation[] bElements = query.ToArray();
-            for(int i = 0; i < bElements.Length; i++)
+            try
             {
-                BoardElementLocationDao block = Mapper.Map<BoardElementLocation, BoardElementLocationDao>(bElements[i]);
-                blocks.Add(block);
+                message = null;
+                List<BoardElementLocationDao> blocks = new List<BoardElementLocationDao>();
+                var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                    where element.Game.Id == gameDao.Id &&
+                          element.BoardElement.ElementType == BoardElementType.BlackBlock ||
+                          element.BoardElement.ElementType == BoardElementType.GrayBlock ||
+                          element.BoardElement.ElementType == BoardElementType.WhiteBlock ||
+                          element.BoardElement.ElementType == BoardElementType.RedBlock
+                    orderby element.XLocation, element.YLocation
+                    select element;
+                BoardElementLocation[] bElements = query.ToArray();
+                for (int i = 0; i < bElements.Length; i++)
+                {
+                    BoardElementLocationDao block =
+                        Mapper.Map<BoardElementLocation, BoardElementLocationDao>(bElements[i]);
+                    blocks.Add(block);
+                }
+                return blocks;
             }
-            return blocks;
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
+            return null;
         }
 
         /// <summary>
@@ -126,20 +176,32 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public List<BoardElementDao> GetAllBombsForGame(GameDao gameDao, out String message)
+        public static List<BoardElementDao> GetAllBombsForGame(GameDao gameDao, out String message)
         {
-            message = null;
-            List<BoardElementDao> bombs = new List<BoardElementDao>();
-            var query = from element in DataManager.DataBaseContext.BoardElements
-                        where element.ElementType == BoardElementType.Bomb
-                        select element;
-            BoardElement[] bElements = query.ToArray();
-            for (int i = 0; i < bElements.Length; i++)
+            try
             {
-                BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
-                bombs.Add(block);
+                message = null;
+                List<BoardElementDao> bombs = new List<BoardElementDao>();
+                var query = from element in DataManager.DataBaseContext.BoardElements
+                    where element.ElementType == BoardElementType.Bomb
+                    select element;
+                BoardElement[] bElements = query.ToArray();
+                for (int i = 0; i < bElements.Length; i++)
+                {
+                    BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
+                    bombs.Add(block);
+                }
+                return bombs;
             }
-            return bombs;
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
+            return null;
         }
 
         /// <summary>
@@ -148,26 +210,38 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        static public List<BoardElementLocationDao> GetAllBonusesForGame(GameDao gameDao, out String message)
+        public static List<BoardElementLocationDao> GetAllBonusesForGame(GameDao gameDao, out String message)
         {
-            message = null;
-            List<BoardElementLocationDao> bonuses = new List<BoardElementLocationDao>();
-            var query = from element in DataManager.DataBaseContext.BoardElementLocations
-                where (element.BoardElement.ElementType == BoardElementType.BombAmountBonus ||
-                       element.BoardElement.ElementType == BoardElementType.FastBonus ||
-                       element.BoardElement.ElementType == BoardElementType.InmortalBonus ||
-                       element.BoardElement.ElementType == BoardElementType.PointBonus ||
-                       element.BoardElement.ElementType == BoardElementType.SlowBonus ||
-                       element.BoardElement.ElementType == BoardElementType.StrenghtBonus)
-                      && element.Game.Id == gameDao.Id 
-                        select element;
-            BoardElementLocation[] bElements = query.ToArray();
-            for (int i = 0; i < bElements.Length; i++)
+            try
             {
-                BoardElementLocationDao block = Mapper.Map<BoardElementLocationDao>(bElements[i]);
-                bonuses.Add(block);
+                message = null;
+                List<BoardElementLocationDao> bonuses = new List<BoardElementLocationDao>();
+                var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                    where (element.BoardElement.ElementType == BoardElementType.BombAmountBonus ||
+                           element.BoardElement.ElementType == BoardElementType.FastBonus ||
+                           element.BoardElement.ElementType == BoardElementType.InmortalBonus ||
+                           element.BoardElement.ElementType == BoardElementType.PointBonus ||
+                           element.BoardElement.ElementType == BoardElementType.SlowBonus ||
+                           element.BoardElement.ElementType == BoardElementType.StrenghtBonus)
+                          && element.Game.Id == gameDao.Id
+                    select element;
+                BoardElementLocation[] bElements = query.ToArray();
+                for (int i = 0; i < bElements.Length; i++)
+                {
+                    BoardElementLocationDao block = Mapper.Map<BoardElementLocationDao>(bElements[i]);
+                    bonuses.Add(block);
+                }
+                return bonuses;
             }
-            return bonuses;
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+            }
+            return null;
         }
     }
 }
