@@ -21,7 +21,6 @@ namespace BomberManViewModel.Converters
             {
                 Game = Mapper.Map<Game>(source.Game),
                 Id = source.Id,
-                IsAlive = source.IsAlive,
                 XLocation = (int) source.XLocation,
                 YLocation = (int) source.YLocation,
                 Oponent = Mapper.Map<Opponent>(source.Oponent)

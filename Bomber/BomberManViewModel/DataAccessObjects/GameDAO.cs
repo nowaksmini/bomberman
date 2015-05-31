@@ -3,7 +3,7 @@
 namespace BomberManViewModel.DataAccessObjects
 {
     /// <summary>
-    /// Klasa repreentuje grę wczytaną z widoku i przekazywaną do bazy danych lub odwrotnie.
+    /// Klasa reprezentuje grę wczytaną z widoku i przekazywaną do bazy danych lub odwrotnie.
     /// </summary>
     public class GameDao
     {
@@ -11,7 +11,6 @@ namespace BomberManViewModel.DataAccessObjects
         public int Level { get; set; }
         public int Points { get; set; }
         public bool Finished { get; set; }
-        public double Life { get; set; }
         public DateTime SaveTime { get; set; }
         public virtual UserDao User { get; set; }
         public uint PlayerXLocation { get; set; }

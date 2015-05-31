@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using BomberMan.Common;
 using BomberMan.Common.Components.StateComponents;
 using BomberManModel.Entities;
@@ -19,8 +18,8 @@ namespace BomberMan.Screens
     /// </summary>
     public class LoginScreen : Screen
     {
-        public List<Label> Labels;
-        public List<TextInput> Fields;
+        private List<Label> _labels;
+        private List<TextInput> _fields;
         private readonly SpriteFont _spriteFont;
         private const float LoginPanelWidth = 300;
         private const float HeightShift = 100;
@@ -74,16 +73,16 @@ namespace BomberMan.Screens
             _showPassword.Click = delegate()
             {
                 _showPassword.Text = _showPassword.Text.Length == 0 ? CheckBoxCheckedSymbol : "";
-                Fields[1].TextInputType = Fields[1].TextInputType == TextInputType.Name
+                _fields[1].TextInputType = _fields[1].TextInputType == TextInputType.Name
                     ? TextInputType.Password
                     : TextInputType.Name;
-                Labels[Labels.Count - 1].Text = "";
+                _labels[_labels.Count - 1].Text = "";
                 return Color.Transparent;
             };
             _regiter.Click = delegate()
             {
                 _regiter.Text = _regiter.Text.Length == 0 ? CheckBoxCheckedSymbol : "";
-                Labels[Labels.Count - 1].Text = "";
+                _labels[_labels.Count - 1].Text = "";
                 return Color.Transparent;
             };
             Func<Color> save = delegate()
@@ -102,26 +101,26 @@ namespace BomberMan.Screens
         /// <param name="texture">textura koloru tła inputtexts</param>
         private void CreateLabelsAndFields(Color color, Color colorInput, Texture2D texture)
         {
-            Labels = new List<Label>();
-            Fields = new List<TextInput>();
-            Labels.Add(new Label(_spriteFont, UserName, color));
-            Labels.Add(new Label(_spriteFont, Password, color));
-            Labels.Add(new Label(_spriteFontCheckBox, ShowPassword, color));
-            Labels.Add(new Label(_spriteFontCheckBox, Register, color));
-            Labels.Add(new Label(_spriteFontCheckBox, "", Color.Red));
+            _labels = new List<Label>();
+            _fields = new List<TextInput>();
+            _labels.Add(new Label(_spriteFont, UserName, color));
+            _labels.Add(new Label(_spriteFont, Password, color));
+            _labels.Add(new Label(_spriteFontCheckBox, ShowPassword, color));
+            _labels.Add(new Label(_spriteFontCheckBox, Register, color));
+            _labels.Add(new Label(_spriteFontCheckBox, "", Color.Red));
 
-            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, MaxNameCharacters));
-            Fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password,
+            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, MaxNameCharacters));
+            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password,
                 MaxPasswordCharacters));
-            Fields[_inputIndex].Enabled = true;
-            foreach (var input in Fields)
+            _fields[_inputIndex].Enabled = true;
+            foreach (var input in _fields)
             {
                 var textInput = input;
                 Func<Color> enable = delegate()
                 {
-                    Fields.ForEach(x => x.Enabled = false);
+                    _fields.ForEach(x => x.Enabled = false);
                     textInput.Enabled = true;
-                    Labels[Labels.Count - 1].Text = "";
+                    _labels[_labels.Count - 1].Text = "";
                     return Color.Transparent;
                 };
                 textInput.OnClick(enable);
@@ -135,11 +134,11 @@ namespace BomberMan.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            foreach (var label in Labels)
+            foreach (var label in _labels)
             {
                 label.Draw(spriteBatch);
             }
-            foreach (var textInput in Fields)
+            foreach (var textInput in _fields)
             {
                 textInput.Draw(spriteBatch);
             }
@@ -148,7 +147,7 @@ namespace BomberMan.Screens
             Vector2 origin = new Vector2((float) _bombTexture.Width/2, (float) _bombTexture.Height/2);
             spriteBatch.Draw(_bombTexture, new Vector2(BombWidth/2, BombHeight/2), sourceRectangle, Color.White,
                 0.0f, origin, scale, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(_spriteFontTitle, BomberManTitle, new Vector2(Labels[0].Position.X, BombHeight/2),
+            spriteBatch.DrawString(_spriteFontTitle, BomberManTitle, new Vector2(_labels[0].Position.X, BombHeight/2),
                 Color.White);
             _saveButton.Draw(spriteBatch);
             _regiter.Draw(spriteBatch);
@@ -171,35 +170,35 @@ namespace BomberMan.Screens
 
             float x = (float) windowWidth/2 - LoginPanelWidth/2;
             float y = (float) windowHeight/2 - HeightShift;
-            foreach (var label in Labels)
+            foreach (var label in _labels)
             {
                 label.Position = new Vector2(x, y);
                 y += _spriteFont.LineSpacing + DataRowsShift;
             }
             y = (float) windowHeight/2 - HeightShift;
-            for (int i = 0; i < Fields.Count; i++)
+            for (int i = 0; i < _fields.Count; i++)
             {
                 if (i == 0)
                 {
-                    Vector2 label = _spriteFont.MeasureString(Labels[i].Text);
-                    Fields[i].Position = new Vector2(x + label.X + DataInputShift, y);
+                    Vector2 label = _spriteFont.MeasureString(_labels[i].Text);
+                    _fields[i].Position = new Vector2(x + label.X + DataInputShift, y);
                 }
                 else
                 {
-                    Fields[i].Position = new Vector2(Fields[i - 1].Position.X, y);
+                    _fields[i].Position = new Vector2(_fields[i - 1].Position.X, y);
                 }
                 y += _spriteFont.LineSpacing + DataRowsShift;
-                if (Fields[i].Enabled)
+                if (_fields[i].Enabled)
                 {
-                    Fields[i].ProcessKeyboard(false);
+                    _fields[i].ProcessKeyboard(false);
                 }
-                Fields[i].Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+                _fields[i].Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
             }
 
             Vector2 scaleCheckbox =
                 new Vector2(_spriteFontTitle.MeasureString(CheckBoxCheckedSymbol).X/_showPassword.Texture.Width,
                     _spriteFontTitle.MeasureString(CheckBoxCheckedSymbol).X/_showPassword.Texture.Height);
-            Vector2 showPasswordPosition = Fields[Fields.Count - 1].Position;
+            Vector2 showPasswordPosition = _fields[_fields.Count - 1].Position;
             _showPassword.Scale = scaleCheckbox;
             float width = scaleCheckbox.X*_showPassword.Texture.Width;
             float height = scaleCheckbox.Y*_showPassword.Texture.Height;
@@ -248,16 +247,16 @@ namespace BomberMan.Screens
                     case Keys.Tab:
                     case Keys.Down:
                         _inputIndex++;
-                        _inputIndex = _inputIndex >= Fields.Count ? Fields.Count - 1 : _inputIndex;
-                        Fields.ForEach(x => x.Enabled = false);
-                        Fields[_inputIndex].Enabled = true;
+                        _inputIndex = _inputIndex >= _fields.Count ? _fields.Count - 1 : _inputIndex;
+                        _fields.ForEach(x => x.Enabled = false);
+                        _fields[_inputIndex].Enabled = true;
                         break;
                     case Keys.Up:
                         _inputIndex--;
                         _inputIndex = _inputIndex < 0 ? 0 : _inputIndex;
-                        _inputIndex = _inputIndex%Fields.Count;
-                        Fields.ForEach(x => x.Enabled = false);
-                        Fields[_inputIndex].Enabled = true;
+                        _inputIndex = _inputIndex%_fields.Count;
+                        _fields.ForEach(x => x.Enabled = false);
+                        _fields[_inputIndex].Enabled = true;
                         break;
                     case Keys.Enter:
                         _saveButton.Click();
@@ -274,12 +273,24 @@ namespace BomberMan.Screens
             String message;
             if (Utils.User == null)
             {
-                Utils.User = new UserDao() { Name = Fields[0].TextValue, Password = Fields[1].TextValue };
+                Utils.User = new UserDao()
+                {
+                    Name = _fields[0].TextValue, 
+                    Password = _fields[1].TextValue,
+                    BombKeyboardOption = BombKeyboardOption.Spcace,
+                    IsAnimation = true,
+                    IsMusic = true,
+                    KeyboardOption = KeyboardOption.Arrows
+                };
             }
             else
             {
-                Utils.User.Name = Fields[0].TextValue;
-                Utils.User.Password = Fields[1].TextValue;
+                Utils.User.Name = _fields[0].TextValue;
+                Utils.User.Password = _fields[1].TextValue;
+                Utils.User.BombKeyboardOption = BombKeyboardOption.Spcace;
+                Utils.User.IsAnimation = true;
+                Utils.User.IsMusic = true;
+                Utils.User.KeyboardOption = KeyboardOption.Arrows;
             }
             if (!_regiter.Text.Equals(CheckBoxCheckedSymbol))
             {
@@ -290,16 +301,12 @@ namespace BomberMan.Screens
             }
             else
             {
-                Utils.User.BombKeyboardOption = BombKeyboardOption.Spcace;
-                Utils.User.IsAnimation = true;
-                Utils.User.IsMusic = true;
-                Utils.User.KeyboardOption = KeyboardOption.Arrows;
                 if (UserService.CreateUser(Utils.User, out message))
                 {
                     GameManager.ScreenType = ScreenType.MainMenu;
                 }
             }
-            if (message != null) Labels[Labels.Count - 1].Text = message;
+            if (message != null) _labels[_labels.Count - 1].Text = message;
         }
     }
 }

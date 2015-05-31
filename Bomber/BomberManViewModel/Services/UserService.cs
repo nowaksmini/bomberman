@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
-using BomberManModel;
+using AutoMapper;
 using BomberManModel.Entities;
 using BomberManViewModel.DataAccessObjects;
 
@@ -40,18 +39,54 @@ namespace BomberManViewModel.Services
                 {
                     if (VerificatePassword(userDao.Password, user.Password, out message))
                     {
-                        userDao = AutoMapper.Mapper.Map<UserDao>(user);
+                        userDao = Mapper.Map<UserDao>(user);
                         return true;
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
-                    e.StackTrace);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
                 message = e.Message;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Załąduj wszytskie ustawienia dla użytkownika. Wykonywane za każdym razem odpalenia screena z ustawieniami.
+        /// </summary>
+        /// <param name="userDao">użytkownik</param>
+        /// <param name="message">wiadomości otrzymane po zakończeniu weryfikacji</param>
+        /// <returns>zwróć <c>true</c> jeżeli udało znaleźć użytkownika w baze, w p.p. <c>false</c></returns>
+        public static bool LoadSettingsToUser(ref UserDao userDao, out String message)
+        {
+            try
+            {
+                int id = userDao.Id;
+                var query = from b in DataManager.DataBaseContext.Users
+                            where b.Id == id
+                            select b;
+                if (!query.Any())
+                {
+                    message = "Nie istnieje taki użytkownik " + userDao.Name;
+                    return false;
+                }
+                message = null;
+                userDao = Mapper.Map<UserDao>(query.First());
+            }
+            catch (Exception e)
+            {
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
+                message = e.Message;
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -76,8 +111,10 @@ namespace BomberManViewModel.Services
             }
             catch (Exception e)
             {
-                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
-                    e.StackTrace);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
                 message = e.Message;
                 return false;
             }
@@ -107,7 +144,7 @@ namespace BomberManViewModel.Services
                 message = null;
                 userDao.Password += Salt;
                 userDao.Password = userDao.Password.GetHashCode().ToString();
-                DataManager.DataBaseContext.Users.Add(AutoMapper.Mapper.Map<User>(userDao));
+                DataManager.DataBaseContext.Users.Add(Mapper.Map<User>(userDao));
                 DataManager.DataBaseContext.SaveChanges();
             }
             catch (Exception e)
@@ -125,8 +162,9 @@ namespace BomberManViewModel.Services
         /// </summary>
         /// <param name="userDao">użytkownik</param>
         /// <param name="message">wiadomość przesyłana w razie niepowodzenia</param>
+        /// <param name="withPassword">czy chcemy napisywać hasło(user przekazywany posiada Stringa a nie Hash)</param>
         /// <returns>zwróć true o ile udało się wykonać zaminy na encji użytkownika</returns>
-        public static bool UpdateUser(UserDao userDao, out String message)
+        public static bool UpdateUser(UserDao userDao, out String message, bool withPassword = false)
         {
             try
             {
@@ -139,7 +177,7 @@ namespace BomberManViewModel.Services
                     return false;
                 }
                 User user = query.First();
-                if (user.Name.Length < 4 || user.Password.Length < 4)
+                if (userDao.Name.Length < 4 || userDao.Password.Length < 4)
                 {
                     message = "Login i hasło powinny zawierać po minimum 4 znaki";
                     return false;
@@ -155,8 +193,14 @@ namespace BomberManViewModel.Services
                         return false;
                     }
                 }
-                userDao.Password = (userDao.Password + Salt).GetHashCode().ToString();
-                user = AutoMapper.Mapper.Map<User>(userDao);
+                if(withPassword)
+                    userDao.Password = (userDao.Password + Salt).GetHashCode().ToString();
+                user.IsAnimation = userDao.IsAnimation;
+                user.BombKeyboardOption = userDao.BombKeyboardOption;
+                user.KeyboardOption = userDao.KeyboardOption;
+                user.IsMusic = userDao.IsMusic;
+                user.Name = userDao.Name;
+                if (withPassword) user.Password = userDao.Password;
                 DataManager.DataBaseContext.Entry(user).State = EntityState.Modified;
                 DataManager.DataBaseContext.SaveChanges();
                 message = null;

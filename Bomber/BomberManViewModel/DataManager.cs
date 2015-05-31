@@ -196,7 +196,7 @@ namespace BomberManViewModel
                         Id = 7,
                         Description =
                             "Dodtakowe życie. Dzięki temu bonusowi życie gracza zwiększa się o 50% maksymalnie do 100%",
-                        ElementType = BoardElementType.LifeBonus
+                        ElementType = BoardElementType.PointBonus
                     },
                     new BoardElement
                     {

@@ -30,7 +30,7 @@ namespace BomberManModel
         BlackBlock,
         RedBlock,
         Bomb,
-        LifeBonus,
+        PointBonus,
         FastBonus,
         SlowBonus,
         InmortalBonus,

@@ -21,7 +21,6 @@ namespace BomberManViewModel.Converters
                 Finished = source.Finished,
                 Id = source.Id,
                 Level = source.Level,
-                Life = source.Life,
                 PlayerXLocation = source.PlayerXLocation,
                 PlayerYLocation = source.PlayerYLocation,
                 Points = source.Points,

@@ -26,10 +26,10 @@ namespace BomberMan.Screens
         private readonly SpriteFont _titleSpriteFont;
         private static readonly Color LabelsTextColor = Color.White;
         private readonly Label _title;
-        private Label _user;
-        private Label _lp;
-        private Label _level;
-        private Label _points;
+        private readonly Label _user;
+        private readonly Label _lp;
+        private readonly Label _level;
+        private readonly Label _points;
         private readonly Button _backButton;
         private const int TitleGap = 100;
         private const int RowGap = 30;
@@ -181,7 +181,7 @@ namespace BomberMan.Screens
                 switch (k)
                 {
                     case Keys.Back:
-                    case Keys.B:
+                    case Keys.Home:
                     case Keys.Escape:
                         _backButton.Click();
                         break;

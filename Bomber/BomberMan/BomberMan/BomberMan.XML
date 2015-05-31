@@ -111,13 +111,21 @@
             <param name="angle">kąt nachylenia bonusa</param>
             <param name="bonusType">rodzaj bonusa <example>Uzupełnij życie gracza o 50%</example></param>
         </member>
+        <member name="P:BomberMan.Common.Components.StateComponents.Bonus.BonusType">
+            <summary>
+            Ustaw lub pobierz rodzaj bonusa.
+            </summary>
+            <value>
+            Rodzaj bonusa
+            </value>
+        </member>
         <member name="T:BomberMan.Common.Components.StateComponents.BonusType">
             <summary>
             Rodzaje bonusów :
-            zwiększ życie o 50%, przyspiesz ruch grcza dwukrotnie na określony czas,
-            zwolnij ruch gracza dwukrotnie na określony czas, sraw by gracz stał się niezniszczalny na określony czas,
-            zwiększ moc bomb 1,5 krotnie na określony czas, zwiększ ilość bomb do wykorzystania na planszy o 1
-            Wszystkie bonusy początkowo znajdują się pod polami szarymi
+            dodatkowe punkty, przyspiesz ruch grcza dwukrotnie na określony czas,
+            zwolnij ruch przeciników dwukrotnie na określony czas, spraw by gracz stał się niezniszczalny na określony czas,
+            zwiększ moc bomb z 3-gwiazdy na 4-gwiazdę na określony czas, zwiększ ilość bomb do wykorzystania na planszy o 1.
+            Wszystkie bonusy początkowo znajdują się pod polami szarymi.
             </summary>
         </member>
         <member name="T:BomberMan.Common.Components.StateComponents.Button">
@@ -439,6 +447,30 @@
             <param name="height">oczekiwana wysokość bonusa</param>
             <returns>zwróć nową postać</returns>
         </member>
+        <member name="P:BomberMan.Common.Engines.BoardEngine.PlayerLocation">
+            <summary>
+            Zwraca lub ustawia lokalizację gracza na planszy.
+            </summary>
+            <value>
+            lokalizacja gracza.
+            </value>
+        </member>
+        <member name="P:BomberMan.Common.Engines.BoardEngine.Rows">
+            <summary>
+            Zwaraca ilość wierszy na planszy.
+            </summary>
+            <value>
+            Wiersze.
+            </value>
+        </member>
+        <member name="P:BomberMan.Common.Engines.BoardEngine.Columns">
+             <summary>
+            Zwraca ilość kolummna na planszy.
+             </summary>
+             <value>
+             Ilość kolumn
+             </value>
+        </member>
         <member name="T:BomberMan.Common.Engines.PlanetEngine">
             <summary>
             Silnik generujący planety znajdujące się w tle aplikacji.
@@ -529,6 +561,16 @@
             Klasa odpowiedzialna za zarządzanie przełączaniem widoków, łądowaniem resources.
             </summary>
         </member>
+        <member name="F:BomberMan.GameManager.BackButtonSize">
+            <summary>
+            stały rozmiar przycisku powrotu.
+            </summary>
+        </member>
+        <member name="M:BomberMan.GameManager.#ctor">
+            <summary>
+            Zainicjalizuj nową instancję <see cref="T:BomberMan.GameManager"/> class.
+            </summary>
+        </member>
         <member name="M:BomberMan.GameManager.LoadContent">
             <summary>
             Załaduj wszytskie zewnętrzne resources.
@@ -557,6 +599,14 @@
             Załaduj komponenty po poprawnym zalogowaniu się.
             </summary>
         </member>
+        <member name="P:BomberMan.GameManager.ScreenType">
+            <summary>
+            Zwróć lub ustaw rodzaj ekranu.
+            </summary>
+            <value>
+            rodzaj widocznego ekranu <example>Menu główne</example>
+            </value>
+        </member>
         <member name="T:BomberMan.Common.Screen">
             <summary>
             Klasa reprezentująca widok poszczególnego okna <example>Menu, Gra, Opcje</example>
@@ -581,6 +631,11 @@
             Obsłuż wciskane klawisze na klawiaturze.
             </summary>
         </member>
+        <member name="T:BomberMan.Screens.GameScreen">
+            <summary>
+            Klasa tworząca cały widok gry.
+            </summary>
+        </member>
         <member name="F:BomberMan.Screens.GameScreen._boardBlocksTypes">
             <summary>
             Lista zawierająca wszystkie jednostkowe pola planszy ze wzgędu na typ pola
@@ -600,6 +655,11 @@
             W przeciwnym przypadku załąduj grę z Utils i utwórz widok całej planszy
             </summary>
         </member>
+        <member name="M:BomberMan.Screens.GameScreen.LoadGame">
+            <summary>
+            Załaduj grę
+            </summary>
+        </member>
         <member name="M:BomberMan.Screens.GameScreen.CreateBackButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
             Utwórz przycisk powrotu do głównego menu.
@@ -612,6 +672,21 @@
             </summary>
             <param name="spriteBatch">Obiekt, w którym rysowane są komponenty.</param>
         </member>
+        <member name="M:BomberMan.Screens.GameScreen.DrawBonuses(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszytskie bonusy w infomacji.
+            </summary>
+            <param name="spriteBatch">Obiekt, na którym rysujemy.</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.DrawBonus(Microsoft.Xna.Framework.Graphics.SpriteBatch,BomberMan.Common.Components.StateComponents.BonusType,System.Single,System.Single)">
+            <summary>
+            Narysuj bonus.
+            </summary>
+            <param name="spriteBatch">Obiekt, na którym rysujemy</param>
+            <param name="bonusType">Rodzaj bonusa</param>
+            <param name="x">Położenie x bonusa.</param>
+            <param name="y">Położenie y bonusa.</param>
+        </member>
         <member name="M:BomberMan.Screens.GameScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
             <summary>
             Uaktualnij widok planszy w zależności od rozmiaru okna gry
@@ -620,33 +695,119 @@
             <param name="windowWidth">Szerokość okna</param>
             <param name="windowHeight">Wysokość okna</param>
         </member>
+        <member name="M:BomberMan.Screens.GameScreen.CheckIfUserWonLevel">
+            <summary>
+            Sprawdź czy gracz wygrał poziom i należy załadować kolejny.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.UpdateBonusesDuration(System.Single)">
+            <summary>
+            Zaktualizuj czas trwania wszystkich bonusów,
+            </summary>
+            <param name="gameTimeSeconds">Czas trwania gry w sekundach</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.UpdateCharactersLocations(System.Single)">
+            <summary>
+            Zaktualizuj pozycje postaci na planszy.
+            </summary>
+            <param name="gameTimeSeconds">Czas trwani gry w sekundach</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.UpdateBombs(System.Single)">
+            <summary>
+            Uaktualnij bomby, niektóre powinny zniknąc bo właśnie wybuchają.
+            </summary>
+            <param name="gameTimeSeconds">Czas trwani gry w sekundach</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.LaunchBomb(System.Int32)">
+            <summary>
+            Odpal bombę na podaje pozycji, zmień kolory wszystkich pól odpowiednio
+            </summary>
+            <param name="bombPosition">pozycja bomby</param>
+        </member>
         <member name="M:BomberMan.Screens.GameScreen.DeleteCharacters(System.Int32)">
             <summary>
-            Zniszcz znajdujących się na polach czerownych przeciwników.
+            Zniszcz znajdujących się na polach czerownych przeciwników lub zakończ grę.
             </summary>
-            <param name="position"></param>
+            <param name="position">pozycja pola czerownego</param>
         </member>
-        <member name="M:BomberMan.Screens.GameScreen.GenerateOneMoveForOpponent(System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{BomberMan.Common.Components.StateComponents.CharacterType}}@,System.Int32,BomberMan.Common.Components.StateComponents.CharacterType)">
+        <member name="M:BomberMan.Screens.GameScreen.CheckIfPlayerIsOnSameFieldAsAnyOpponent">
             <summary>
-            Szczegółowa analiza ruchu, który powinien wykonać przeciwnik.
+            Sprawdź czy gracz znalazł się na tym samym polu co inny przeciwnik.
+            Jeżeli tak to zakończ grę.
             </summary>
-            <param name="tmpDictionary">pomocniczy słownik przechowywujący lokalizaje przeciwników</param>
-            <param name="actualPosition">aktualna pozycja przeciwnika</param>
-            <param name="character">typ przeciwnika</param>
         </member>
-        <member name="M:BomberMan.Screens.GameScreen.CheckIfOpponentSeesPlayer(System.Int32,System.Int32)">
+        <member name="M:BomberMan.Screens.GameScreen.CheckIfUserShouldGetAnyBonus">
             <summary>
-            Sprawdż czy przeciwnik widzi gracza w lini prostej bez przeszkód. Nie jest ona samobujcą więc nie wejdzie
-            na pole czerwone, które by go spaliło.
+            Sprawdź czy użytkownik powinien zebrać jakiś bonus.
             </summary>
-            <param name="octopusPosition">pozycja przeciwnika</param>
-            <param name="playerPosition">pozycja gracza</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.MoveOpponents">
+            <summary>
+            Wykonaj ruch dla wszytskich przeciwników.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.GenerateOpponentMove(System.Int32)">
+            <summary>
+            Wygeneruj ruch ośmiornicy lub ducha na podstawie pozycji gracza.
+            </summary>
+            <param name="opponentPosition">pozycja ośmiornicy</param>
+            <returns>zwróć -1 jeżeli nie udało się wylosować poprawnej pozycji w p.p zwróć nową pozycję</returns>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.RandomOpponentMove(System.Int32)">
+            <summary>
+            Wylosuj ruch przeciwnika.
+            </summary>
+            <param name="opponentPosition">Pozycja przeciwnika</param>
             <returns></returns>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.GameFinished(System.Boolean)">
+            <summary>
+            Zakończ grę w zależności od wyniku gry.
+            </summary>
+            <param name="win">Jeżeli wartość <c>true</c> zakończ grę sukcesem. W p.p. komuniat o przegranej. Zapisz stan gry do bazy danych.</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyBomb">
+            <summary>
+            Obsłuż wciśnięty klawisz odpowiedzialny za stawiane bomby.
+            Obsługa przytrzymanego klawisza.
+            </summary>
         </member>
         <member name="M:BomberMan.Screens.GameScreen.HandleKeyboard">
             <summary>
             Obsłuż wciskane klawisze na klawiaturze w zależności od wybranej opcji.
             </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyDown(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Obsługa pójścia w dół przez gracza.
+            </summary>
+            <param name="playerRow">wiersz pozycji gracza</param>
+            <param name="playerColumn">kolumna pozycji gracza</param>
+            <param name="playerLocation">lokalizacja gracza na planszy</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyUp(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Obsługa pójścia w górę przez gracza.
+            </summary>
+            <param name="playerRow">wiersz pozycji gracza</param>
+            <param name="playerColumn">kolumna pozycji gracza</param>
+            <param name="playerLocation">lokalizacja gracza na planszy</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyRight(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Obsługa pójścia w prawo przez gracza.
+            </summary>
+            <param name="playerRow">wiersz pozycji gracza</param>
+            <param name="playerColumn">kolumna pozycji gracza</param>
+            <param name="playerLocation">lokalizacja gracza na planszy</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.HandleKeyLeft(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Obsługa pójścia w lewo przez gracza.
+            </summary>
+            <param name="playerRow">wiersz pozycji gracza</param>
+            <param name="playerColumn">kolumna pozycji gracza</param>
+            <param name="playerLocation">lokalizacja gracza na planszy</param>
         </member>
         <member name="M:BomberMan.Screens.GameScreen.CreateNewGame">
             <summary>
@@ -709,7 +870,7 @@
             Każdy typ bonusa losuj z częstotliwością w zależności od poziomu
             Bonusy tworzone są tylko na polach szarych, na każdym polu szarym wsytępuje maksymalnie jeden bonus.
             Ilość wszystkich bonusów na planszy po rozpoczęsciu poziomu to <value>PercentageOfBonuses</value> * ilość pól
-            Wylosuj z prawdopodobieństwem 1/10 Bonus Inmortal, 3/10 Life, 2/10 Fast, 1/10 Slow, 2/10 Strength, 1/10 Extra Bomb
+            Wylosuj z prawdopodobieństwem 1/10 Bonus Inmortal, 3/10 Points, 2/10 Fast, 1/10 Slow, 2/10 Strength, 1/10 Extra Bomb
             </summary>
         </member>
         <member name="M:BomberMan.Screens.GameScreen.RandomCharacters(System.Int32)">
@@ -865,6 +1026,11 @@
         <member name="M:BomberMan.Screens.SettingsScreen.HandleKeyboard">
             <summary>
             Obsłuż wciskane przyciski na klawiaturze.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.SettingsScreen.LoadUserSettings">
+            <summary>
+            Załaduj ustawienia użytkownika z bazy.
             </summary>
         </member>
         <member name="T:BomberMan.Utils">

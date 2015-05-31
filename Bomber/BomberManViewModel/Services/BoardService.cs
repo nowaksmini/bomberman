@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using AutoMapper;
 using BomberManModel;
 using BomberManModel.Entities;
@@ -54,7 +53,7 @@ namespace BomberManViewModel.Services
             if (query.Any())
             {
                 message = null;
-                return AutoMapper.Mapper.Map<BoardElementDao>(query.First());
+                return Mapper.Map<BoardElementDao>(query.First());
             }
             message = "Nie znaleziono szukanego elementu planszy";
             return null;
@@ -151,7 +150,7 @@ namespace BomberManViewModel.Services
                 where (element.BoardElement.ElementType == BoardElementType.BombAmountBonus ||
                        element.BoardElement.ElementType == BoardElementType.FastBonus ||
                        element.BoardElement.ElementType == BoardElementType.InmortalBonus ||
-                       element.BoardElement.ElementType == BoardElementType.LifeBonus ||
+                       element.BoardElement.ElementType == BoardElementType.PointBonus ||
                        element.BoardElement.ElementType == BoardElementType.SlowBonus ||
                        element.BoardElement.ElementType == BoardElementType.StrenghtBonus)
                       && element.Game.Id == gameDao.Id 

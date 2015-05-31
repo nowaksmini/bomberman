@@ -18,7 +18,7 @@ namespace BomberMan
     /// </summary>
     public class GameManager : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private const int MinWindowWidth = 900;
         private const int MinWindowHeight = 600;
         private SpriteBatch _spriteBatch;
@@ -27,24 +27,56 @@ namespace BomberMan
         private PlanetEngine _planetEngine;
         private Texture2D _background;
         private Texture2D _back;
+        private static ScreenType _screenType;
 
-        public static ScreenType ScreenType = ScreenType.Login;
+        /// <summary>
+        /// Zwróæ lub ustaw rodzaj ekranu.
+        /// </summary>
+        /// <value>
+        /// rodzaj widocznego ekranu <example>Menu g³ówne</example>
+        /// </value>
+        public static ScreenType ScreenType
+        {
+            get { return _screenType;  }
+            set
+            {
+                _screenType = value;
+                if (value == ScreenType.Game)
+                {
+                    // utwórz now¹ grê 
+                    Utils.Game = _game.CreateNewGame();
+                }
+                else if (value == ScreenType.Settings)
+                {
+                    _settings.LoadUserSettings();
+                }
+            }
+        }
+        /// <summary>
+        /// sta³y rozmiar przycisku powrotu.
+        /// </summary>
         public const float BackButtonSize = 50f;
         private MainMenuScreen _mainMenu;
-        private GameScreen _game;
+        private static GameScreen _game;
         private HelpMenuScreen _help;
         private HighScoresScreen _highScores;
         private LoginScreen _login;
-        private SettingsScreen _settings;
+        private static SettingsScreen _settings;
 
         private Song _song;
         private Random _random;
 
+        /// <summary>
+        /// Zainicjalizuj now¹ instancjê <see cref="GameManager"/> class.
+        /// </summary>
         public GameManager()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = MinWindowWidth;
-            _graphics.PreferredBackBufferHeight = MinWindowHeight;
+            ScreenType = ScreenType.Login;
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = MinWindowWidth,
+                PreferredBackBufferHeight = MinWindowHeight
+            };
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             DataManager.InitContext();
@@ -247,7 +279,7 @@ namespace BomberMan
             blockTextures.AddRange(blocks);
             List<Texture2D> bonusTextures = new List<Texture2D>();
             Texture2D[] bonuses = new Texture2D[6];
-            bonuses[(int) BonusType.Life] = Content.Load<Texture2D>(@"Images/Game/life_bonus");
+            bonuses[(int) BonusType.Points] = Content.Load<Texture2D>(@"Images/Game/life_bonus");
             bonuses[(int) BonusType.BombAmount] = Content.Load<Texture2D>(@"Images/Game/extra_bomb_bonus");
             bonuses[(int) BonusType.Fast] = Content.Load<Texture2D>(@"Images/Game/fast_bonus");
             bonuses[(int) BonusType.Inmortal] = Content.Load<Texture2D>(@"Images/Game/inmortal_bonus");

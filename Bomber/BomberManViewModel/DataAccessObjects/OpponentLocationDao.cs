@@ -7,7 +7,6 @@
     public class OpponentLocationDao
     {
         public int Id { get; set; }
-        public bool IsAlive { get; set; }
         public OpponentDao Oponent { get; set; }
         public uint XLocation { get; set; }
         public uint YLocation { get; set; }

@@ -22,13 +22,31 @@ namespace BomberMan.Common.Engines
         private readonly List<Texture2D> _characterTextures;
         private readonly Texture2D _bombTexture;
         private const int Shift = 60;
+        /// <summary>
+        /// Zwraca lub ustawia lokalizację gracza na planszy.
+        /// </summary>
+        /// <value>
+        /// lokalizacja gracza.
+        /// </value>
         public int PlayerLocation { get; set; }
 
+        /// <summary>
+        /// Zwaraca ilość wierszy na planszy.
+        /// </summary>
+        /// <value>
+        /// Wiersze.
+        /// </value>
         public int Rows
         {
             get { return _rows; }
         }
 
+        /// <summary>
+        ///Zwraca ilość kolummna na planszy.
+        /// </summary>
+        /// <value>
+        /// Ilość kolumn
+        /// </value>
         public int Columns
         {
             get { return _columns; }
@@ -108,14 +126,20 @@ namespace BomberMan.Common.Engines
                             Components.Add(new Component(_bombTexture, Color.White, new Vector2(x, y), scale, 0));
                         }
                         //na samej górze narysowane będą postacie - przeciwnicy oraz gracz
+                        bool player = true;
                         if (characterLocations.ContainsKey(counter))
                         {
                             foreach (var character in characterLocations[counter])
                             {
-                                Components.Add(GenerateNewCharacter(character, x, y, width, height));
-                                if (character == CharacterType.Player)
+                                if (character == CharacterType.Player && player)
                                 {
                                     PlayerLocation = counter;
+                                    player = false;
+                                    Components.Add(GenerateNewCharacter(character, x, y, width, height));
+                                }
+                                else
+                                {
+                                    Components.Add(GenerateNewCharacter(character, x, y, width, height));
                                 }
                             }
                         }

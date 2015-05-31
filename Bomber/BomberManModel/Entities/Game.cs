@@ -16,10 +16,6 @@ namespace BomberManModel.Entities
         /// </summary>
         public bool Finished { get; set; }
         /// <summary>
-        /// Procentowo oznaczona ilość życia, która pozostała graczowi
-        /// </summary>
-        public double Life { get; set; }
-        /// <summary>
         /// Ostatni czas zapisu gry.
         /// </summary>
         public DateTime SaveTime { get;set; }
