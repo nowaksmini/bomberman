@@ -4,6 +4,7 @@ using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
 using BomberMan.Screens;
 using BomberMan.Screens.Menus;
+using BomberManModel;
 using BomberManViewModel;
 using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
@@ -162,6 +163,7 @@ namespace BomberMan
                     _settings.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.Help:
+                    _help.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.HighScores:
                     _highScores.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
@@ -210,6 +212,7 @@ namespace BomberMan
                     _settings.Draw(_spriteBatch);
                     break;
                 case ScreenType.Help:
+                    _help.Draw(_spriteBatch);
                     break;
                 case ScreenType.HighScores:
                     _highScores.Draw(_spriteBatch);
@@ -243,6 +246,19 @@ namespace BomberMan
             LoadGame();
             LoadHighScores();
             LoadLoadScreen();
+            LoadHelpMenu();
+        }
+
+        private void LoadHelpMenu()
+        {
+            Texture2D[] opponents = new Texture2D[2];
+            opponents[(int) OpponentType.Octopus] = Content.Load<Texture2D>(@"Images/Game/octopus");
+            opponents[(int)OpponentType.Ghost] = Content.Load<Texture2D>(@"Images/Game/ghost");
+
+            List<Texture2D> images = new List<Texture2D>();
+            images.AddRange(opponents);
+            SpriteFont labelSpriteFont = Content.Load<SpriteFont>(@"Fonts/Input");
+            _help = new HelpMenuScreen(images, _back, labelSpriteFont);
         }
 
         private void LoadMainMenu()
@@ -321,9 +337,10 @@ namespace BomberMan
             characterTextures.AddRange(characters);
             SpriteFont titleFont = Content.Load<SpriteFont>(@"Fonts/Title");
             Texture2D saveButton = Content.Load<Texture2D>(@"Images/Common/Save");
+            Texture2D helpButton = Content.Load<Texture2D>(@"Images/Common/Question");
             Texture2D restartButton = Content.Load<Texture2D>(@"Images/Game/restart");
             _game = new GameScreen(blockTextures, bonusTextures, Content.Load<Texture2D>(@"Images/Game/bomb"),
-                characterTextures, _back, titleFont, saveButton, restartButton);
+                characterTextures, _back, titleFont, saveButton, restartButton, helpButton);
         }
 
         private void LoadBackGround()
@@ -363,6 +380,11 @@ namespace BomberMan
             _starsEngine.Update();
         }
 
+        /// <summary>
+        /// Obs³u¿ zmianê rozmiaru okna aplikacji.
+        /// </summary>
+        /// <param name="sender">Ÿród³o pojawienia siê eventu</param>
+        /// <param name="e"><see cref="EventArgs"/> instancja zawieraj¹ca dane zdarzenia</param>
         private void Window_ClientSizeChanged(object sender, EventArgs e)
         {
             if (Window.ClientBounds.Height < MinWindowHeight)

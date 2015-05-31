@@ -216,6 +216,7 @@ namespace BomberMan.Screens
                 button.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 y += +rowHeight + RowGap;
             }
+            HandleKeyboard();
         }
 
         /// <summary>

@@ -104,17 +104,6 @@ namespace BomberMan.Screens.Menus
         {
             LastKeyboardState = KeyboardState;
             KeyboardState = Keyboard.GetState();
-            Keys[] keymap = KeyboardState.GetPressedKeys();
-            foreach (Keys k in keymap)
-            {
-                switch (k)
-                {
-                    case Keys.Back:
-                    case Keys.Escape:
-                        OptionButtons[OptionButtons.Count()-1].OnClick(0.25);
-                        break;
-                }
-            }
         }
     }
 

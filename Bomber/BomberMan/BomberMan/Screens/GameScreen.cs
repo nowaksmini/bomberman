@@ -96,6 +96,7 @@ namespace BomberMan.Screens
         private readonly List<Texture2D> _characterTextures;
         private readonly List<Texture2D> _bonusesTextures;
         private Button _backButton;
+        private Button _helpButton;
         private readonly Button _saveButton;
         private readonly Button _restartGame;
 
@@ -127,7 +128,8 @@ namespace BomberMan.Screens
         /// </summary>
         public GameScreen(List<Texture2D> blockTextures, List<Texture2D> bonusesTextures,
             Texture2D bombTexture, List<Texture2D> characterTextures, Texture2D backButtonTexture,
-            SpriteFont titleFont, Texture2D saveButtonTexture, Texture2D startAgainTexture)
+            SpriteFont titleFont, Texture2D saveButtonTexture, Texture2D startAgainTexture, 
+            Texture2D helpButton)
         {
             _titleSpriteFont = titleFont;
             _informationLabel = new Label(titleFont, "", Color.BlueViolet);
@@ -160,6 +162,7 @@ namespace BomberMan.Screens
             _bombLocations = new List<int>();
             _characterLocations = new Dictionary<int, List<CharacterType>>();
             CreateBackButton(backButtonTexture);
+            CreateHelpButton(helpButton);
             if (Utils.Game == null)
             {
                 Utils.Game = CreateNewGame();
@@ -411,6 +414,27 @@ namespace BomberMan.Screens
         }
 
         /// <summary>
+        /// Utwórz przycisk pomocy
+        /// </summary>
+        /// <param name="helpButtonTexture">tło przycisku pomocy</param>
+        private void CreateHelpButton(Texture2D helpButtonTexture)
+        {
+            _helpButton = new Button(helpButtonTexture, Color.White, null, "", Color.White)
+            {
+                Click = delegate()
+                {
+                    GameManager.ScreenType = ScreenType.Help;
+                    return Color.Transparent;
+                }
+            };
+            float width = GameManager.BackButtonSize;
+            float height = GameManager.BackButtonSize - 5;
+            _helpButton.Scale = new Vector2(width / _backButton.Texture.Width,
+                height/ _backButton.Texture.Height);
+            _helpButton.Position = new Vector2(GameManager.BackButtonSize * 3 / 2, GameManager.BackButtonSize / 2);
+        }
+
+        /// <summary>
         /// Narysuj wsyztskie komponenty w oknie gry.
         /// </summary>
         /// <param name="spriteBatch">Obiekt, w którym rysowane są komponenty.</param>
@@ -419,6 +443,7 @@ namespace BomberMan.Screens
             _boardEngine.Draw(spriteBatch);
             spriteBatch.Begin();
             _backButton.Draw(spriteBatch);
+            _helpButton.Draw(spriteBatch);
             _levelLabel.Draw(spriteBatch);
             _restartGame.Draw(spriteBatch);
             _saveButton.Draw(spriteBatch);
@@ -507,7 +532,7 @@ namespace BomberMan.Screens
                 PrevMousePressed = MousePressed;
                 MousePressed = mouseState.LeftButton == ButtonState.Pressed;
                 _backButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
-
+                _helpButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 if (_shouldUpdate)
                 {
                     _currentRedBlockTime += gameTimeSeconds;
@@ -1273,6 +1298,8 @@ namespace BomberMan.Screens
             _columns = columns;
         }
 
+        #region save
+
         /// <summary>
         /// Zapisz dotychczasowy stan gry do bazie danych
         /// </summary>
@@ -1514,6 +1541,8 @@ namespace BomberMan.Screens
                 }
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Utwórz wszytskie potrzebne informacje wymagane do wyświetlenia planszy, bonusów, przeciników oraz gracza

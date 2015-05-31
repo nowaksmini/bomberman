@@ -633,6 +633,13 @@
             Załaduj komponenty po poprawnym zalogowaniu się.
             </summary>
         </member>
+        <member name="M:BomberMan.GameManager.Window_ClientSizeChanged(System.Object,System.EventArgs)">
+            <summary>
+            Obsłuż zmianę rozmiaru okna aplikacji.
+            </summary>
+            <param name="sender">źródło pojawienia się eventu</param>
+            <param name="e"><see cref="T:System.EventArgs"/> instancja zawierająca dane zdarzenia</param>
+        </member>
         <member name="P:BomberMan.GameManager.ScreenType">
             <summary>
             Zwróć lub ustaw rodzaj ekranu.
@@ -687,7 +694,7 @@
             Jedna textura na jeden obrazek
             </summary>
         </member>
-        <member name="M:BomberMan.Screens.GameScreen.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D)">
+        <member name="M:BomberMan.Screens.GameScreen.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
             Utwórz widok gry ze wszystkimi polami jednostkowymi
             Jeżeli nie ma utworzonego GameDAO w Utils to wygeneruj nową grę z poziomem 0
@@ -724,6 +731,12 @@
             Utwórz przycisk powrotu do głównego menu.
             </summary>
             <param name="backButtonTexture">tło przycisku powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.CreateHelpButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz przycisk pomocy
+            </summary>
+            <param name="helpButtonTexture">tło przycisku pomocy</param>
         </member>
         <member name="M:BomberMan.Screens.GameScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
             <summary>
@@ -962,6 +975,48 @@
             Prawdopodobieństwo wylosowania ośmiornicy wynosi 65% a ducha 35%
             </summary>
             <param name="columns">ilość kolumn pól jednostkowych na planszy</param>
+        </member>
+        <member name="T:BomberMan.Screens.HelpMenuScreen">
+            <summary>
+            Klasa odpowiedzialna za generowanie opisów poruszania się po grze.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.#ctor(System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D},Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont)">
+            <summary>
+            Zainicjalizuj nową instancję klasy <see cref="T:BomberMan.Screens.HelpMenuScreen"/>
+            </summary>
+            <param name="images">obrazki do wyświetlenia</param>
+            <param name="backButtonTexture">tło przycisku powrót</param>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.LoadDescriptions">
+            <summary>
+            Pobierz opis kompnentów z bazy danych.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.CreateBackButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz przycisk powrotu do głównego menu.
+            </summary>
+            <param name="backButtonTexture">tło przycisku powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary komponentów znajdujących się w silniku.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Screens.HelpMenuScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze.
+            </summary>
         </member>
         <member name="T:BomberMan.Screens.HighScoresScreen">
             <summary>

@@ -386,7 +386,6 @@ namespace BomberMan.Screens
                     case Keys.Enter:
                         _buttons[_buttons.Count - 1].Click();
                         break;
-                    case Keys.Back:
                     case Keys.Escape:
                     case Keys.Home:
                         _backButton.Click();

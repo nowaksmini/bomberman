@@ -121,11 +121,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Common\NoSound.png">
-      <Name>NoSound</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Images\Common\Question.png">
       <Name>Question</Name>
       <Importer>TextureImporter</Importer>
@@ -133,16 +128,6 @@
     </Compile>
     <Compile Include="Images\Common\Save.png">
       <Name>Save</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Common\Setting.png">
-      <Name>Setting</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Images\Common\Sound.png">
-      <Name>Sound</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
