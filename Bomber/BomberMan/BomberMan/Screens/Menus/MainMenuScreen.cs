@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration.Configuration;
-using BomberMan.Common;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BomberMan.Screens.Menus
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za tworzenie okna menu oraz wybieranie opcji dostępnego menu.
+    /// </summary>
     public class MainMenuScreen : Menu
     {
         private const int Shift = 100;
-        private float countDuration = 0.1f; //every  0.5s.
+        private float countDuration = 0.1f; //every  0.1s.
         private float _currentTime;
-        private int _currentIndex;
 
+        /// <summary>
+        /// Zainicjalizuj instancje <see cref="MainMenuScreen"/>.
+        /// </summary>
+        /// <param name="options">Ilość dostępnych opcji</param>
+        /// <param name="buttonsTextures">Tła przycisków</param>
         public MainMenuScreen(int options, List<Texture2D> buttonsTextures) : base(options, buttonsTextures)
         {
             Func<Color> newGame = delegate
@@ -42,6 +48,12 @@ namespace BomberMan.Screens.Menus
 
         }
 
+        /// <summary>
+        /// Uaktualnij pozycje i rozmiary komponentów znajdujących się w menu.
+        /// </summary>
+        /// <param name="gameTime">czas trwania gry</param>
+        /// <param name="windowWidth">szerokość okna aplikacji</param>
+        /// <param name="windowHeight">wysokość okna aplikacji</param>
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
             double frameTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
@@ -68,6 +80,10 @@ namespace BomberMan.Screens.Menus
             }
         }
 
+        /// <summary>
+        /// Narysuj wszystkie komponenty znajdujące się w menu.
+        /// </summary>
+        /// <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -76,6 +92,9 @@ namespace BomberMan.Screens.Menus
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Obsłuż wciskane klawisze na klawiaturze.
+        /// </summary>
         public override void HandleKeyboard()
         {
             LastKeyboardState = KeyboardState;
@@ -85,14 +104,18 @@ namespace BomberMan.Screens.Menus
             {
                 switch (k)
                 {
-                    case Keys.Enter:
-                        OptionButtons[0].OnClick(0.25);
+                    case Keys.Back:
+                    case Keys.Escape:
+                        OptionButtons[OptionButtons.Count()-1].OnClick(0.25);
                         break;
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Opcje dostępne w menu gry.
+    /// </summary>
     public enum MainMenuOptions
     {
         NewGame,

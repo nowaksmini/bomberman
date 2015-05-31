@@ -28,6 +28,7 @@ namespace BomberMan
         private Texture2D _background;
         private Texture2D _back;
         private static ScreenType _screenType;
+        private static ScreenType _prevScreenType;
 
         /// <summary>
         /// Zwróæ lub ustaw rodzaj ekranu.
@@ -40,15 +41,23 @@ namespace BomberMan
             get { return _screenType;  }
             set
             {
+                _prevScreenType = _screenType;
                 _screenType = value;
                 if (value == ScreenType.Game)
                 {
                     // utwórz now¹ grê 
-                    Utils.Game = _game.CreateNewGame();
+                    if (_prevScreenType == ScreenType.MainMenu)
+                    {
+                        Utils.Game = _game.CreateNewGame();
+                    }
                 }
                 else if (value == ScreenType.Settings)
                 {
                     _settings.LoadUserSettings();
+                }
+                else if (value == ScreenType.HighScores)
+                {
+                    _highScores.LoadHighScores();
                 }
             }
         }
@@ -59,7 +68,7 @@ namespace BomberMan
         private MainMenuScreen _mainMenu;
         private static GameScreen _game;
         private HelpMenuScreen _help;
-        private HighScoresScreen _highScores;
+        private static HighScoresScreen _highScores;
         private LoginScreen _login;
         private static SettingsScreen _settings;
 
@@ -72,6 +81,7 @@ namespace BomberMan
         public GameManager()
         {
             ScreenType = ScreenType.Login;
+            _prevScreenType = ScreenType.Login;
             _graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = MinWindowWidth,

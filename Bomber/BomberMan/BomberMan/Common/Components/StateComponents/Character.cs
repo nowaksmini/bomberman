@@ -8,6 +8,12 @@ namespace BomberMan.Common.Components.StateComponents
     /// </summary>
     public class Character : Component
     {
+        /// <summary>
+        /// Zwróć lub ustaw rodzaj postaci.
+        /// </summary>
+        /// <value>
+        /// Rodzaj postaci
+        /// </value>
         public CharacterType CharacterType { get; set; }
 
         /// <summary>
@@ -31,8 +37,17 @@ namespace BomberMan.Common.Components.StateComponents
     /// </summary>
     public enum CharacterType
     {
+        /// <summary>
+        /// Duch
+        /// </summary>
         Ghost,
+        /// <summary>
+        /// Ośmiornica
+        /// </summary>
         Octopus,
+        /// <summary>
+        /// Gracz
+        /// </summary>
         Player
     }
 }

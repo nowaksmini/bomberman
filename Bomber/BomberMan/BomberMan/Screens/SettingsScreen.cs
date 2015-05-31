@@ -103,9 +103,9 @@ namespace BomberMan.Screens
             };
             _textInputs = new List<TextInput>
             {
-                new TextInput(_checkBoxTexture, _spriteFontLables, true, Color.Black, TextInputType.Name,
+                new TextInput(_checkBoxTexture, _spriteFontLables, true, Color.Black, TextInputType.Name, Color.White,
                     MaxNameCharacters),
-                new TextInput(_checkBoxTexture, _spriteFontLables, true, Color.Black, TextInputType.Password,
+                new TextInput(_checkBoxTexture, _spriteFontLables, true, Color.Black, TextInputType.Password, Color.White,
                     MaxPasswordCharacters)
             };
             _textInputs[_inputIndex].Enabled = true;
@@ -158,8 +158,8 @@ namespace BomberMan.Screens
             }
             else
             {
-                _buttons[ArrowsButtonIndex].NormalColor = SelectedOptionColor;
-                _buttons[WsadButtonIndex].NormalColor = LabelsColor;
+                _buttons[WsadButtonIndex].NormalColor = SelectedOptionColor;
+                _buttons[ArrowsButtonIndex].NormalColor = LabelsColor;
             }
             if (Utils.User.BombKeyboardOption == BombKeyboardOption.Spcace)
             {
@@ -168,29 +168,33 @@ namespace BomberMan.Screens
             }
             else
             {
-                _buttons[SpaceButtonIndex].NormalColor = SelectedOptionColor;
-                _buttons[PButtonIndex].NormalColor = LabelsColor;
+                _buttons[PButtonIndex].NormalColor = SelectedOptionColor;
+                _buttons[SpaceButtonIndex].NormalColor = LabelsColor;
             }
             _buttons[ArrowsButtonIndex].Click = delegate
             {
+                _buttons[ArrowsButtonIndex].NormalColor = SelectedOptionColor;
                 _buttons[WsadButtonIndex].NormalColor = LabelsColor;
                 Utils.User.KeyboardOption = KeyboardOption.Arrows;
                 return SelectedOptionColor;
             };
             _buttons[WsadButtonIndex].Click = delegate
             {
+                _buttons[WsadButtonIndex].NormalColor = SelectedOptionColor;
                 _buttons[ArrowsButtonIndex].NormalColor = LabelsColor;
                 Utils.User.KeyboardOption = KeyboardOption.Wsad;
                 return SelectedOptionColor;
             };
             _buttons[SpaceButtonIndex].Click = delegate
             {
+                _buttons[SpaceButtonIndex].NormalColor = SelectedOptionColor;
                 _buttons[PButtonIndex].NormalColor = LabelsColor;
                 Utils.User.BombKeyboardOption = BombKeyboardOption.Spcace;
                 return SelectedOptionColor;
             };
             _buttons[PButtonIndex].Click = delegate
             {
+                _buttons[PButtonIndex].NormalColor = SelectedOptionColor;
                 _buttons[SpaceButtonIndex].NormalColor = LabelsColor;
                 Utils.User.BombKeyboardOption = BombKeyboardOption.P;
                 return SelectedOptionColor;

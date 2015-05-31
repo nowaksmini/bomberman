@@ -11,12 +11,15 @@ namespace BomberMan.Common.Components.StateComponents
     {
         private BState _state;
         private double _timer;
-        private readonly Color _pressedColor = Color.DarkBlue;
+        private readonly Color _pressedColor = Color.DarkSlateBlue;
         private readonly Color _hoverColor = Color.LightBlue;
         private Color _normalColor = Color.White;
         private bool _mpressed, _prevMpressed;
         private int _mx, _my;
         private double _frameTime;
+        /// <summary>
+        /// Funkjca wywoływana podczas kliku.
+        /// </summary>
         public Func<Color> Click;
         private readonly Label _textLabel;
 

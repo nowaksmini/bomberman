@@ -73,11 +73,7 @@ namespace BomberManViewModel.Services
                         where element.Game.Id == gameId
                         select element;
 
-            BoardElementLocation [] bElements = query.ToArray();
-            for (int i = 0; i < bElements.Length; i++)
-            {
-                DataManager.DataBaseContext.BoardElementLocations.Remove(bElements[i]);
-            }
+            DataManager.DataBaseContext.BoardElementLocations.RemoveRange(query);
             DataManager.DataBaseContext.SaveChanges();
             var gameQuery = from b in DataManager.DataBaseContext.Games
                 where b.Id == gameId

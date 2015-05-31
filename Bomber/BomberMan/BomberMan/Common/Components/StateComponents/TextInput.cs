@@ -20,7 +20,7 @@ namespace BomberMan.Common.Components.StateComponents
         private DateTime _prevUpdate = DateTime.Now;
         private readonly SpriteFont _font;
         public bool ShowCursor;
-        private readonly Color _color;
+        private readonly Color _textColor;
         public Vector2 Position { get; set; }
         private readonly Button _button;
         private readonly Texture2D _texture;
@@ -35,11 +35,12 @@ namespace BomberMan.Common.Components.StateComponents
         /// <param name="texture">kolor tła pola</param>
         /// <param name="font">czcionka tekstu</param>
         /// <param name="showCursor"><value>true</value> oznacza pokazywanie kursowa, <value>false</value> brak</param>
-        /// <param name="color">kolor czcionki</param>
+        /// <param name="textColor">kolor czcionki</param>
         /// <param name="textInputType">rodzaj pola <value>Hasło</value> oznacza zamianę wpisywanych znaków na symbole "*"</param>
+        /// <param name="buttonColor">kolor tła przycisku</param>
         /// <param name="maxCharacters">maksymalna ilość znaków</param>
         public TextInput(Texture2D texture, SpriteFont font, bool showCursor,
-            Color color, TextInputType textInputType, int maxCharacters = Int32.MaxValue)
+            Color textColor, TextInputType textInputType, Color buttonColor, int maxCharacters = Int32.MaxValue)
         {
             _maxCharacters = maxCharacters;
             TextInputType = textInputType;
@@ -47,8 +48,8 @@ namespace BomberMan.Common.Components.StateComponents
             _texture = texture;
             TextValue = String.Empty;
             ShowCursor = showCursor;
-            _color = color;
-            _button = new Button(BState.Up, texture, color, new Vector2(0, 0), new Vector2(1, 1), 0.0f, 2.0f, Color.Black);
+            _textColor = textColor;
+            _button = new Button(BState.Up, texture, buttonColor, new Vector2(0, 0), new Vector2(1, 1), 0.0f, 2.0f, Color.Black);
         }
 
         /// <summary>
@@ -118,10 +119,10 @@ namespace BomberMan.Common.Components.StateComponents
             String text = TextInputType == TextInputType.Name ? TextValue : password;
             Vector2 stringSize = _font.MeasureString(text);
             _button.Draw(spriteBatch);
-            spriteBatch.DrawString(_font, text, Position, _color);
+            spriteBatch.DrawString(_font, text, Position, _textColor);
             if (ShowCursor && Enabled)
             {
-                spriteBatch.DrawString(_font, "_", new Vector2(Position.X + stringSize.X, Position.Y), _color);
+                spriteBatch.DrawString(_font, "_", new Vector2(Position.X + stringSize.X, Position.Y), _textColor);
             }
         }
 

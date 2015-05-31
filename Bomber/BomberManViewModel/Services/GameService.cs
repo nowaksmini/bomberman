@@ -122,7 +122,7 @@ namespace BomberManViewModel.Services
                 game.Level = gameDao.Level;
                 game.PlayerXLocation = gameDao.PlayerXLocation;
                 game.PlayerYLocation = gameDao.PlayerYLocation;
-                game.Points = game.Points;
+                game.Points = gameDao.Points;
                 var userQuery = from b in DataManager.DataBaseContext.Users
                                 where b.Id == dao.User.Id
                                 select b;

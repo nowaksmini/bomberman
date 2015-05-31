@@ -7,10 +7,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BomberMan.Screens
 {
+    /// <summary>
+    /// Klasa bazowa dla wszytskich menu zawierających przyciski, które umożliwiają przełączanie widoku.
+    /// </summary>
     public abstract class Menu : Screen
     {
-        public Button[] OptionButtons { get; set; }
-        public int Options { get; set; }
+        /// <summary>
+        /// Zwróć lub ustaw dostępne przyciski w opcjach.
+        /// </summary>
+        /// <value>
+        /// opcje menu.
+        /// </value>
+        protected Button[] OptionButtons { get; set; }
+        /// <summary>
+        /// zwróć lub ustaw ilość opcji w menu.
+        /// </summary>
+        /// <value>
+        /// The options.
+        /// </value>
+        protected int Options { get; set; }
 
         /// <summary>
         /// Utwóz nową instancję menu.

@@ -67,9 +67,32 @@
             <param name="angle">kąt nachylenia postaci</param>
             <param name="characterType">rodzaj postaci <example>Ośmiornica</example></param>
         </member>
+        <member name="P:BomberMan.Common.Components.StateComponents.Character.CharacterType">
+            <summary>
+            Zwróć lub ustaw rodzaj postaci.
+            </summary>
+            <value>
+            Rodzaj postaci
+            </value>
+        </member>
         <member name="T:BomberMan.Common.Components.StateComponents.CharacterType">
             <summary>
             Rodzaje postaci wyświetlanych na planszy
+            </summary>
+        </member>
+        <member name="F:BomberMan.Common.Components.StateComponents.CharacterType.Ghost">
+            <summary>
+            Duch
+            </summary>
+        </member>
+        <member name="F:BomberMan.Common.Components.StateComponents.CharacterType.Octopus">
+            <summary>
+            Ośmiornica
+            </summary>
+        </member>
+        <member name="F:BomberMan.Common.Components.StateComponents.CharacterType.Player">
+            <summary>
+            Gracz
             </summary>
         </member>
         <member name="T:BomberMan.Common.Components.StateComponents.Block">
@@ -306,15 +329,16 @@
             Klasa reprezentująca EditText z możliwościć wpisywania niewyświetlanego hasła
             </summary>
         </member>
-        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Boolean,Microsoft.Xna.Framework.Color,BomberMan.Common.Components.StateComponents.TextInputType,System.Int32)">
+        <member name="M:BomberMan.Common.Components.StateComponents.TextInput.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Boolean,Microsoft.Xna.Framework.Color,BomberMan.Common.Components.StateComponents.TextInputType,Microsoft.Xna.Framework.Color,System.Int32)">
             <summary>
             Utwórz nowe pole edytowalne.
             </summary>
             <param name="texture">kolor tła pola</param>
             <param name="font">czcionka tekstu</param>
             <param name="showCursor"><value>true</value> oznacza pokazywanie kursowa, <value>false</value> brak</param>
-            <param name="color">kolor czcionki</param>
+            <param name="textColor">kolor czcionki</param>
             <param name="textInputType">rodzaj pola <value>Hasło</value> oznacza zamianę wpisywanych znaków na symbole "*"</param>
+            <param name="buttonColor">kolor tła przycisku</param>
             <param name="maxCharacters">maksymalna ilość znaków</param>
         </member>
         <member name="M:BomberMan.Common.Components.StateComponents.TextInput.ProcessKeyboard(System.Boolean)">
@@ -990,12 +1014,69 @@
             Zaloguj użytkownika lub utwórz nowe konto w zależności od zaznaczonej opcji.
             </summary>
         </member>
+        <member name="T:BomberMan.Screens.Menu">
+            <summary>
+            Klasa bazowa dla wszytskich menu zawierających przyciski, które umożliwiają przełączanie widoku.
+            </summary>
+        </member>
         <member name="M:BomberMan.Screens.Menu.#ctor(System.Int32,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D})">
             <summary>
             Utwóz nową instancję menu.
             </summary>
             <param name="options">ilość dostępnych opcji</param>
             <param name="textures">dostępne tła dla przycisków</param>
+        </member>
+        <member name="P:BomberMan.Screens.Menu.OptionButtons">
+            <summary>
+            Zwróć lub ustaw dostępne przyciski w opcjach.
+            </summary>
+            <value>
+            opcje menu.
+            </value>
+        </member>
+        <member name="P:BomberMan.Screens.Menu.Options">
+            <summary>
+            zwróć lub ustaw ilość opcji w menu.
+            </summary>
+            <value>
+            The options.
+            </value>
+        </member>
+        <member name="T:BomberMan.Screens.Menus.MainMenuScreen">
+            <summary>
+            Klasa odpowiedzialna za tworzenie okna menu oraz wybieranie opcji dostępnego menu.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.Menus.MainMenuScreen.#ctor(System.Int32,System.Collections.Generic.List{Microsoft.Xna.Framework.Graphics.Texture2D})">
+            <summary>
+            Zainicjalizuj instancje <see cref="T:BomberMan.Screens.Menus.MainMenuScreen"/>.
+            </summary>
+            <param name="options">Ilość dostępnych opcji</param>
+            <param name="buttonsTextures">Tła przycisków</param>
+        </member>
+        <member name="M:BomberMan.Screens.Menus.MainMenuScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary komponentów znajdujących się w menu.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Screens.Menus.MainMenuScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszystkie komponenty znajdujące się w menu.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="M:BomberMan.Screens.Menus.MainMenuScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze.
+            </summary>
+        </member>
+        <member name="T:BomberMan.Screens.Menus.MainMenuOptions">
+            <summary>
+            Opcje dostępne w menu gry.
+            </summary>
         </member>
         <member name="T:BomberMan.Screens.SettingsScreen">
             <summary>

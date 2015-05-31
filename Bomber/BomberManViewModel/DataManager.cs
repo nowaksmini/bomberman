@@ -25,7 +25,6 @@ namespace BomberManViewModel
             CreateMappers();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BomberManContext>());
             DataBaseContext = context ?? new BomberManContext();
-            Clear();
             CreateElements();
             CreateOponents();
         }

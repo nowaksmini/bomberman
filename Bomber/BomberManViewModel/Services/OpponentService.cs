@@ -68,12 +68,7 @@ namespace BomberManViewModel.Services
             var query = from element in DataManager.DataBaseContext.OponentLocations
                         where element.Game.Id == gameId
                         select element;
-
-            OpponentLocation[] bElements = query.ToArray();
-            for (int i = 0; i < bElements.Length; i++)
-            {
-                DataManager.DataBaseContext.OponentLocations.Remove(bElements[i]);
-            }
+            DataManager.DataBaseContext.OponentLocations.RemoveRange(query);
             DataManager.DataBaseContext.SaveChanges();
             var gameQuery = from element in DataManager.DataBaseContext.Games
                             where element.Id == gameId

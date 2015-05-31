@@ -144,8 +144,8 @@ namespace BomberMan.Screens
                 Click = delegate()
                 {
                     _informationLabel.Text = "";
-                    _shouldUpdate = false;
-                    GenerateGameForSpecifiedLevel(0);
+                    Utils.Game.Id = -1;
+                    CreateNewGame();
                     return Color.Transparent;
                 }
             };
@@ -385,8 +385,8 @@ namespace BomberMan.Screens
                 _saveButton.Position = new Vector2(_restartGame.Position.X - SpectialButtonsHeight,
                     SpectialButtonsHeight/2);
                 _levelLabel.Position = new Vector2(GameManager.BackButtonSize*2, 0);
-                _saveButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 _restartGame.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
+                _saveButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 _informationLabel.Position =
                     new Vector2((float) windowWidth/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).X/2,
                         (float) windowHeight/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).Y/2);
@@ -883,9 +883,6 @@ namespace BomberMan.Screens
                 {
                     if (keymap.Contains(Keys.P))
                     {
-                        while (KeyboardState.IsKeyDown(Keys.P))
-                        {
-                        }
                         _bombLocations.Add(gamer);
                         _currentBombTimes.Add(0);
                     }
@@ -1366,7 +1363,12 @@ namespace BomberMan.Screens
         /// <param name="level">poziom, dla którego generowana jest plansza</param>
         private void GenerateGameForSpecifiedLevel(int level)
         {
-            if (Utils.Game != null) Utils.Game.Level = level;
+            if (Utils.Game != null)
+            {
+                Utils.Game.Level = level;
+                Utils.Game.Finished = false;
+                Utils.Game.BombsAmount = StartBombAmount;
+            }
             _informationLabel.Text = "";
             _shouldUpdate = false;
             _boardBlocksTypes = new List<BlockType>();

@@ -17,7 +17,7 @@ namespace BomberMan.Screens
     /// </summary>
     public class HighScoresScreen : Screen
     {
-        private const int TopScores = 5;
+        private const int TopScores = 10;
         private readonly List<Label> _scores;
         private readonly List<Label> _levels;
         private readonly List<Label> _userNames;
@@ -62,28 +62,29 @@ namespace BomberMan.Screens
                     return Color.Transparent;
                 }
             };
-            _backButton.Scale = new Vector2(GameManager.BackButtonSize / _backButton.Texture.Width,
-                GameManager.BackButtonSize / _backButton.Texture.Height);
+            _backButton.Scale = new Vector2(GameManager.BackButtonSize/_backButton.Texture.Width,
+                GameManager.BackButtonSize/_backButton.Texture.Height);
             _backButton.Position = new Vector2(GameManager.BackButtonSize, GameManager.BackButtonSize);
         }
 
         /// <summary>
         /// Załaduj najlepsze wyniki.
         /// </summary>
-        private void LoadHighScores()
+        public void LoadHighScores()
         {
             String message;
-            List<GameDao> games = GameService.GetBestHighSocredGames(TopScores, out message );
+            List<GameDao> games = GameService.GetBestHighSocredGames(TopScores, out message);
             _userNames.Clear();
             _scores.Clear();
             _levels.Clear();
             _lps.Clear();
             for (int i = 0; i < games.Count; i++)
             {
-                _lps.Add(new Label(_labelSpriteFont, (i+1).ToString(), LabelsTextColor));
+                _lps.Add(new Label(_labelSpriteFont, (i + 1).ToString(), LabelsTextColor));
                 _userNames.Add(new Label(_labelSpriteFont, games[i].User.Name, LabelsTextColor));
                 _scores.Add(new Label(_labelSpriteFont, games[i].Points.ToString(), LabelsTextColor));
-                _levels.Add(new Label(_labelSpriteFont, (games[i].Level + 1).ToString(), LabelsTextColor)); ;
+                _levels.Add(new Label(_labelSpriteFont, (games[i].Level + 1).ToString(), LabelsTextColor));
+                ;
             }
         }
 
@@ -128,18 +129,22 @@ namespace BomberMan.Screens
         public override void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
             LoadHighScores();
-            double frameTime = gameTime.ElapsedGameTime.Milliseconds / 1000.0;
+            double frameTime = gameTime.ElapsedGameTime.Milliseconds/1000.0;
             MouseState mouseState = Mouse.GetState();
             PrevMousePressed = MousePressed;
             MousePressed = mouseState.LeftButton == ButtonState.Pressed;
-            _title.Position = new Vector2((float)windowWidth/2 - _titleSpriteFont.MeasureString(_title.Text).X/2, 0);
+            _title.Position = new Vector2((float) windowWidth/2 - _titleSpriteFont.MeasureString(_title.Text).X/2, 0);
             _lp.Position = new Vector2(RowGap, TitleGap);
-            _user.Position = new Vector2(_lp.Position.X  + _labelSpriteFont.MeasureString(_user.Text).X 
-                + RowGap, _lp.Position.Y);
-            _level.Position = new Vector2(_user.Position.X + RowGap + TitleGap + RowGap +
-                _labelSpriteFont.MeasureString(_level.Text).X, _user.Position.Y);
-            _points.Position = new Vector2(_level.Position.X + TitleGap + RowGap + _labelSpriteFont.MeasureString(_points.Text).X,
-                _level.Position.Y);
+            _user.Position = new Vector2(_lp.Position.X + _labelSpriteFont.MeasureString(_user.Text).X
+                                         + RowGap, _lp.Position.Y);
+            _level.Position = new Vector2((float)windowWidth/2 + 
+                                          _labelSpriteFont.MeasureString(_level.Text).X/2, _user.Position.Y);
+            _points.Position =
+                new Vector2(
+                    windowWidth - 
+                    (TitleGap + (float) TitleGap/2 + RowGap +
+                    _labelSpriteFont.MeasureString(_points.Text).X),
+                    _level.Position.Y);
             float y = _points.Position.Y + TitleGap;
             foreach (var lp in _lps)
             {
@@ -149,7 +154,7 @@ namespace BomberMan.Screens
             y = _points.Position.Y + TitleGap;
             foreach (var user in _userNames)
             {
-                user.Position = new Vector2(_user.Position.X,y);
+                user.Position = new Vector2(_user.Position.X, y);
                 y += RowGap;
             }
             y = _points.Position.Y + TitleGap;

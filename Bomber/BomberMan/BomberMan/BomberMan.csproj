@@ -90,7 +90,6 @@
     <Compile Include="Common\Components\MovingComponents\Star.cs" />
     <Compile Include="Common\Components\MovingComponents\Rocket.cs" />
     <Compile Include="Common\Components\StateComponents\Label.cs" />
-    <Compile Include="Common\Components\StateComponents\ProgressBar.cs" />
     <Compile Include="Common\Components\StateComponents\TextInput.cs" />
     <Compile Include="Common\Engine.cs" />
     <Compile Include="Common\Engines\BoardEngine.cs" />

@@ -109,8 +109,8 @@ namespace BomberMan.Screens
             _labels.Add(new Label(_spriteFontCheckBox, Register, color));
             _labels.Add(new Label(_spriteFontCheckBox, "", Color.Red));
 
-            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, MaxNameCharacters));
-            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password,
+            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Name, color, MaxNameCharacters));
+            _fields.Add(new TextInput(texture, _spriteFont, true, colorInput, TextInputType.Password, color,
                 MaxPasswordCharacters));
             _fields[_inputIndex].Enabled = true;
             foreach (var input in _fields)
