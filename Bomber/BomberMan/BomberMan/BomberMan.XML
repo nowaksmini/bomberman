@@ -827,6 +827,29 @@
             Zapisz dotychczasowy stan gry do bazie danych
             </summary>
         </member>
+        <member name="M:BomberMan.Screens.GameScreen.SaveBonuses(System.Collections.Generic.List{BomberManViewModel.DataAccessObjects.BoardElementLocationDao}@,System.String@)">
+            <summary>
+            Zapisz wszytskie bonusy wraz ich pozostałymi czasami życia. Bonus, które są już w trakcie kożystania
+            zapisywane są na polu -1,-1 to oznacza że po wczytaniu gry z tego pola wpisywane będą wartości wszystkich niewykorzystanych do końca bonusów.
+            </summary>
+            <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+            <param name="message">w razie błędów komunikat o problemach</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.SaveBlocksAndOpponents(System.Collections.Generic.List{BomberManViewModel.DataAccessObjects.OpponentLocationDao}@,System.Collections.Generic.List{BomberManViewModel.DataAccessObjects.BoardElementLocationDao}@,System.String@)">
+            <summary>
+            Zapisz wszytskich przeciwników i jednostkowe pola.
+            </summary>
+            <param name="opponentLocations">lokalizacja przeciwników</param>
+            <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+            <param name="message">w razie błędów komunikat o problemach</param>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.SaveBombs(System.Collections.Generic.List{BomberManViewModel.DataAccessObjects.BoardElementLocationDao}@,System.String@)">
+            <summary>
+            Zapisz wszytskie bomby wraz ich pozostałymi czasami życia.
+            </summary>
+            <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+            <param name="message">w razie błędów komunikat o problemach</param>
+        </member>
         <member name="M:BomberMan.Screens.GameScreen.GenerateGameForSpecifiedLevel(System.Int32)">
             <summary>
             Utwórz wszytskie potrzebne informacje wymagane do wyświetlenia planszy, bonusów, przeciników oraz gracza

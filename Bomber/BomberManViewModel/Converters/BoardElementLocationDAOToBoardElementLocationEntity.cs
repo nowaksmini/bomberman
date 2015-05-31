@@ -18,8 +18,8 @@ namespace BomberManViewModel.Converters
         public BoardElementLocation Convert(BoardElementLocationDao source)
         {
             BoardElementLocation target = new BoardElementLocation();
-            target.YLocation = target.YLocation;
-            target.XLocation = target.XLocation;
+            target.YLocation = source.YLocation;
+            target.XLocation = source.XLocation;
             target.Id = source.Id;
             target.Game = Mapper.Map<Game>(source.Game);
             target.BoardElement = Mapper.Map<BoardElement>(source.BoardElement);

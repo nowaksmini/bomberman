@@ -8,13 +8,13 @@ namespace BomberManViewModel.DataAccessObjects
     public class BoardElementLocationDao
     {
         public int Id { get; set; }
-        public uint XLocation { get; set; }
-        public uint YLocation { get; set; }
+        public int XLocation { get; set; }
+        public int YLocation { get; set; }
         /// <summary>
-        /// Czas wyrażony w milisekundach oznaczający ilość czasu życia jaki pozostał obiektowi.
+        /// Czas wyrażony w sekundach oznaczający ilość czasu życia jaki pozostał obiektowi.
         /// Nie dotyczy wszystkich elementów planszy.
         /// </summary>
-        public Int64 Timeout { get; set; }
+        public float? Timeout { get; set; }
         public virtual BoardElementDao BoardElement { get; set; }
         public virtual GameDao Game { get; set; }
     }

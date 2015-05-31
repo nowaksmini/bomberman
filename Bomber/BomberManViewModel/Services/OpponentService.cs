@@ -58,15 +58,15 @@ namespace BomberManViewModel.Services
         /// <summary>
         /// Zaktualizuj rozmieszczenie przeciwników.
         /// </summary>
+        /// <param name="gameId">id aktalnie zapisywanej gry</param>
         /// <param name="opponents">przeciwnicy</param>
         /// <param name="message">wiadomość przesyłana w razie niepowodzenia</param>
         /// <returns></returns>
-        static public bool UpdateOpponentLocations(List<OpponentLocationDao> opponents, out String message)
+        static public bool UpdateOpponentLocations(int gameId, List<OpponentLocationDao> opponents, out String message)
         {
-            uint gameid = (uint)opponents[0].Game.Id;
             message = null;
             var query = from element in DataManager.DataBaseContext.OponentLocations
-                        where element.Game.Id == gameid
+                        where element.Game.Id == gameId
                         select element;
 
             OpponentLocation[] bElements = query.ToArray();
@@ -75,9 +75,20 @@ namespace BomberManViewModel.Services
                 DataManager.DataBaseContext.OponentLocations.Remove(bElements[i]);
             }
             DataManager.DataBaseContext.SaveChanges();
+            var gameQuery = from element in DataManager.DataBaseContext.Games
+                            where element.Id == gameId
+                            select element;
+            if (!gameQuery.Any())
+            {
+                message = "Nie istnieje taka gra";
+                return false;
+            }
+            Game game = gameQuery.First();
             for (int i = 0; i < opponents.Count; i++)
             {
-                DataManager.DataBaseContext.OponentLocations.Add(Mapper.Map<OpponentLocation>(opponents[i]));
+                OpponentLocation opponentLocation = Mapper.Map<OpponentLocation>(opponents[i]);
+                opponentLocation.Game = game;
+                DataManager.DataBaseContext.OponentLocations.Add(opponentLocation);
             }
             DataManager.DataBaseContext.SaveChanges();
             return true;

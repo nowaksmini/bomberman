@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
+using BomberMan.Common;
 using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
 using BomberManModel;
@@ -13,11 +13,6 @@ using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Button = BomberMan.Common.Components.StateComponents.Button;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-using Label = BomberMan.Common.Components.StateComponents.Label;
-using Screen = BomberMan.Common.Screen;
 
 namespace BomberMan.Screens
 {
@@ -171,7 +166,7 @@ namespace BomberMan.Screens
             }
             _levelLabel = new Label(titleFont, Level + " " + (Utils.Game.Level + 1) + " " + Points + Utils.Game.Points
                 , Color.White);
-            _bonusLabel = new Label(titleFont, BonusLabel,Color.White);
+            _bonusLabel = new Label(titleFont, BonusLabel, Color.White);
         }
 
         /// <summary>
@@ -313,23 +308,23 @@ namespace BomberMan.Screens
         private void DrawBonus(SpriteBatch spriteBatch, BonusType bonusType, float x, float y)
         {
             // narysuj białe tło
-            Vector2 blockScale = new Vector2(BonusSize/_blockTextures[(int)BlockType.White].Width,
-                BonusSize / _blockTextures[(int)BlockType.White].Height);
+            Vector2 blockScale = new Vector2(BonusSize/_blockTextures[(int) BlockType.White].Width,
+                BonusSize/_blockTextures[(int) BlockType.White].Height);
             Rectangle sourceBlockRectangle = new Rectangle
-                (0, 0, _blockTextures[(int)BlockType.White].Width,
-                _blockTextures[(int)BlockType.White].Height);
-            Vector2 blockOrigin = new Vector2((float)_blockTextures[(int)BlockType.White].Width / 2,
-                 (float)_blockTextures[(int)BlockType.White].Height / 2);
-            spriteBatch.Draw(_blockTextures[(int)BlockType.White], new Vector2(x, y),
+                (0, 0, _blockTextures[(int) BlockType.White].Width,
+                    _blockTextures[(int) BlockType.White].Height);
+            Vector2 blockOrigin = new Vector2((float) _blockTextures[(int) BlockType.White].Width/2,
+                (float) _blockTextures[(int) BlockType.White].Height/2);
+            spriteBatch.Draw(_blockTextures[(int) BlockType.White], new Vector2(x, y),
                 sourceBlockRectangle, Color.White, 0.0f, blockOrigin, blockScale, SpriteEffects.None, 0f);
 
-            Vector2 scale = new Vector2(BonusSize / _bonusesTextures[(int)bonusType].Width,
-               BonusSize / _bonusesTextures[(int)bonusType].Height);
+            Vector2 scale = new Vector2(BonusSize/_bonusesTextures[(int) bonusType].Width,
+                BonusSize/_bonusesTextures[(int) bonusType].Height);
             Rectangle sourceRectangle = new Rectangle
-                (0, 0, _bonusesTextures[(int)bonusType].Width, _bonusesTextures[(int)bonusType].Height);
-            Vector2 origin = new Vector2((float)_bonusesTextures[(int)bonusType].Width / 2,
-                 (float)_bonusesTextures[(int)bonusType].Height / 2);
-            spriteBatch.Draw(_bonusesTextures[(int)bonusType], new Vector2(x, y),
+                (0, 0, _bonusesTextures[(int) bonusType].Width, _bonusesTextures[(int) bonusType].Height);
+            Vector2 origin = new Vector2((float) _bonusesTextures[(int) bonusType].Width/2,
+                (float) _bonusesTextures[(int) bonusType].Height/2);
+            spriteBatch.Draw(_bonusesTextures[(int) bonusType], new Vector2(x, y),
                 sourceRectangle, Color.White, 0.0f, origin, scale, SpriteEffects.None, 0f);
         }
 
@@ -351,7 +346,7 @@ namespace BomberMan.Screens
                 PrevMousePressed = MousePressed;
                 MousePressed = mouseState.LeftButton == ButtonState.Pressed;
                 _backButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
-               
+
                 if (_shouldUpdate)
                 {
                     _currentRedBlockTime += gameTimeSeconds;
@@ -392,8 +387,9 @@ namespace BomberMan.Screens
                 _levelLabel.Position = new Vector2(GameManager.BackButtonSize*2, 0);
                 _saveButton.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
                 _restartGame.Update(mouseState.X, mouseState.Y, frameTime, MousePressed, PrevMousePressed);
-                _informationLabel.Position = new Vector2((float) windowWidth/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).X /2,
-                    (float) windowHeight/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).Y/2);
+                _informationLabel.Position =
+                    new Vector2((float) windowWidth/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).X/2,
+                        (float) windowHeight/2 - _titleSpriteFont.MeasureString(_informationLabel.Text).Y/2);
                 _levelLabel.Text = Level + " " + (Utils.Game.Level + 1) + " " + Points + " " + Utils.Game.Points;
                 _bonusLabel.Position = new Vector2(_titleSpriteFont.MeasureString(_bonusLabel.Text).X,
                     windowHeight - _titleSpriteFont.MeasureString(_bonusLabel.Text).Y);
@@ -603,7 +599,7 @@ namespace BomberMan.Screens
                     }
                 }
                 characters.RemoveAll(x => x != CharacterType.Player);
-                if(characters.Count == 0) _characterLocations.Remove(position);
+                if (characters.Count == 0) _characterLocations.Remove(position);
             }
         }
 
@@ -857,8 +853,8 @@ namespace BomberMan.Screens
                     _informationLabel.Text = BravoWinning;
                     _shouldUpdate = false;
                 }
-                //GenerateGameForSpecifiedLevel(++Utils.Game.Level);
             }
+            Utils.Game.Finished = true;
         }
 
         #region KeyboardHandle
@@ -964,7 +960,7 @@ namespace BomberMan.Screens
         {
             if (playerRow < _rows - 1)
             {
-                int tmpLocation = (playerRow + 1) * _columns + playerColumn;
+                int tmpLocation = (playerRow + 1)*_columns + playerColumn;
                 if (_boardBlocksTypes[tmpLocation].Equals(BlockType.White) ||
                     _boardBlocksTypes[tmpLocation].Equals(BlockType.Red))
                 {
@@ -972,15 +968,15 @@ namespace BomberMan.Screens
                     _characterLocations[playerLocation].Remove(CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerRow++;
-                    playerLocation = playerRow * _columns + playerColumn;
+                    playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
                         _characterLocations[playerLocation].Add(CharacterType.Player);
                     else
                     {
                         _characterLocations.Add(playerLocation, new List<CharacterType>()
-                                    {
-                                        CharacterType.Player
-                                    });
+                        {
+                            CharacterType.Player
+                        });
                     }
                 }
             }
@@ -996,7 +992,7 @@ namespace BomberMan.Screens
         {
             if (playerRow > 0)
             {
-                int tmp = (playerRow - 1) * _columns + playerColumn;
+                int tmp = (playerRow - 1)*_columns + playerColumn;
                 if (_boardBlocksTypes[tmp].Equals(BlockType.White) ||
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
@@ -1004,15 +1000,15 @@ namespace BomberMan.Screens
                     _characterLocations[playerLocation].Remove(CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerRow--;
-                    playerLocation = playerRow * _columns + playerColumn;
+                    playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
                         _characterLocations[playerLocation].Add(CharacterType.Player);
                     else
                     {
                         _characterLocations.Add(playerLocation, new List<CharacterType>()
-                                    {
-                                        CharacterType.Player
-                                    });
+                        {
+                            CharacterType.Player
+                        });
                     }
                 }
             }
@@ -1028,7 +1024,7 @@ namespace BomberMan.Screens
         {
             if (playerColumn < _columns - 1)
             {
-                int tmp = playerRow * _columns + playerColumn + 1;
+                int tmp = playerRow*_columns + playerColumn + 1;
                 if (_boardBlocksTypes[tmp].Equals(BlockType.White) ||
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
@@ -1036,15 +1032,15 @@ namespace BomberMan.Screens
                     _characterLocations[playerLocation].Remove(CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerColumn++;
-                    playerLocation = playerRow * _columns + playerColumn;
+                    playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
                         _characterLocations[playerLocation].Add(CharacterType.Player);
                     else
                     {
                         _characterLocations.Add(playerLocation, new List<CharacterType>()
-                                    {
-                                        CharacterType.Player
-                                    });
+                        {
+                            CharacterType.Player
+                        });
                     }
                 }
             }
@@ -1060,7 +1056,7 @@ namespace BomberMan.Screens
         {
             if (playerColumn > 0)
             {
-                int tmp = playerRow * _columns + playerColumn - 1;
+                int tmp = playerRow*_columns + playerColumn - 1;
                 if (_boardBlocksTypes[tmp].Equals(BlockType.White) ||
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
@@ -1068,15 +1064,15 @@ namespace BomberMan.Screens
                     _characterLocations[playerLocation].Remove(CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerColumn--;
-                    playerLocation = playerRow * _columns + playerColumn;
+                    playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
                         _characterLocations[playerLocation].Add(CharacterType.Player);
                     else
                     {
                         _characterLocations.Add(playerLocation, new List<CharacterType>()
-                                    {
-                                        CharacterType.Player
-                                    });
+                        {
+                            CharacterType.Player
+                        });
                     }
                 }
             }
@@ -1093,10 +1089,11 @@ namespace BomberMan.Screens
             GenerateGameForSpecifiedLevel(0);
             GameDao gameDao = new GameDao()
             {
+                Id = -1,
                 Level = 0,
                 Finished = false,
-                PlayerXLocation = (uint)(_boardEngine.PlayerLocation/_columns),
-                PlayerYLocation = (uint)(_boardEngine.PlayerLocation - _boardEngine.PlayerLocation/_columns * _columns),
+                PlayerXLocation = (uint) (_boardEngine.PlayerLocation/_columns),
+                PlayerYLocation = (uint) (_boardEngine.PlayerLocation - _boardEngine.PlayerLocation/_columns*_columns),
                 Points = 0,
                 SaveTime = DateTime.Now,
                 User = Utils.User
@@ -1122,15 +1119,157 @@ namespace BomberMan.Screens
         /// </summary>
         private void SaveGame()
         {
+            bool prevState = _shouldUpdate;
+            _shouldUpdate = false;
             String message;
             int x = _boardEngine.PlayerLocation/_columns;
             int y = _boardEngine.PlayerLocation - x*_columns;
             Utils.Game.PlayerXLocation = (uint) x;
             Utils.Game.PlayerYLocation = (uint) y;
-            GameService.UpdateGame(ref Utils.Game, out message);
-            List<OpponentLocationDao> opponentLocations = new List<OpponentLocationDao>();
-            List<BoardElementLocationDao> boardElementLocation = new List<BoardElementLocationDao>();
+            Utils.Game.BombsAmount = _bombAmount;
+            bool savedGame = false;
+            Utils.Game.User = Utils.User;
+            if (Utils.Game.Id == -1)
+            {
+                if (GameService.CreateGame(ref Utils.Game, out message))
+                {
+                    savedGame = true;
+                }
+            }
+            else
+            {
+                if (GameService.UpdateGame(ref Utils.Game, out message))
+                {
+                    savedGame = true;
+                }
+            }
+            if (savedGame)
+            {
+                List<OpponentLocationDao> opponentLocations = new List<OpponentLocationDao>();
+                List<BoardElementLocationDao> boardElementLocation = new List<BoardElementLocationDao>();
+                SaveBlocksAndOpponents(ref opponentLocations, ref boardElementLocation, out message);
+                SaveBombs(ref boardElementLocation, out message);
+                SaveBonuses(ref boardElementLocation, out message);
+                OpponentService.UpdateOpponentLocations(Utils.Game.Id, opponentLocations, out message);
+                BoardService.UpdateBoardElementLocations(Utils.Game.Id, boardElementLocation, out message);
+            }
+            _shouldUpdate = prevState;
+        }
 
+        /// <summary>
+        /// Zapisz wszytskie bonusy wraz ich pozostałymi czasami życia. Bonus, które są już w trakcie kożystania
+        /// zapisywane są na polu -1,-1 to oznacza że po wczytaniu gry z tego pola wpisywane będą wartości wszystkich niewykorzystanych do końca bonusów.
+        /// </summary>
+        /// <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+        /// <param name="message">w razie błędów komunikat o problemach</param>
+        private void SaveBonuses(ref List<BoardElementLocationDao> boardElementLocation, out String message)
+        {
+            message = null;
+            for (int i = 0; i < _bonusLocations.Keys.Count; i++)
+            {
+                BoardElementType boardElementType = BoardElementType.BombAmountBonus;
+                switch (_bonusLocations[_bonusLocations.Keys.ElementAt(i)])
+                {
+                    case BonusType.BombAmount:
+                        boardElementType = BoardElementType.BombAmountBonus;
+                        break;
+                    case BonusType.Fast:
+                        boardElementType = BoardElementType.FastBonus;
+                        break;
+                    case BonusType.Inmortal:
+                        boardElementType = BoardElementType.InmortalBonus;
+                        break;
+                    case BonusType.Slow:
+                        boardElementType = BoardElementType.SlowBonus;
+                        break;
+                    case BonusType.Points:
+                        boardElementType = BoardElementType.PointBonus;
+                        break;
+                    case BonusType.Strenght:
+                        break;
+                }
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(boardElementType, out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = null,
+                    XLocation = (_bonusLocations.Keys.ElementAt(i)/_columns),
+                    YLocation =
+                        (_bonusLocations.Keys.ElementAt(i) - _bonusLocations.Keys.ElementAt(i)/_columns*_columns),
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+
+            if (_currentFastBonusCycle - _currentFastBonusTime > 0f)
+            {
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.FastBonus,
+                    out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = _currentFastBonusCycle - _currentFastBonusTime,
+                    XLocation = -1,
+                    YLocation = -1,
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+            if (_currentStrengthBonusCycle - _currentStrengthBonusTime > 0f)
+            {
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.StrenghtBonus,
+                    out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = _currentStrengthBonusCycle - _currentStrengthBonusTime,
+                    XLocation = -1,
+                    YLocation = -1,
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+            if (_currentSlowBonusCycle - _currentSlowBonusTime > 0f)
+            {
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.SlowBonus,
+                    out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = _currentSlowBonusCycle - _currentSlowBonusTime,
+                    XLocation = -1,
+                    YLocation = -1,
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+            if (_currentInmortalBonusCycle - _currentInmortalBonusTime > 0f)
+            {
+                BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.InmortalBonus,
+                    out message);
+                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                {
+                    Game = Utils.Game,
+                    BoardElement = boardElementDao,
+                    Timeout = _currentInmortalBonusCycle - _currentInmortalBonusTime,
+                    XLocation = -1,
+                    YLocation = -1,
+                };
+                boardElementLocation.Add(boardElementLocationDao);
+            }
+        }
+
+
+        /// <summary>
+        /// Zapisz wszytskich przeciwników i jednostkowe pola.
+        /// </summary>
+        /// <param name="opponentLocations">lokalizacja przeciwników</param>
+        /// <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+        /// <param name="message">w razie błędów komunikat o problemach</param>
+        private void SaveBlocksAndOpponents(ref List<OpponentLocationDao> opponentLocations,
+            ref List<BoardElementLocationDao> boardElementLocation, out String message)
+        {
+            message = null;
             for (int i = 0; i < _boardBlocksTypes.Count; i++)
             {
                 if (_characterLocations.ContainsKey(i))
@@ -1154,7 +1293,7 @@ namespace BomberMan.Screens
                     }
                 }
                 BoardElementType boardElementType = BoardElementType.WhiteBlock;
-                //long time = 
+                float? time = null;
                 switch (_boardBlocksTypes[i])
                 {
                     case BlockType.Black:
@@ -1164,7 +1303,14 @@ namespace BomberMan.Screens
                         boardElementType = BoardElementType.GrayBlock;
                         break;
                     case BlockType.Red:
-                        boardElementType = BoardElementType.RedBlock;
+                        time = RedBlockCycleDuration - _currentRedBlockTime;
+                        if (time > 0f)
+                            boardElementType = BoardElementType.RedBlock;
+                        else
+                        {
+                            time = null;
+                            boardElementType = BoardElementType.WhiteBlock;
+                        }
                         break;
                     case BlockType.White:
                         boardElementType = BoardElementType.WhiteBlock;
@@ -1175,64 +1321,39 @@ namespace BomberMan.Screens
                 {
                     Game = Utils.Game,
                     BoardElement = boardElementDao,
-                    Timeout = 100,
-                    XLocation = (uint) (i/_columns),
-                    YLocation = (uint) (i - i/_columns*_columns),
+                    Timeout = time,
+                    XLocation = (i/_columns),
+                    YLocation = (i - i/_columns*_columns),
                 };
                 boardElementLocation.Add(boardElementLocationDao);
             }
+        }
+
+        /// <summary>
+        /// Zapisz wszytskie bomby wraz ich pozostałymi czasami życia.
+        /// </summary>
+        /// <param name="boardElementLocation">rozmieszczenie jednostkowych pól</param>
+        /// <param name="message">w razie błędów komunikat o problemach</param>
+        private void SaveBombs(ref List<BoardElementLocationDao> boardElementLocation, out String message)
+        {
+            message = null;
             for (int i = 0; i < _bombLocations.Count; i++)
             {
                 BoardElementDao boardElementDao = BoardService.FindBoardElementByType(BoardElementType.Bomb, out message);
-                BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
+                float timeLeft = BombCycleDuration - _currentBombTimes[i];
+                if (timeLeft > 0f)
                 {
-                    Game = Utils.Game,
-                    BoardElement = boardElementDao,
-                    Timeout = 100,
-                    XLocation = (uint) (i/_columns),
-                    YLocation = (uint) (i - i/_columns*_columns),
-                };
-                boardElementLocation.Add(boardElementLocationDao);
-            }
-            for (int i = 0; i < _bonusLocations.Count; i++)
-            {
-                if (_bonusLocations.ContainsKey(i))
-                {
-                    BoardElementType boardElementType = BoardElementType.BombAmountBonus;
-                    switch (_bonusLocations[i])
-                    {
-                        case BonusType.BombAmount:
-                            boardElementType = BoardElementType.BombAmountBonus;
-                            break;
-                        case BonusType.Fast:
-                            boardElementType = BoardElementType.FastBonus;
-                            break;
-                        case BonusType.Inmortal:
-                            boardElementType = BoardElementType.InmortalBonus;
-                            break;
-                        case BonusType.Slow:
-                            boardElementType = BoardElementType.SlowBonus;
-                            break;
-                        case BonusType.Points:
-                            boardElementType = BoardElementType.PointBonus;
-                            break;
-                        case BonusType.Strenght:
-                            break;
-                    }
-                    BoardElementDao boardElementDao = BoardService.FindBoardElementByType(boardElementType, out message);
                     BoardElementLocationDao boardElementLocationDao = new BoardElementLocationDao()
                     {
                         Game = Utils.Game,
                         BoardElement = boardElementDao,
-                        Timeout = 100,
-                        XLocation = (uint) (i/_columns),
-                        YLocation = (uint) (i - i/_columns*_columns),
+                        Timeout = timeLeft,
+                        XLocation = (_bombLocations[i]/_columns),
+                        YLocation = (_bombLocations[i] - _bombLocations[i]/_columns*_columns),
                     };
                     boardElementLocation.Add(boardElementLocationDao);
                 }
             }
-            OpponentService.UpdateOpponentLocations(opponentLocations, out message);
-            BoardService.UpdateBoardElementLocations(boardElementLocation, out message);
         }
 
         /// <summary>

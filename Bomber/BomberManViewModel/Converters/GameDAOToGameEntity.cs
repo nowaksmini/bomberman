@@ -25,6 +25,7 @@ namespace BomberManViewModel.Converters
                 PlayerYLocation = source.PlayerYLocation,
                 Points = source.Points,
                 SaveTime = source.SaveTime,
+                BombsAmount = source.BombsAmount,
                 User = Mapper.Map<User>(source.User)
             };
             return target;

@@ -24694,3 +24694,22 @@ CLASS : UserService METHODE : UpdateUser ERROR :    at System.Data.Entity.Core.O
    at System.Data.Entity.Internal.InternalEntityEntry.set_State(EntityState value)
    at System.Data.Entity.Infrastructure.DbEntityEntry`1.set_State(EntityState value)
    at BomberManViewModel.Services.UserService.UpdateUser(UserDao userDao, String& message, Boolean withPassword) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberManViewModel\Services\UserService.cs:line 161
+CLASS : GameScreen METHODE : Update ERROR :    at System.Data.Entity.Core.Objects.EntityEntry.DetectChangesInProperty(Int32 ordinal, Boolean detectOnlyComplexProperties, Boolean detectOnly)
+   at System.Data.Entity.Core.Objects.EntityEntry.DetectChangesInProperties(Boolean detectOnlyComplexProperties)
+   at System.Data.Entity.Core.Objects.ObjectStateManager.DetectChangesInScalarAndComplexProperties(IList`1 entries)
+   at System.Data.Entity.Core.Objects.ObjectStateManager.DetectChanges()
+   at System.Data.Entity.Core.Objects.ObjectContext.DetectChanges()
+   at System.Data.Entity.Internal.InternalContext.DetectChanges(Boolean force)
+   at System.Data.Entity.Internal.InternalContext.GetStateEntries(Func`2 predicate)
+   at System.Data.Entity.Internal.InternalContext.GetStateEntries()
+   at System.Data.Entity.Infrastructure.DbChangeTracker.Entries()
+   at System.Data.Entity.DbContext.GetValidationErrors()
+   at System.Data.Entity.Internal.InternalContext.SaveChanges()
+   at System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   at System.Data.Entity.DbContext.SaveChanges()
+   at BomberManViewModel.Services.OpponentService.UpdateOpponentLocations(List`1 opponents, String& message) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberManViewModel\Services\OpponentService.cs:line 77
+   at BomberMan.Screens.GameScreen.SaveGame() in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 1150
+   at BomberMan.Screens.GameScreen.<.ctor>b__2() in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 138
+   at BomberMan.Common.Components.StateComponents.Button.OnClick(Double timer) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Common\Components\StateComponents\Button.cs:line 163
+   at BomberMan.Common.Components.StateComponents.Button.Update(Int32 mx, Int32 my, Double frameTime, Boolean mPressed, Boolean prevMPressed) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Common\Components\StateComponents\Button.cs:line 131
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 388

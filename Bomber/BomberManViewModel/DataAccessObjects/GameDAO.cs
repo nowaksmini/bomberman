@@ -15,5 +15,6 @@ namespace BomberManViewModel.DataAccessObjects
         public virtual UserDao User { get; set; }
         public uint PlayerXLocation { get; set; }
         public uint PlayerYLocation { get; set; }
+        public int BombsAmount { get; set; }
     }
 }

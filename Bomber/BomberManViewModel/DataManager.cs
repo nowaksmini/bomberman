@@ -25,6 +25,7 @@ namespace BomberManViewModel
             CreateMappers();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BomberManContext>());
             DataBaseContext = context ?? new BomberManContext();
+            Clear();
             CreateElements();
             CreateOponents();
         }
@@ -195,14 +196,14 @@ namespace BomberManViewModel
                     {
                         Id = 7,
                         Description =
-                            "Dodtakowe życie. Dzięki temu bonusowi życie gracza zwiększa się o 50% maksymalnie do 100%",
+                            "Dodtakowe punkty. Dzięki temu bonusowi gracz otrzymuje ododatkowe punkty do całkowitej puli.",
                         ElementType = BoardElementType.PointBonus
                     },
                     new BoardElement
                     {
                         Id = 8,
                         Description =
-                            "Blok gotowy do wybuchu. Jest to blok, który pojawia się na sekundę po wybuchu bomby w pobliżu. Wejście na taki blok kończy się" +
+                            "Blok gotowy do wybuchu. Jest to blok, który pojawia się na chwilę po wybuchu bomby w jej pobliżu. Wejście na taki blok kończy się" +
                             "śmiercią dla każdej postaci na planszy.",
                         ElementType = BoardElementType.RedBlock
                     },
@@ -210,14 +211,14 @@ namespace BomberManViewModel
                     {
                         Id = 9,
                         Description =
-                            "Spowolnienie. Gracz po uzyskaniu tego bonusa niestety spowalnia swój ruch dwukrotnie na 3s.",
+                            "Spowolnienie. Gracz po uzyskaniu tego bonusa niestety spowalnia ruch przeciwników dwukrotnie na kilka sekund.",
                         ElementType = BoardElementType.SlowBonus
                     },
                     new BoardElement
                     {
                         Id = 10,
                         Description =
-                            "Zwiększenie mocy bomb. Po uzyskaniu tego bonusa gracz otrzymuje zwiększenie mocy bomb z zakresu 3 do 5 jedynie na 3 sekundy.",
+                            "Zwiększenie mocy bomb. Po uzyskaniu tego bonusa gracz otrzymuje zwiększenie mocy bomb z zakresu 3 do 5 jedynie na kilka sekund.",
                         ElementType = BoardElementType.StrenghtBonus
                     },
                     new BoardElement

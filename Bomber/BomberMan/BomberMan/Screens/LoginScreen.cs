@@ -301,7 +301,7 @@ namespace BomberMan.Screens
             }
             else
             {
-                if (UserService.CreateUser(Utils.User, out message))
+                if (UserService.CreateUser(ref Utils.User, out message))
                 {
                     GameManager.ScreenType = ScreenType.MainMenu;
                 }

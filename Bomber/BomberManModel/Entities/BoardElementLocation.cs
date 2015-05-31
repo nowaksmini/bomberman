@@ -14,10 +14,10 @@ namespace BomberManModel.Entities
         public int XLocation { get; set; }
         public int YLocation { get; set; }
         /// <summary>
-        /// Czas w milisekundach ile pozostało życia np bonus prędkości
+        /// Czas w sekundach ile pozostało życia np bonus prędkości
         /// Jeżeli mamy null znaczy, że nie dotyczy np pole planszy Black
         /// </summary>
-        public Int64 Timeout { get; set; } 
+        public float? Timeout { get; set; } 
         public virtual BoardElement BoardElement{ get; set; }
         public virtual Game Game { get; set; }
     }

@@ -127,7 +127,7 @@ namespace BomberManViewModel.Services
         /// <param name="userDao">nowy użytkownik z podanym loginem i hasłem</param>
         /// <param name="message">wiadomości otrzymane po próbie utworzenia użytkownika</param>
         /// <returns></returns>
-        public static bool CreateUser(UserDao userDao, out String message)
+        public static bool CreateUser(ref UserDao userDao, out String message)
         {
             try
             {
@@ -144,13 +144,17 @@ namespace BomberManViewModel.Services
                 message = null;
                 userDao.Password += Salt;
                 userDao.Password = userDao.Password.GetHashCode().ToString();
-                DataManager.DataBaseContext.Users.Add(Mapper.Map<User>(userDao));
+                User user = Mapper.Map<User>(userDao);
+                DataManager.DataBaseContext.Users.Add(user);
                 DataManager.DataBaseContext.SaveChanges();
+                userDao = Mapper.Map<UserDao>(user);
             }
             catch (Exception e)
             {
-                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
-                    e.StackTrace);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
                 message = e.Message;
                 return false;
             }
@@ -208,8 +212,10 @@ namespace BomberManViewModel.Services
             }
             catch (Exception e)
             {
-                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
-                    e.StackTrace);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
                 message = e.Message;
             }
             return false;
@@ -239,8 +245,10 @@ namespace BomberManViewModel.Services
             }
             catch (Exception e)
             {
-                Logger.LogMessage(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name,
-                    e.StackTrace);
+                var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+                if (declaringType != null)
+                    Logger.LogMessage(declaringType.Name, MethodBase.GetCurrentMethod().Name,
+                        e.StackTrace);
                 message = e.Message;
             }
             return false;
