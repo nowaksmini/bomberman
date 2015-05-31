@@ -13,8 +13,8 @@ namespace BomberMan.Common.Engines
     /// </summary>
     public class BoardEngine : Engine
     {
-        private readonly int _rows;
-        private readonly int _columns;
+        private int _rows;
+        private int _columns;
         private readonly List<Texture2D> _bonusTextures;
         private readonly List<Texture2D> _characterTextures;
         private readonly Texture2D _bombTexture;
@@ -35,6 +35,7 @@ namespace BomberMan.Common.Engines
         /// </value>
         public int Rows
         {
+            set { _rows = value; }
             get { return _rows; }
         }
 
@@ -46,6 +47,7 @@ namespace BomberMan.Common.Engines
         /// </value>
         public int Columns
         {
+            set { _columns = value; }
             get { return _columns; }
         }
 

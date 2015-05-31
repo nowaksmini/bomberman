@@ -32,7 +32,7 @@ namespace BomberMan.Screens
         private readonly Label _points;
         private readonly Button _backButton;
         private const int TitleGap = 100;
-        private const int RowGap = 30;
+        private const int RowGap = 40;
 
         /// <summary>
         /// Inicjalizuje nową instancję <see cref="HighScoresScreen"/> class.

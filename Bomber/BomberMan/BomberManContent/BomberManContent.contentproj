@@ -121,11 +121,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Common\Frame - Copy %282%29.png">
-      <Name>Frame - Copy %282%29</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Images\Common\NoSound.png">
       <Name>NoSound</Name>
       <Importer>TextureImporter</Importer>
@@ -182,8 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\Help\" />
-    <Folder Include="Images\HighScores\" />
-    <Folder Include="Images\LoadGame\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Images\Game\black_block.png">
@@ -302,6 +295,13 @@
   <ItemGroup>
     <Compile Include="Images\Game\restart.png">
       <Name>restart</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\LoadGame\Load.png">
+      <Name>Load</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -1,11 +1,11 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using BomberMan.Common.Components.StateComponents;
 using BomberMan.Common.Engines;
 using BomberMan.Screens;
 using BomberMan.Screens.Menus;
 using BomberManViewModel;
+using BomberManViewModel.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -50,6 +50,10 @@ namespace BomberMan
                     {
                         Utils.Game = _game.CreateNewGame();
                     }
+                    else if(_prevScreenType == ScreenType.LoadGame)
+                    {
+                        _game.LoadGame();
+                    }
                 }
                 else if (value == ScreenType.Settings)
                 {
@@ -59,15 +63,25 @@ namespace BomberMan
                 {
                     _highScores.LoadHighScores();
                 }
+                else if (value == ScreenType.LoadGame)
+                {
+                    _loadGame.LoadGames();
+                }
             }
         }
+
         /// <summary>
         /// sta³y rozmiar przycisku powrotu.
         /// </summary>
         public const float BackButtonSize = 50f;
+        /// <summary>
+        /// sta³y rozmiar przycisku muzyki.
+        /// </summary>
+        public const float MusicButtonSize = 50f;
+        private static LoadGameScreen _loadGame;
         private MainMenuScreen _mainMenu;
         private static GameScreen _game;
-        private HelpMenuScreen _help;
+        private static HelpMenuScreen _help;
         private static HighScoresScreen _highScores;
         private LoginScreen _login;
         private static SettingsScreen _settings;
@@ -156,6 +170,7 @@ namespace BomberMan
                     _game.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.LoadGame:
+                    _loadGame.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
                     break;
                 case ScreenType.Login:
                     _login.Update(gameTime, Window.ClientBounds.Width, Window.ClientBounds.Height);
@@ -171,6 +186,7 @@ namespace BomberMan
         /// <param name="gameTime">czas trwanie gry</param>
         protected override void Draw(GameTime gameTime)
         {
+            IsMouseVisible = true;
             if (ScreenType != ScreenType.Login && _mainMenu == null)
             {
                 LoadRestSreens();
@@ -188,26 +204,23 @@ namespace BomberMan
             switch (ScreenType)
             {
                 case ScreenType.MainMenu:
-                    IsMouseVisible = true;
                     _mainMenu.Draw(_spriteBatch);
                     break;
                 case ScreenType.Settings:
-                    IsMouseVisible = true;
                     _settings.Draw(_spriteBatch);
                     break;
                 case ScreenType.Help:
                     break;
                 case ScreenType.HighScores:
-                    IsMouseVisible = true;
                     _highScores.Draw(_spriteBatch);
                     break;
                 case ScreenType.Game:
                     _game.Draw(_spriteBatch);
                     break;
                 case ScreenType.LoadGame:
+                    _loadGame.Draw(_spriteBatch);
                     break;
                 case ScreenType.Login:
-                    IsMouseVisible = true;
                     _login.Draw(_spriteBatch);
                     break;
             }
@@ -229,6 +242,7 @@ namespace BomberMan
             LoadSettings();
             LoadGame();
             LoadHighScores();
+            LoadLoadScreen();
         }
 
         private void LoadMainMenu()
@@ -265,8 +279,11 @@ namespace BomberMan
                 Content.Load<Texture2D>(@"Images/Settings/SaveChanges"), _back);
         }
 
-        private void LoadHelp()
+        private void LoadLoadScreen()
         {
+            Texture2D loadButton = Content.Load<Texture2D>(@"Images/LoadGame/Load");
+            SpriteFont labelSpriteFont = Content.Load<SpriteFont>(@"Fonts/Input");
+            _loadGame = new LoadGameScreen(loadButton, labelSpriteFont, _back);
         }
 
         private void LoadLogin()
@@ -360,6 +377,9 @@ namespace BomberMan
         }
     }
 
+    /// <summary>
+    /// Rodzaje widoków.
+    /// </summary>
     public enum ScreenType
     {
         MainMenu,

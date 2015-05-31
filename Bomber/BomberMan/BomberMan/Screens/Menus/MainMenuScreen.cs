@@ -45,6 +45,11 @@ namespace BomberMan.Screens.Menus
                 GameManager.ScreenType = ScreenType.HighScores;
                 return Color.Transparent;
             };
+            OptionButtons[(int)MainMenuOptions.LoadGame].Click = delegate
+            {
+                GameManager.ScreenType = ScreenType.LoadGame;
+                return Color.Transparent;
+            };
 
         }
 

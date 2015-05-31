@@ -20,8 +20,8 @@ namespace BomberManModel.Entities
         /// </summary>
         public DateTime SaveTime { get;set; }
         public virtual User User { get; set; }
-        public uint PlayerXLocation { get; set; }
-        public uint PlayerYLocation { get; set; }
+        public int PlayerXLocation { get; set; }
+        public int PlayerYLocation { get; set; }
         public int BombsAmount { get; set; }
 
         public virtual ICollection<OpponentLocation> OponentLocation { get; set; }

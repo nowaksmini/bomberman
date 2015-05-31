@@ -192,6 +192,7 @@ namespace BomberManViewModel.Services
                 var query = from b in DataManager.DataBaseContext.Games
                     where b.User.Id == userDao.Id && b.Finished == false
                             orderby b.SaveTime
+                            descending 
                             select b;
                 var top = query.Take(n);
                 List<Game> games = top.ToList();

@@ -24713,3 +24713,31 @@ CLASS : GameScreen METHODE : Update ERROR :    at System.Data.Entity.Core.Object
    at BomberMan.Common.Components.StateComponents.Button.OnClick(Double timer) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Common\Components\StateComponents\Button.cs:line 163
    at BomberMan.Common.Components.StateComponents.Button.Update(Int32 mx, Int32 my, Double frameTime, Boolean mPressed, Boolean prevMPressed) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Common\Components\StateComponents\Button.cs:line 131
    at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 388
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 676
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 526
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 676
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 526
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 678
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 528
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 678
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 528
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 678
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 528
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 678
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 528
+CLASS : GameScreen METHODE : Update ERROR :    at System.ThrowHelper.ThrowArgumentOutOfRangeException()
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at BomberMan.Screens.GameScreen.UpdateBombs(Single gameTimeSeconds) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 678
+   at BomberMan.Screens.GameScreen.Update(GameTime gameTime, Int32 windowWidth, Int32 windowHeight) in c:\Users\sylwia.nowak\Desktop\old_computer\chrome\Bomber\BomberMan\BomberMan\Screens\GameScreen.cs:line 528

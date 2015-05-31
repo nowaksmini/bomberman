@@ -1,4 +1,5 @@
-﻿using BomberMan.Common.Components.StateComponents;
+﻿using System.Collections.Generic;
+using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,16 +11,13 @@ namespace BomberMan.Common
     /// </summary>
     public abstract class Screen
     {
-        public Button MusicButton;
-        public static Texture2D[] MusicTexture;
-        public Button Back;
         protected int PrevSelectedOption, SelectedOption;
         protected KeyboardState KeyboardState, LastKeyboardState;
         protected bool MousePressed, PrevMousePressed = false;
         protected const int Gap = 10;
 
         /// <summary>
-        /// Narusuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+        /// Narysuj wszystkie komponenty znajdujące się w silniku w aplikacji.
         /// </summary>
         /// <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
         public abstract void Draw(SpriteBatch spriteBatch);

@@ -169,12 +169,89 @@ namespace BomberMan.Screens
             _bonusLabel = new Label(titleFont, BonusLabel, Color.White);
         }
 
+        #region loadGame
+
         /// <summary>
         /// Załaduj grę
         /// </summary>
-        public static void LoadGame()
+        public void LoadGame()
         {
-            String message = "";
+            _informationLabel.Text = "";
+            _shouldUpdate = false;
+            String message;
+            Utils.Game = GameService.GetGameForUserById(Utils.User, Utils.Game.Id, out message);
+            _boardBlocksTypes = new List<BlockType>();
+            _bombLocations = new List<int>();
+            _currentPlayerMoveTimeCycle = PLayerMoveDurationCycle;
+            _currentOpponentMoveTimeCycyle = OpponentMoveCycyle;
+            _currentBombTimes = new List<float>();
+            _currentFastBonusTime = 0f;
+            _currentFastBonusCycle = 0f;
+            _currentOpponentMoveTime = 0f;
+            _currentPlayerMoveTime = 0f;
+            _currentSlowBonusCycle = 0f;
+            _currentSlowBonusTime = 0f;
+            _currentStrengthBonusCycle = 0f;
+            _currentStrengthBonusTime = 0f;
+            _currentInmortalBonusCycle = StartInmortality;
+            _isInmortal = true;
+            _isSuperBomb = false;
+            _currentInmortalBonusTime = 0f;
+            _currentRedBlockTime = 0f;
+            _bombAmount = Utils.Game.BombsAmount;
+            int level = Utils.Game.Level;
+            int columns, rows;
+            if (level < 0 || level > MaxNumberOfLevel)
+                throw new NotImplementedException("Level Should be between indexes 0 and " + MaxNumberOfLevel);
+            if (level < 5)
+            {
+                columns = SimpleLevelColumns;
+                rows = SimpleLevelRows;
+            }
+            else if (level < 10)
+            {
+                columns = MediumLevelComulns;
+                rows = MediumLevelRows;
+            }
+            else if (level < 15)
+            {
+                columns = HighLevelColumns;
+                rows = HighLevelRows;
+            }
+            else
+            {
+                columns = SimpleLevelColumns;
+                rows = SimpleLevelRows;
+            }
+            _boardEngine.Rows = rows;
+            _boardEngine.Columns = columns;
+            _rows = rows;
+            _columns = columns;
+            LoadBlocks();
+            LoadBonuses();
+            LoadBombs();
+            LoadOpponents();
+            int playerPosition = (int) (Utils.Game.PlayerXLocation*_columns + Utils.Game.PlayerYLocation);
+            _boardEngine.PlayerLocation = playerPosition;
+            if (!_characterLocations.ContainsKey(playerPosition))
+            {
+                _characterLocations.Add(playerPosition, new List<CharacterType>());
+            }
+            _characterLocations[playerPosition].Add(CharacterType.Player);
+            _shouldUpdate = true;
+        }
+
+        /// <summary>
+        /// Pobierz z bazy informacje na temat kolorów pól planszy.
+        /// </summary>
+        private void LoadBlocks()
+        {
+            _boardBlocksTypes.Clear();
+            String message;
+            for (int i = 0; i < _rows * _columns; i++)
+            {
+               _boardBlocksTypes.Add(BlockType.White);
+            }
             List<BoardElementLocationDao> blocks = BoardService.GetAllBlocksForGame(Utils.Game, out message);
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -185,6 +262,10 @@ namespace BomberMan.Screens
                         blockKind = BlockType.White;
                         break;
                     case BoardElementType.RedBlock:
+                        if (blocks[i].Timeout != null)
+                        {
+                            _currentRedBlockTime = (float) blocks[i].Timeout;
+                        }
                         blockKind = BlockType.Red;
                         break;
                     case BoardElementType.GrayBlock:
@@ -194,8 +275,17 @@ namespace BomberMan.Screens
                         blockKind = BlockType.Black;
                         break;
                 }
-                //_boardBlocksTypes.Add(blockKind);
+                _boardBlocksTypes[blocks[i].XLocation * _columns + blocks[i].YLocation] = blockKind;
             }
+        }
+
+        /// <summary>
+        /// Pobierz z bazy informacje na temat rozmieszczenia bonusów i aktualnie posiadanych.
+        /// </summary>
+        private void LoadBonuses()
+        {
+            _bonusLocations.Clear();
+            String message;
             List<BoardElementLocationDao> bonuses = BoardService.GetAllBonusesForGame(Utils.Game, out message);
             for (int i = 0; i < bonuses.Count; i++)
             {
@@ -221,14 +311,85 @@ namespace BomberMan.Screens
                         bonusType = BonusType.Slow;
                         break;
                 }
-                //_bonusLocations.Add(bonuses[i].);
+                if (bonuses[i].XLocation == -1 || bonuses[i].YLocation == -1)
+                {
+                    if (bonuses[i].Timeout != null)
+                    {
+                        switch (bonusType)
+                        {
+                            case BonusType.Fast:
+                                _currentFastBonusCycle += (float) bonuses[i].Timeout;
+                                break;
+                            case BonusType.Slow:
+                                _currentSlowBonusCycle += (float)bonuses[i].Timeout;
+                                break;
+                            case BonusType.Inmortal:
+                                _currentInmortalBonusCycle += (float)bonuses[i].Timeout;
+                                break;
+                            case BonusType.Strenght:
+                                _currentStrengthBonusCycle += (float)bonuses[i].Timeout;
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    int position = bonuses[i].XLocation*_columns + bonuses[i].YLocation;
+                    if(!_bonusLocations.ContainsKey(position))
+                        _bonusLocations.Add(position, bonusType);
+                }
             }
-            List<BoardElementDao> bombs = BoardService.GetAllBombsForGame(Utils.Game, out message);
-            // najpierw generujemy blocki
-            // potem bomby + inne lementy znaczące
-            // potem generujemy opponentów
-            // na koniec gracza
         }
+
+        /// <summary>
+        /// Pobierz z bazy informacje o rozmieszczeniu bomb.
+        /// </summary>
+        private void LoadBombs()
+        {
+            _bombLocations.Clear();
+            String message;
+            List<BoardElementLocationDao> bombs = BoardService.GetAllBombsForGame(Utils.Game, out message);
+            foreach (var bomb in bombs)
+            {
+                if (bomb.XLocation != -1 && bomb.YLocation != -1)
+                {
+                    _bombLocations.Add(bomb.XLocation * _columns + bomb.YLocation);
+                    _currentBombTimes.Add(bomb.XLocation * _columns + bomb.YLocation);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pobierz z bazy informacje na temat pozcji przeciwników.
+        /// </summary>
+        private void LoadOpponents()
+        {
+            _characterLocations.Clear();
+            String message;
+            List<OpponentLocationDao> opponentLocationDaos =
+                OpponentService.GetAllOponentsWithLocationsByGame(Utils.Game, out message);
+            foreach (var opponent in opponentLocationDaos)
+            {
+                CharacterType characterType = CharacterType.Octopus;
+                switch (opponent.Oponent.OpponentType)
+                {
+                    case OpponentType.Ghost:
+                        characterType = CharacterType.Ghost;
+                        break;
+                    case OpponentType.Octopus:
+                        characterType = CharacterType.Octopus;
+                        break;
+                }
+                int position = (int)(opponent.XLocation*_columns + opponent.YLocation);
+                if (!_characterLocations.ContainsKey(position))
+                {
+                    _characterLocations.Add(position, new List<CharacterType>());
+                }
+                _characterLocations[position].Add(characterType);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Utwórz przycisk powrotu do głównego menu.
@@ -855,6 +1016,7 @@ namespace BomberMan.Screens
                 }
             }
             Utils.Game.Finished = true;
+            SaveGame();
         }
 
         #region KeyboardHandle
@@ -1089,8 +1251,8 @@ namespace BomberMan.Screens
                 Id = -1,
                 Level = 0,
                 Finished = false,
-                PlayerXLocation = (uint) (_boardEngine.PlayerLocation/_columns),
-                PlayerYLocation = (uint) (_boardEngine.PlayerLocation - _boardEngine.PlayerLocation/_columns*_columns),
+                PlayerXLocation =  (_boardEngine.PlayerLocation/_columns),
+                PlayerYLocation =  (_boardEngine.PlayerLocation - _boardEngine.PlayerLocation/_columns*_columns),
                 Points = 0,
                 SaveTime = DateTime.Now,
                 User = Utils.User
@@ -1121,8 +1283,8 @@ namespace BomberMan.Screens
             String message;
             int x = _boardEngine.PlayerLocation/_columns;
             int y = _boardEngine.PlayerLocation - x*_columns;
-            Utils.Game.PlayerXLocation = (uint) x;
-            Utils.Game.PlayerYLocation = (uint) y;
+            Utils.Game.PlayerXLocation = x;
+            Utils.Game.PlayerYLocation = y;
             Utils.Game.BombsAmount = _bombAmount;
             bool savedGame = false;
             Utils.Game.User = Utils.User;

@@ -105,7 +105,7 @@
     <Compile Include="Screens\HighScoresScreen.cs" />
     <Compile Include="Screens\LoginScreen.cs" />
     <Compile Include="Screens\Menu.cs" />
-    <Compile Include="Screens\Menus\LoadGameScreen.cs" />
+    <Compile Include="Screens\LoadGameScreen.cs" />
     <Compile Include="Screens\Menus\MainMenuScreen.cs" />
     <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Utils.cs" />

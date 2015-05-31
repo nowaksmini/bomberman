@@ -144,10 +144,10 @@ namespace BomberManViewModel.Services
                 List<BoardElementLocationDao> blocks = new List<BoardElementLocationDao>();
                 var query = from element in DataManager.DataBaseContext.BoardElementLocations
                     where element.Game.Id == gameDao.Id &&
-                          element.BoardElement.ElementType == BoardElementType.BlackBlock ||
+                          (element.BoardElement.ElementType == BoardElementType.BlackBlock ||
                           element.BoardElement.ElementType == BoardElementType.GrayBlock ||
                           element.BoardElement.ElementType == BoardElementType.WhiteBlock ||
-                          element.BoardElement.ElementType == BoardElementType.RedBlock
+                          element.BoardElement.ElementType == BoardElementType.RedBlock)
                     orderby element.XLocation, element.YLocation
                     select element;
                 BoardElementLocation[] bElements = query.ToArray();
@@ -176,19 +176,20 @@ namespace BomberManViewModel.Services
         /// <param name="gameDao">gra</param>
         /// <param name="message">wiadomośc, przekazywana w razie porażki</param>
         /// <returns></returns>
-        public static List<BoardElementDao> GetAllBombsForGame(GameDao gameDao, out String message)
+        public static List<BoardElementLocationDao> GetAllBombsForGame(GameDao gameDao, out String message)
         {
             try
             {
                 message = null;
-                List<BoardElementDao> bombs = new List<BoardElementDao>();
-                var query = from element in DataManager.DataBaseContext.BoardElements
-                    where element.ElementType == BoardElementType.Bomb
+                List<BoardElementLocationDao> bombs = new List<BoardElementLocationDao>();
+                var query = from element in DataManager.DataBaseContext.BoardElementLocations
+                    where element.BoardElement.ElementType == BoardElementType.Bomb
+                    && element.Game.Id == gameDao.Id
                     select element;
-                BoardElement[] bElements = query.ToArray();
+                BoardElementLocation[] bElements = query.ToArray();
                 for (int i = 0; i < bElements.Length; i++)
                 {
-                    BoardElementDao block = Mapper.Map<BoardElement, BoardElementDao>(bElements[i]);
+                    BoardElementLocationDao block = Mapper.Map<BoardElementLocationDao>(bElements[i]);
                     bombs.Add(block);
                 }
                 return bombs;

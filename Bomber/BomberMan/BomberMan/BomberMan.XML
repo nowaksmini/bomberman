@@ -156,6 +156,11 @@
             Reprezentacja przyciska, możliwośc najechania na przycisk, wciśnięcia, wykonania akcji
             </summary>
         </member>
+        <member name="F:BomberMan.Common.Components.StateComponents.Button.Click">
+            <summary>
+            Funkjca wywoływana podczas kliku.
+            </summary>
+        </member>
         <member name="M:BomberMan.Common.Components.StateComponents.Button.#ctor(BomberMan.Common.Components.StateComponents.BState,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Double,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteFont,System.String)">
             <summary>
             Utwórz nowy przycisk z napisem na nim.
@@ -590,6 +595,11 @@
             stały rozmiar przycisku powrotu.
             </summary>
         </member>
+        <member name="F:BomberMan.GameManager.MusicButtonSize">
+            <summary>
+            stały rozmiar przycisku muzyki.
+            </summary>
+        </member>
         <member name="M:BomberMan.GameManager.#ctor">
             <summary>
             Zainicjalizuj nową instancję <see cref="T:BomberMan.GameManager"/> class.
@@ -631,6 +641,11 @@
             rodzaj widocznego ekranu <example>Menu główne</example>
             </value>
         </member>
+        <member name="T:BomberMan.ScreenType">
+            <summary>
+            Rodzaje widoków.
+            </summary>
+        </member>
         <member name="T:BomberMan.Common.Screen">
             <summary>
             Klasa reprezentująca widok poszczególnego okna <example>Menu, Gra, Opcje</example>
@@ -638,7 +653,7 @@
         </member>
         <member name="M:BomberMan.Common.Screen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
             <summary>
-            Narusuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+            Narysuj wszystkie komponenty znajdujące się w silniku w aplikacji.
             </summary>
             <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
         </member>
@@ -682,6 +697,26 @@
         <member name="M:BomberMan.Screens.GameScreen.LoadGame">
             <summary>
             Załaduj grę
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.LoadBlocks">
+            <summary>
+            Pobierz z bazy informacje na temat kolorów pól planszy.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.LoadBonuses">
+            <summary>
+            Pobierz z bazy informacje na temat rozmieszczenia bonusów i aktualnie posiadanych.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.LoadBombs">
+            <summary>
+            Pobierz z bazy informacje o rozmieszczeniu bomb.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.GameScreen.LoadOpponents">
+            <summary>
+            Pobierz z bazy informacje na temat pozcji przeciwników.
             </summary>
         </member>
         <member name="M:BomberMan.Screens.GameScreen.CreateBackButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
@@ -1041,6 +1076,55 @@
             <value>
             The options.
             </value>
+        </member>
+        <member name="T:BomberMan.Screens.LoadGameScreen">
+            <summary>
+            Klasa odpowiedzialna za tworzenie listy ostatnich gier, pozwalająca użytkownikowi łądować grę
+            o ile nie jest ona skończona.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Graphics.SpriteFont,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Zainicjalizuj nową instancję klasy <see cref="T:BomberMan.Screens.LoadGameScreen"/>.
+            </summary>
+            <param name="loadBackground">tło przycisku ładującego grę.</param>
+            <param name="spriteFont">czcionka labelek</param>
+            <param name="backButtonTexture">tło przycisku powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.CreateBackButton(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Utwórz przycisk powrotu do głównego menu.
+            </summary>
+            <param name="backButtonTexture">tło przycisku powrotu</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.GenerateLabels">
+            <summary>
+            Utwóz opisy kolumn w wudoku ładowania gry.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.LoadGames">
+            <summary>
+            Załąduj n ostatnich, nieskończonych gier gracza.
+            </summary>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Narysuj wszystkie komponenty znajdujące się w silniku w aplikacji.
+            </summary>
+            <param name="spriteBatch">obiekt, w którym rysujemy komponenty</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.Update(Microsoft.Xna.Framework.GameTime,System.Int32,System.Int32)">
+            <summary>
+            Uaktualnij pozycje i rozmiary komponentów znajdujących się w silniku.
+            </summary>
+            <param name="gameTime">czas trwania gry</param>
+            <param name="windowWidth">szerokość okna aplikacji</param>
+            <param name="windowHeight">wysokość okna aplikacji</param>
+        </member>
+        <member name="M:BomberMan.Screens.LoadGameScreen.HandleKeyboard">
+            <summary>
+            Obsłuż wciskane klawisze na klawiaturze.
+            </summary>
         </member>
         <member name="T:BomberMan.Screens.Menus.MainMenuScreen">
             <summary>
