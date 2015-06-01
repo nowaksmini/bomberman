@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BomberMan.Common.Components.StateComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -82,7 +83,7 @@ namespace BomberMan.Common.Engines
         /// <param name="windowWidth">szerokość okna gry</param>
         /// <param name="windowHeight">wysokość okna gry</param>
         public void Update(List<BlockType> blocksTypes, Dictionary<int, BonusType> bonusLocations,
-            Dictionary<int, List<CharacterType>> characterLocations,
+            Dictionary<int, List<Tuple<CharacterType, int>>> characterLocations,
             List<int> bombLocations, int windowWidth, int windowHeight)
         {
             int width = (windowWidth - 2*Shift)/(_columns);
@@ -130,15 +131,15 @@ namespace BomberMan.Common.Engines
                         {
                             foreach (var character in characterLocations[counter])
                             {
-                                if (character == CharacterType.Player && player)
+                                if (character.Item1 == CharacterType.Player && player)
                                 {
                                     PlayerLocation = counter;
                                     player = false;
-                                    Components.Add(GenerateNewCharacter(character, x, y, width, height));
+                                    Components.Add(GenerateNewCharacter(character.Item1, x, y, width, height));
                                 }
                                 else
                                 {
-                                    Components.Add(GenerateNewCharacter(character, x, y, width, height));
+                                    Components.Add(GenerateNewCharacter(character.Item1, x, y, width, height));
                                 }
                             }
                         }

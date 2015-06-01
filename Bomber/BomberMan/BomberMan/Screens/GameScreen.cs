@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -80,7 +81,8 @@ namespace BomberMan.Screens
         private List<BlockType> _boardBlocksTypes;
 
         private Dictionary<int, BonusType> _bonusLocations;
-        private Dictionary<int, List<CharacterType>> _characterLocations;
+        // pozycja pola, lista postaci na danym polu wraz i ostatnim polem gdzie widziano gracza
+        private Dictionary<int, List<Tuple<CharacterType, int>>> _characterLocations;
         private List<int> _bombLocations;
         private readonly Label _levelLabel;
         private readonly Label _bonusLabel;
@@ -160,7 +162,7 @@ namespace BomberMan.Screens
             _boardBlocksTypes = new List<BlockType>();
             _bonusLocations = new Dictionary<int, BonusType>();
             _bombLocations = new List<int>();
-            _characterLocations = new Dictionary<int, List<CharacterType>>();
+            _characterLocations = new Dictionary<int, List<Tuple<CharacterType, int>>>();
             CreateBackButton(backButtonTexture);
             CreateHelpButton(helpButton);
             if (Utils.Game == null)
@@ -238,9 +240,9 @@ namespace BomberMan.Screens
             _boardEngine.PlayerLocation = playerPosition;
             if (!_characterLocations.ContainsKey(playerPosition))
             {
-                _characterLocations.Add(playerPosition, new List<CharacterType>());
+                _characterLocations.Add(playerPosition, new List<Tuple<CharacterType, int>>());
             }
-            _characterLocations[playerPosition].Add(CharacterType.Player);
+            _characterLocations[playerPosition].Add(new Tuple<CharacterType,int>(CharacterType.Player, -1));
             _shouldUpdate = true;
         }
 
@@ -386,9 +388,9 @@ namespace BomberMan.Screens
                 int position = (int)(opponent.XLocation*_columns + opponent.YLocation);
                 if (!_characterLocations.ContainsKey(position))
                 {
-                    _characterLocations.Add(position, new List<CharacterType>());
+                    _characterLocations.Add(position, new List<Tuple<CharacterType, int>>());
                 }
-                _characterLocations[position].Add(characterType);
+                _characterLocations[position].Add(new Tuple<CharacterType, int>(characterType, -1));
             }
         }
 
@@ -596,8 +598,8 @@ namespace BomberMan.Screens
         {
             if (_characterLocations.Keys.Count == 1)
             {
-                List<CharacterType> characters = _characterLocations[_characterLocations.Keys.ElementAt(0)];
-                if (characters.Count == 1 && characters[0] == CharacterType.Player)
+                List<Tuple<CharacterType, int>> characters = _characterLocations[_characterLocations.Keys.ElementAt(0)];
+                if (characters.Count == 1 && characters[0].Item1 == CharacterType.Player)
                 {
                     if (Utils.Game.Level == MaxNumberOfLevel)
                         GameFinished(true);
@@ -717,6 +719,8 @@ namespace BomberMan.Screens
         /// <param name="bombPosition">pozycja bomby</param>
         private void LaunchBomb(int bombPosition)
         {
+            // powiedz duchom że bomba wybuchła czyli był tu gracz
+            TellGhoastWhereUserWas(bombPosition);
             int row = bombPosition/_columns;
             int bombScope = _isSuperBomb ? 6 : 4;
             //zniszcz wszystkie pola w poziomie
@@ -781,6 +785,43 @@ namespace BomberMan.Screens
         }
 
         /// <summary>
+        /// Daje znak duchowi, gdzie wybuchła bomba
+        /// </summary>
+        /// <param name="bombPositionExplode">The bomb position explode.</param>
+        private void TellGhoastWhereUserWas(int bombPositionExplode)
+        {
+            Dictionary<int, List<Tuple<CharacterType, int>>> tmpCharacterLocations = new Dictionary<int, List<Tuple<CharacterType, int>>>();
+            for (int i = 0; i < _rows * _columns; i++)
+            {
+                if (_characterLocations.ContainsKey(i))
+                {
+                    List<Tuple<CharacterType, int>> characterTypes = _characterLocations[i];
+                    foreach (var character in characterTypes)
+                    {
+                        var tmpCharacter = character;
+                        if (tmpCharacter.Item1 == CharacterType.Ghost)
+                        {
+                            //if (tmpCharacter.Item2 == -1)
+                                tmpCharacter = new Tuple<CharacterType, int>(tmpCharacter.Item1, bombPositionExplode);
+                            if (!tmpCharacterLocations.ContainsKey(i))
+                                tmpCharacterLocations.Add(i, new List<Tuple<CharacterType, int>>());
+                            tmpCharacterLocations[i].Add(tmpCharacter);
+                        }
+                        else
+                        {
+                            if (!tmpCharacterLocations.ContainsKey(i))
+                            {
+                                tmpCharacterLocations.Add(i, new List<Tuple<CharacterType, int>>());
+                            }
+                            tmpCharacterLocations[i].Add(tmpCharacter);
+                        }
+                    }
+                }
+            }
+            _characterLocations = tmpCharacterLocations;
+        }
+
+        /// <summary>
         /// Zniszcz znajdujących się na polach czerownych przeciwników lub zakończ grę.
         /// </summary>
         /// <param name="position">pozycja pola czerownego</param>
@@ -788,10 +829,10 @@ namespace BomberMan.Screens
         {
             if (_characterLocations.ContainsKey(position))
             {
-                List<CharacterType> characters = _characterLocations[position];
+                List<Tuple<CharacterType,int>> characters = _characterLocations[position];
                 foreach (var character in characters)
                 {
-                    switch (character)
+                    switch (character.Item1)
                     {
                         case CharacterType.Ghost:
                             Utils.Game.Points += DeletingGhoast;
@@ -804,8 +845,11 @@ namespace BomberMan.Screens
                             return;
                     }
                 }
-                characters.RemoveAll(x => x != CharacterType.Player);
-                if (characters.Count == 0) _characterLocations.Remove(position);
+                characters.RemoveAll(x => x.Item1 != CharacterType.Player);
+                if (characters.Count == 0)
+                {
+                    _characterLocations.Remove(position);
+                }
             }
         }
 
@@ -817,10 +861,10 @@ namespace BomberMan.Screens
         {
             if (_characterLocations.ContainsKey(_boardEngine.PlayerLocation))
             {
-                List<CharacterType> characterTypes = _characterLocations[_boardEngine.PlayerLocation];
+                List<Tuple<CharacterType, int>> characterTypes = _characterLocations[_boardEngine.PlayerLocation];
                 for (int i = 0; i < characterTypes.Count; i++)
                 {
-                    if (characterTypes[i] != CharacterType.Player)
+                    if (characterTypes[i].Item1 != CharacterType.Player)
                     {
                         GameFinished(false);
                     }
@@ -873,39 +917,56 @@ namespace BomberMan.Screens
         /// </summary>
         private void MoveOpponents()
         {
-            Dictionary<int, List<CharacterType>> tmpCharacterLocations = new Dictionary<int, List<CharacterType>>();
+            Dictionary<int, List<Tuple<CharacterType,int>>> tmpCharacterLocations = new Dictionary<int, List<Tuple<CharacterType, int>>>();
             for (int i = 0; i < _rows*_columns; i++)
             {
                 if (_characterLocations.ContainsKey(i))
                 {
-                    List<CharacterType> characterTypes = _characterLocations[i];
+                    List<Tuple<CharacterType,int>> characterTypes = _characterLocations[i];
                     foreach (var character in characterTypes)
                     {
-                        if (character == CharacterType.Octopus)
+                        var tmpCharacter = character;
+                        if (tmpCharacter.Item1 == CharacterType.Octopus)
                         {
-                            //jeżeli ośmiornica widzi gracza to idzie w jego kierunku
-                            // w p.p losuje kierunek
-                            int newIndex = GenerateOpponentMove(i);
+                            // jeżeli udało dojść się do pola, które było gonione to trzeba znaleźć nowe, więc wyrzucić to co zapisane
+                            // i wpisać -1.
+                            if(tmpCharacter.Item2 == i) 
+                                tmpCharacter  = new Tuple<CharacterType, int>(tmpCharacter.Item1, -1);
+                            int newPosition = -1;
+                            int newIndex = GenerateOpponentMove(i, tmpCharacter.Item2, out newPosition);
+                            if (newPosition != -1)
+                            {
+                                tmpCharacter = new Tuple<CharacterType, int>(tmpCharacter.Item1, newPosition);
+                            }
                             if (newIndex == -1) newIndex = RandomOpponentMove(i);
                             if (!tmpCharacterLocations.ContainsKey(newIndex))
-                                tmpCharacterLocations.Add(newIndex, new List<CharacterType>());
-                            tmpCharacterLocations[newIndex].Add(character);
+                                tmpCharacterLocations.Add(newIndex, new List<Tuple<CharacterType, int>>());
+                            tmpCharacterLocations[newIndex].Add(tmpCharacter);
                         }
-                        else if (character == CharacterType.Ghost)
+                        else if (tmpCharacter.Item1 == CharacterType.Ghost)
                         {
-                            int newIndex = GenerateOpponentMove(i);
+                            // jeżeli udało dojść się do pola, które było gonione to trzeba znaleźć nowe, więc wyrzucić to co zapisane
+                            // i wpisać -1.
+                            if (tmpCharacter.Item2 == i)
+                                tmpCharacter = new Tuple<CharacterType, int>(tmpCharacter.Item1, -1);
+                            int newPosition = -1;
+                            int newIndex = GenerateOpponentMove(i, tmpCharacter.Item2, out newPosition);
+                            if (newPosition != -1)
+                            {
+                                tmpCharacter = new Tuple<CharacterType, int>(tmpCharacter.Item1, newPosition);
+                            }
                             if (newIndex == -1) newIndex = RandomOpponentMove(i);
                             if (!tmpCharacterLocations.ContainsKey(newIndex))
-                                tmpCharacterLocations.Add(newIndex, new List<CharacterType>());
-                            tmpCharacterLocations[newIndex].Add(character);
+                                tmpCharacterLocations.Add(newIndex, new List<Tuple<CharacterType, int>>());
+                            tmpCharacterLocations[newIndex].Add(tmpCharacter);
                         }
                         else
                         {
                             if (!tmpCharacterLocations.ContainsKey(i))
                             {
-                                tmpCharacterLocations.Add(i, new List<CharacterType>());
+                                tmpCharacterLocations.Add(i, new List<Tuple<CharacterType, int>>());
                             }
-                            tmpCharacterLocations[i].Add(character);
+                            tmpCharacterLocations[i].Add(tmpCharacter);
                         }
                     }
                 }
@@ -917,13 +978,16 @@ namespace BomberMan.Screens
         /// Wygeneruj ruch ośmiornicy lub ducha na podstawie pozycji gracza.
         /// </summary>
         /// <param name="opponentPosition">pozycja ośmiornicy</param>
+        /// <param name="destinationFiled">pozycja do której chce się dostać postać</param>
+        /// <param name="newDestinationField">zwracane <c>-1</c> jeżeli nie udało się zobaczeć gracza, jeżeli jednak widzi się gracza to wpisuje się jego pozycję</param>
         /// <returns>zwróć -1 jeżeli nie udało się wylosować poprawnej pozycji w p.p zwróć nową pozycję</returns>
-        private int GenerateOpponentMove(int opponentPosition)
+        private int GenerateOpponentMove(int opponentPosition, int destinationFiled, out int newDestinationField)
         {
             int row = opponentPosition/_columns;
             int column = opponentPosition - row*_columns;
             int playerRow = _boardEngine.PlayerLocation/_columns;
             int playerColumn = _boardEngine.PlayerLocation - playerRow*_columns;
+
             // nie rozpatrzamy przypadku kiedy ośmiornica nachodzi na gracza bo wcześniej to wygeneruje zakończenie gry
             if (row == playerRow)
             {
@@ -946,6 +1010,7 @@ namespace BomberMan.Screens
                     {
                         if (_boardBlocksTypes[opponentPosition - 1] != BlockType.Red)
                         {
+                            newDestinationField = _boardEngine.PlayerLocation;
                             return opponentPosition - 1;
                         }
                     }
@@ -954,6 +1019,7 @@ namespace BomberMan.Screens
                     {
                         if (_boardBlocksTypes[opponentPosition + 1] != BlockType.Red)
                         {
+                            newDestinationField = _boardEngine.PlayerLocation;
                             return opponentPosition + 1;
                         }
                     }
@@ -980,6 +1046,7 @@ namespace BomberMan.Screens
                     {
                         if (_boardBlocksTypes[opponentPosition - _columns] != BlockType.Red)
                         {
+                            newDestinationField = _boardEngine.PlayerLocation;
                             return opponentPosition - +_columns;
                         }
                     }
@@ -988,12 +1055,123 @@ namespace BomberMan.Screens
                     {
                         if (_boardBlocksTypes[opponentPosition + _columns] != BlockType.Red)
                         {
+                            newDestinationField = _boardEngine.PlayerLocation;
                             return opponentPosition + +_columns;
                         }
                     }
                 }
             }
+            // nie widać gracza
+            newDestinationField = -1;
+            // sprawdź czy nie ma nic wpisanego w pole w parze
+            if (destinationFiled != -1)
+            {
+                int position;
+                //int destRow = destinationFiled / _columns;
+                //int destColumn = destinationFiled - destRow * _columns;
+                //// idź jedno pole w prawo
+                //if (destColumn > column && _boardBlocksTypes[opponentPosition + 1] == BlockType.White)
+                //{
+                //    return opponentPosition + 1;
+                //}
+                ////idź jedo pole w górę
+                //if (destRow < row && _boardBlocksTypes[opponentPosition - _columns] == BlockType.White)
+                //{
+                //    return opponentPosition - _columns;
+                //}
+                ////idź jedo pole w lewo
+                //if (destColumn < column && _boardBlocksTypes[opponentPosition + 1] == BlockType.White)
+                //{
+                //    return opponentPosition - 1;
+                //}
+                ////idź jedo pole w dół
+                //if (row < destRow && _boardBlocksTypes[opponentPosition + _columns] == BlockType.White)
+                //{
+                //    return opponentPosition + _columns;
+                //}
+                //// spróbuj iśc w kieruku pola
+                if (FindShortestPathBeetweenTwoPoints(opponentPosition, destinationFiled, out position))
+                {
+                    if (position != opponentPosition && _boardBlocksTypes[position] != BlockType.Red)
+                        return position;
+                }
+            }
             return -1;
+        }
+
+        /// <summary>
+        /// Znajdź najkrótszą ścieżkę między dwoma punktami o ile istnieje
+        /// </summary>
+        /// <param name="start">pozycja startowa ducha</param>
+        /// <param name="end">poycja docelowa</param>
+        /// <param name="nextPosition">pozycja pola nastęnego po start gdzie powinien udać się duch</param>
+        /// <returns>zwróć <c>true</c> jak znaleziono ścieżkę</returns>
+        private bool FindShortestPathBeetweenTwoPoints(int start, int end, out int nextPosition)
+        {
+            // zapuść algorytm szukający ścieżki
+            bool[] visited = new bool[_boardBlocksTypes.Count];
+            int max = _boardBlocksTypes.Count(field => field == BlockType.White || field == BlockType.Grey);
+            bool ifPahExists = false;
+            int[] bestPath = null;
+            FindPath(visited, 0, start, ref max, end, ref ifPahExists, new int[max+1], ref bestPath );
+            if (ifPahExists)
+            {
+                nextPosition = bestPath[1];
+                return true;
+            }
+            // nie idź od start do end
+            nextPosition = -1;
+            return false;
+        }
+
+        /// <summary>
+        /// Pomocnicza funkjca wywoływana rekurencyjnie aby sprawdzić czy można dojść z
+        /// dowolnego pola planszy (nie czarnego) do dowolnego pola planszy (nie czarnego)
+        /// </summary>
+        /// <param name="visited">pola odwiedzone</param>
+        /// <param name="index">index wierchołka, na którym jesteśmy</param>
+        /// <param name="vertexes">ilośc odwiedzonych wierzchołków</param>
+        /// <param name="max">maxilość odwiedzonych wierzchołków</param>
+        /// <param name="end">końcowy wierzchołek</param>
+        /// <param name="gained">czy osiągnięto cel</param>
+        /// <param name="moves">ścieżka poruszania się</param>
+        /// <param name="bestMoves">najlepsza ścieżka</param>
+        private void FindPath(bool[] visited, int vertexes,
+            int index, ref int max, int end, ref bool gained, int[] moves, ref int[] bestMoves)
+        {
+            if (vertexes == max) return;
+            if (index == end)
+            {
+                gained = true;
+                if (vertexes == Math.Min(vertexes, max))
+                {
+                    bestMoves = new int[vertexes+1];
+                    for (int i = 0; i < vertexes; i++)
+                    {
+                        bestMoves[i] = moves[i];
+                    }
+                    bestMoves[vertexes] = end;
+                }
+                max = Math.Min(vertexes, max);
+                return;
+            }
+            if (index < 0) return;
+            if (index >= visited.Length) return;
+            if (_boardBlocksTypes[index] == BlockType.Black || _boardBlocksTypes[index] == BlockType.Grey) return;
+            if (visited[index]) return;
+            // zwiększamy ilośc odwiedzonych wierzchołków
+            if (!visited[index])
+            {
+                visited[index] = true;
+                moves[vertexes] = index;
+                vertexes++;
+            }
+            if ((index + 1) % _columns != 0) FindPath(visited, vertexes, index + 1, ref max, end, ref  gained, moves, ref bestMoves);
+            if (index - _columns >= 0) FindPath(visited, vertexes, index - _columns, ref max, end, ref gained, moves, ref bestMoves);
+            if (index % _columns != 0) FindPath(visited, vertexes, index - 1, ref max, end, ref gained, moves, ref bestMoves);
+            if (index + _columns < visited.Length)
+                FindPath(visited, vertexes, index + _columns, ref max, end, ref gained, moves, ref bestMoves);
+            visited[index] = false;
         }
 
         /// <summary>
@@ -1169,17 +1347,17 @@ namespace BomberMan.Screens
                     _boardBlocksTypes[tmpLocation].Equals(BlockType.Red))
                 {
                     if (!_characterLocations.ContainsKey(playerLocation)) return;
-                    _characterLocations[playerLocation].Remove(CharacterType.Player);
+                    _characterLocations[playerLocation].RemoveAll(x => x.Item1 == CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerRow++;
                     playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
-                        _characterLocations[playerLocation].Add(CharacterType.Player);
+                        _characterLocations[playerLocation].Add(new Tuple<CharacterType, int>(CharacterType.Player, -1));
                     else
                     {
-                        _characterLocations.Add(playerLocation, new List<CharacterType>()
+                        _characterLocations.Add(playerLocation, new List<Tuple<CharacterType,int>>()
                         {
-                            CharacterType.Player
+                            new Tuple<CharacterType, int>(CharacterType.Player, -1)
                         });
                     }
                 }
@@ -1201,17 +1379,17 @@ namespace BomberMan.Screens
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
                     if (!_characterLocations.ContainsKey(playerLocation)) return;
-                    _characterLocations[playerLocation].Remove(CharacterType.Player);
+                    _characterLocations[playerLocation].RemoveAll(x => x.Item1 == CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerRow--;
                     playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
-                        _characterLocations[playerLocation].Add(CharacterType.Player);
+                        _characterLocations[playerLocation].Add(new Tuple<CharacterType, int>(CharacterType.Player, -1));
                     else
                     {
-                        _characterLocations.Add(playerLocation, new List<CharacterType>()
+                        _characterLocations.Add(playerLocation, new List<Tuple<CharacterType, int>>()
                         {
-                            CharacterType.Player
+                            new Tuple<CharacterType, int>(CharacterType.Player, -1)
                         });
                     }
                 }
@@ -1233,17 +1411,17 @@ namespace BomberMan.Screens
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
                     if (!_characterLocations.ContainsKey(playerLocation)) return;
-                    _characterLocations[playerLocation].Remove(CharacterType.Player);
+                    _characterLocations[playerLocation].RemoveAll(x => x.Item1 == CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerColumn++;
                     playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
-                        _characterLocations[playerLocation].Add(CharacterType.Player);
+                        _characterLocations[playerLocation].Add(new Tuple<CharacterType, int>(CharacterType.Player, -1));
                     else
                     {
-                        _characterLocations.Add(playerLocation, new List<CharacterType>()
+                        _characterLocations.Add(playerLocation, new List<Tuple<CharacterType, int>>()
                         {
-                            CharacterType.Player
+                            new Tuple<CharacterType, int>(CharacterType.Player, -1)
                         });
                     }
                 }
@@ -1265,17 +1443,17 @@ namespace BomberMan.Screens
                     _boardBlocksTypes[tmp].Equals(BlockType.Red))
                 {
                     if (!_characterLocations.ContainsKey(playerLocation)) return;
-                    _characterLocations[playerLocation].Remove(CharacterType.Player);
+                    _characterLocations[playerLocation].RemoveAll(x => x.Item1 == CharacterType.Player);
                     if (_characterLocations[playerLocation].Count == 0) _characterLocations.Remove(playerLocation);
                     playerColumn--;
                     playerLocation = playerRow*_columns + playerColumn;
                     if (_characterLocations.ContainsKey(playerLocation))
-                        _characterLocations[playerLocation].Add(CharacterType.Player);
+                        _characterLocations[playerLocation].Add(new Tuple<CharacterType, int>(CharacterType.Player, -1));
                     else
                     {
-                        _characterLocations.Add(playerLocation, new List<CharacterType>()
+                        _characterLocations.Add(playerLocation, new List<Tuple<CharacterType, int>>()
                         {
-                            CharacterType.Player
+                            new Tuple<CharacterType, int>(CharacterType.Player, -1)
                         });
                     }
                 }
@@ -1480,13 +1658,13 @@ namespace BomberMan.Screens
             {
                 if (_characterLocations.ContainsKey(i))
                 {
-                    List<CharacterType> characters = _characterLocations[i];
+                    List<Tuple<CharacterType,int>> characters = _characterLocations[i];
                     foreach (var c in characters)
                     {
-                        if (c != CharacterType.Player)
+                        if (c.Item1 != CharacterType.Player)
                         {
                             OpponentType opponent = OpponentType.Ghost;
-                            if (c == CharacterType.Octopus) opponent = OpponentType.Octopus;
+                            if (c.Item1 == CharacterType.Octopus) opponent = OpponentType.Octopus;
                             OpponentDao opponentDao = OpponentService.FindBoardElementByType(opponent, out message);
                             opponentLocations.Add(new OpponentLocationDao()
                             {
@@ -1602,7 +1780,7 @@ namespace BomberMan.Screens
             _currentRedBlockTime = 0f;
             _bombAmount = StartBombAmount;
             _bonusLocations = new Dictionary<int, BonusType>();
-            _characterLocations = new Dictionary<int, List<CharacterType>>();
+            _characterLocations = new Dictionary<int, List<Tuple<CharacterType,int>>>();
             if (level == 0 && Utils.Game != null) Utils.Game.Points = 0;
             if (level < 0 || level > MaxNumberOfLevel)
                 throw new NotImplementedException("Level Should be between indexes 0 and " + MaxNumberOfLevel);
@@ -1817,8 +1995,8 @@ namespace BomberMan.Screens
             // wylosuj z dostępnych pól pole dla gracza
             int playerField = _random.Next(indexes.Count);
             playerField = indexes[playerField];
-            _characterLocations.Add(playerField, new List<CharacterType>());
-            _characterLocations[playerField].Add(CharacterType.Player);
+            _characterLocations.Add(playerField, new List<Tuple<CharacterType,int>>());
+            _characterLocations[playerField].Add(new Tuple<CharacterType, int>(CharacterType.Player, -1));
             // wylosuj przeciwników
             int maxOpponentAmount = PercentageOfOpponents*_boardBlocksTypes.Count/100 - 1;
             int counter = 0;
@@ -1850,9 +2028,9 @@ namespace BomberMan.Screens
                 var characterType = number < 65 ? CharacterType.Octopus : CharacterType.Ghost;
                 int opponentPosition = _random.Next(goodOpponentLocations.Count);
                 opponentPosition = goodOpponentLocations[opponentPosition];
-                _characterLocations.Add(opponentPosition, new List<CharacterType>()
+                _characterLocations.Add(opponentPosition, new List<Tuple<CharacterType,int>>()
                 {
-                    characterType
+                    new Tuple<CharacterType,int>(characterType, -1)
                 });
                 goodOpponentLocations.Remove(opponentPosition);
                 counter++;
