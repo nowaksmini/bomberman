@@ -126,7 +126,6 @@ namespace BomberManViewModel
                         Description = "Zła ośmiornica. Potrafi poruszać się jedynie po polach białych. " +
                                       "Porusza się w losowym kierunku chyba, że w lini prostej zauważy gracza wówczas " +
                                       "goni gracza do miejsca gdzie widział go ostatnim razem." +
-                                      " Po spotkaniu gracza z panem ośmiornicą gracz traci 40% życia. " +
                                       "Pan Ośmiornica ginie od eksplozji bomby.",
                         OpponentType = OpponentType.Octopus,
                         Id = 2

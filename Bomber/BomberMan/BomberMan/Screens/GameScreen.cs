@@ -56,7 +56,7 @@ namespace BomberMan.Screens
 
         //Stałe cykle timerów
         private const float FastBonusDuration = 3f; //3s
-        private const float SlowBonusDuration = 10f;
+        private const float SlowBonusDuration = 9f;
         private const float StrengthBonusDuration = 10f;
         private const float InmortalBonusDuration = 10f;
         private const float BombCycleDuration = 5.0f;
@@ -727,7 +727,12 @@ namespace BomberMan.Screens
                 if (blockPosition >= _columns*_rows) break;
                 if (row != blockPosition/_columns) break;
                 if (_boardBlocksTypes[blockPosition] == BlockType.Black) break;
-                if (_boardBlocksTypes[blockPosition] == BlockType.Grey) Utils.Game.Points += DeletingGreyField;
+                if (_boardBlocksTypes[blockPosition] == BlockType.Grey)
+                {
+                    Utils.Game.Points += DeletingGreyField;
+                    _boardBlocksTypes[blockPosition] = BlockType.Red;
+                    break;
+                }
                 _boardBlocksTypes[blockPosition] = BlockType.Red;
             }
             //idź w lewo aż nie napotkasz pola czarnego
@@ -737,7 +742,12 @@ namespace BomberMan.Screens
                 if (blockPosition < 0) break;
                 if (row != blockPosition/_columns) break;
                 if (_boardBlocksTypes[blockPosition] == BlockType.Black) break;
-                if (_boardBlocksTypes[blockPosition] == BlockType.Grey) Utils.Game.Points += DeletingGreyField;
+                if (_boardBlocksTypes[blockPosition] == BlockType.Grey)
+                {
+                    Utils.Game.Points += DeletingGreyField;
+                    _boardBlocksTypes[blockPosition] = BlockType.Red;
+                    break;
+                }
                 _boardBlocksTypes[blockPosition] = BlockType.Red;
             }
             //idź w górę aż nie napotkasz pola czarnego
@@ -746,7 +756,12 @@ namespace BomberMan.Screens
                 int blockPosition = bombPosition - i*_columns;
                 if (blockPosition < 0) break;
                 if (_boardBlocksTypes[blockPosition] == BlockType.Black) break;
-                if (_boardBlocksTypes[blockPosition] == BlockType.Grey) Utils.Game.Points += DeletingGreyField;
+                if (_boardBlocksTypes[blockPosition] == BlockType.Grey)
+                {
+                    Utils.Game.Points += DeletingGreyField;
+                    _boardBlocksTypes[blockPosition] = BlockType.Red;
+                    break;
+                }
                 _boardBlocksTypes[blockPosition] = BlockType.Red;
             }
             //idź w dół aż nie napotkasz pola czarnego
@@ -755,7 +770,12 @@ namespace BomberMan.Screens
                 int blockPosition = bombPosition + i*_columns;
                 if (blockPosition >= _rows*_columns) break;
                 if (_boardBlocksTypes[blockPosition] == BlockType.Black) break;
-                if (_boardBlocksTypes[blockPosition] == BlockType.Grey) Utils.Game.Points += DeletingGreyField;
+                if (_boardBlocksTypes[blockPosition] == BlockType.Grey)
+                {
+                    Utils.Game.Points += DeletingGreyField;
+                    _boardBlocksTypes[blockPosition] = BlockType.Red;
+                    break;
+                }
                 _boardBlocksTypes[blockPosition] = BlockType.Red;
             }
         }
